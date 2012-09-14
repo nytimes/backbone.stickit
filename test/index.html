@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>gettit suite</title>
+  
+	<link rel="stylesheet" href="vendor/qunit.css" type="text/css"/>  
+	
+	<script type="text/javascript" src="vendor/jquery-1.6.1.js"></script>
+	<script type="text/javascript" src="vendor/qunit.js"></script>  
+	<script type="text/javascript" src="vendor/underscore.js"></script> 
+	<script type="text/javascript" src="vendor/backbone.js"></script>
+	<script type="text/javascript" src="../backbone.stickit.js"></script>
+	
+	<script type="text/javascript" src="testScaffolding.js"></script>
+	<script type="text/javascript" src="bindData.js"></script>
+	<script type="text/javascript" src="modelBinding.js"></script>
+</head>  
+	
+<body>  
+	<h1 id="qunit-header">bind Test Suite</h1>
+	<h2 id="qunit-banner"></h2>  
+	<h2 id="qunit-userAgent"></h2>
+	<ol id="qunit-tests"></ol> 
+
+	<div id="qunit-fixture"></div>
+
+	<script id="jst1" type="text/jst"><input type="text" id="test1"></script>
+
+	<script id="jst2" type="text/jst"><textarea id="test2"></textarea></script>
+
+	<script id="jst3" type="text/jst"><input type="checkbox" id="test3"></script>
+
+	<script id="jst4" type="text/jst">
+		<input type="radio" name="water" value="fountain" class="test4">
+		<input type="radio" name="water" value="evian" class="test4"> 
+	</script>
+
+	<script id="jst5" type="text/jst"><div id="test5"></div></script>
+
+	<script id="jst6" type="text/jst"><input type="text" id="test6"></script>
+
+	<script id="jst7" type="text/jst"><input type="text" id="test7"></script>
+
+	<script id="jst8" type="text/jst"><select id="test8"></select></script>
+
+	<script id="jst9" type="text/jst"><div data-bind="water" class="test" id="test9"></div></script>
+
+	<script id="jst10" type="text/jst">
+		<input type="text" class="test10">
+		<input type="text" class="test10">
+	</script>
+
+</body>
+
+</html>
