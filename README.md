@@ -1,6 +1,4 @@
-# Backbone.stickit
-
-Model binding in Backbone style.
+[DOCUMENTATION](http://nytimes.github.com/backbone.stickit/)
 
 ## Introduction
 
