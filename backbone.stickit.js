@@ -86,7 +86,7 @@
 					bindAttrCallback = function() { updateViewBindEl(self, $el, config, getVal(modelAttr)); };
 					observeModelEvent('bind:'+modelAttr, bindAttrCallback);
 
-					updateViewBindEl(self, $el, config, getVal(modelAttr));
+					updateViewBindEl(self, $el, config, getVal(modelAttr), true);
 				}
 			});
 			
@@ -160,7 +160,7 @@
 	};
 
 	// Update the value of `$el` in `view` using the given configuration.
-	updateViewBindEl = function(view, $el, config, val) {
+	updateViewBindEl = function(view, $el, config, val, isInitializing) {
 		var markReadonly, originalVal,
 			modelAttr = config.modelAttr,
 			readonly = config.readonly,
@@ -218,7 +218,7 @@
 		}
 
 		// Execute the `afterUpdate` callback from the `bindings` config.
-		applyViewFn(this, afterUpdate, $el, val);
+		if (!isInitializing) applyViewFn(view, afterUpdate, $el, val);
 	};
 
 })(window.jQuery || window.Zepto);
