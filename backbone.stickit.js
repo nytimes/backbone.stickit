@@ -83,10 +83,10 @@
 						};
 
 					// Setup a `bind:modelAttr` observer for the model to keep the view element in sync.
-					bindAttrCallback = function() { updateViewBindEl(self, model, $el, config, getVal(modelAttr)); };
+					bindAttrCallback = function() { updateViewBindEl(self, $el, config, getVal(modelAttr)); };
 					observeModelEvent('bind:'+modelAttr, bindAttrCallback);
 
-					updateViewBindEl(self, model, $el, config, getVal(modelAttr));
+					updateViewBindEl(self, $el, config, getVal(modelAttr));
 				}
 			});
 			
@@ -160,7 +160,7 @@
 	};
 
 	// Update the value of `$el` in `view` using the given configuration.
-	updateViewBindEl = function(view, model, $el, config, val) {
+	updateViewBindEl = function(view, $el, config, val) {
 		var markReadonly, originalVal,
 			modelAttr = config.modelAttr,
 			readonly = config.readonly,
