@@ -8,6 +8,12 @@ Backbone.stickit is yet another model-view binding extension for Backbone. Like 
 
 Stickit differs, however, in that it is a more natural fit with Backbone's style and functionality. In Backbone fashion, stickit leaves rendering up to you, with no special attributes, configuration, or markup needed in the DOM; in fact, stickit will probably clean up your templates, as you will need to interpolate less variables while rendering. Similar to `view.events`, stickit is configured with a `view.bindings` object, which is like `events` on steroids. Lastly, stickit leverages the `view.events` object so delegating, undelegating, and removing bindings will be seamless in the lifetime of a Backbone view. 
 
+## Download + Source
+
+[version 0.5.0](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.5.0.zip)
+
+[annotated source](http://nytimes.github.com/backbone.stickit/docs/annotated/)
+
 ## Usage
 
 Similar to `view.events`, you can use `view.bindings` to map selectors to binding configurations. The following bindings configuration will map the view's dom element with [id="header"] to the `view.model`'s `headerName` attribute:
