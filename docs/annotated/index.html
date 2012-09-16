@@ -29,7 +29,7 @@ Copyright &copy; 2012 The New York Times, CMS Group, Matthew DeLambo <a href="ma
       <td class=code>
         <div class='highlight'><pre><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$</span><span class="p">)</span> <span class="p">{</span>
 
-  <span class="kd">var</span> <span class="nx">evaluatePath</span><span class="p">,</span> <span class="nx">applyViewFn</span><span class="p">,</span> <span class="nx">updateViewBindEl</span><span class="p">,</span> <span class="nx">retrieveAttr</span><span class="p">;</span></pre></div>
+  <span class="kd">var</span> <span class="nx">evaluatePath</span><span class="p">,</span> <span class="nx">applyViewFn</span><span class="p">,</span> <span class="nx">updateViewBindEl</span><span class="p">,</span> <span class="nx">getFormElVal</span><span class="p">;</span></pre></div>
       </td>
     </tr>
     <tr id='section-Backbone.View_Mixins'>
@@ -197,7 +197,7 @@ so that the model stays in sync with user input/changes.</p>
             <span class="nx">formElEvent</span> <span class="o">=</span> <span class="s1">&#39;change&#39;</span><span class="p">;</span>
           <span class="k">if</span> <span class="p">(</span><span class="nx">formElEvent</span><span class="p">)</span>
             <span class="nx">self</span><span class="p">.</span><span class="nx">events</span><span class="p">[</span><span class="nx">formElEvent</span><span class="o">+</span><span class="s1">&#39; &#39;</span><span class="o">+</span><span class="nx">selector</span><span class="p">]</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-              <span class="nx">model</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">retrieveAttr</span><span class="p">(</span><span class="nx">$el</span><span class="p">,</span> <span class="nx">modelAttr</span><span class="p">),</span> <span class="nx">config</span><span class="p">.</span><span class="nx">setOptions</span><span class="p">);</span>
+              <span class="nx">model</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">modelAttr</span><span class="p">,</span> <span class="nx">getFormElVal</span><span class="p">(</span><span class="nx">$el</span><span class="p">),</span> <span class="nx">config</span><span class="p">.</span><span class="nx">setOptions</span><span class="p">);</span>
             <span class="p">};</span></pre></div>
       </td>
     </tr>
@@ -209,10 +209,10 @@ so that the model stays in sync with user input/changes.</p>
         <p>Setup a <code>bind:modelAttr</code> observer for the model to keep the view element in sync.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>          <span class="nx">bindAttrCallback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">updateViewBindEl</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">getVal</span><span class="p">(</span><span class="nx">modelAttr</span><span class="p">));</span> <span class="p">};</span>
+        <div class='highlight'><pre>          <span class="nx">bindAttrCallback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span> <span class="nx">updateViewBindEl</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">getVal</span><span class="p">(</span><span class="nx">modelAttr</span><span class="p">));</span> <span class="p">};</span>
           <span class="nx">observeModelEvent</span><span class="p">(</span><span class="s1">&#39;bind:&#39;</span><span class="o">+</span><span class="nx">modelAttr</span><span class="p">,</span> <span class="nx">bindAttrCallback</span><span class="p">);</span>
 
-          <span class="nx">updateViewBindEl</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">getVal</span><span class="p">(</span><span class="nx">modelAttr</span><span class="p">));</span>
+          <span class="nx">updateViewBindEl</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">getVal</span><span class="p">(</span><span class="nx">modelAttr</span><span class="p">),</span> <span class="kc">true</span><span class="p">);</span>
         <span class="p">}</span>
       <span class="p">});</span>
       </pre></div>
@@ -261,8 +261,8 @@ so that the model stays in sync with user input/changes.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-17">&#182;</a>
         </div>
-        <p>Wraps <code>Backbone.Model.set</code> with the following custom functionality:
- &ndash; A <code>bind:[attribute_name]</code> event will be fired for each changed attribute, unless there is a {bind:false} option.</p>
+        <p>Wrap set and fire a <code>bind:[attribute_name]</code> for each changed attribute,
+unless there is a {bind:false} option.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>  <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">set</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">wrap</span><span class="p">(</span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">set</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">oldSet</span><span class="p">,</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">value</span><span class="p">,</span> <span class="nx">oldOptions</span><span class="p">)</span> <span class="p">{</span>
@@ -372,16 +372,15 @@ that should be executed.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-25">&#182;</a>
         </div>
-        <p>Gets the value from <code>$el</code> and returns the following: {field_name:val}.</p>
+        <p>Gets the value from the given form element.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="nx">retrieveAttr</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">,</span> <span class="nx">fieldName</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">attr</span> <span class="o">=</span> <span class="p">{},</span> <span class="nx">val</span><span class="p">;</span>
+        <div class='highlight'><pre>  <span class="nx">getFormElVal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">val</span><span class="p">;</span>
     <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;input[type=checkbox]&#39;</span><span class="p">))</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;checked&#39;</span><span class="p">);</span>
-    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;select&#39;</span><span class="p">))</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;option:selected&#39;</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;val&#39;</span><span class="p">);</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;select&#39;</span><span class="p">))</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;option:selected&#39;</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;stickit_bind_val&#39;</span><span class="p">);</span>
     <span class="k">else</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">val</span><span class="p">();</span>
-    <span class="nx">attr</span><span class="p">[</span><span class="nx">fieldName</span><span class="p">]</span> <span class="o">=</span> <span class="nx">val</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nx">attr</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">val</span><span class="p">;</span>
   <span class="p">};</span></pre></div>
       </td>
     </tr>
@@ -393,7 +392,7 @@ that should be executed.</p>
         <p>Update the value of <code>$el</code> in <code>view</code> using the given configuration.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>  <span class="nx">updateViewBindEl</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
+        <div class='highlight'><pre>  <span class="nx">updateViewBindEl</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">isInitializing</span><span class="p">)</span> <span class="p">{</span>
     <span class="kd">var</span> <span class="nx">markReadonly</span><span class="p">,</span> <span class="nx">originalVal</span><span class="p">,</span>
       <span class="nx">modelAttr</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">modelAttr</span><span class="p">,</span>
       <span class="nx">readonly</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">readonly</span><span class="p">,</span>
@@ -407,29 +406,31 @@ that should be executed.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-27">&#182;</a>
         </div>
-        <p>Sets the disabled property of the bind element based on the truthiness of the <code>readonly</code>
+        <p>Sets the readonly property of the bind element based on the truthiness of the <code>readonly</code>
 configuration, or the result of its execution in the case that it is a function.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>    <span class="nx">markReadonly</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
       <span class="k">if</span> <span class="p">(</span><span class="nx">readonly</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isBoolean</span><span class="p">(</span><span class="nx">readonly</span><span class="p">))</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;disabled&#39;</span><span class="p">,</span> <span class="nx">readonly</span><span class="p">);</span>
-        <span class="k">else</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;disabled&#39;</span><span class="p">,</span> <span class="nx">view</span><span class="p">[</span><span class="nx">readonly</span><span class="p">].</span><span class="nx">call</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">modelAttr</span><span class="p">));</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isBoolean</span><span class="p">(</span><span class="nx">readonly</span><span class="p">))</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;readonly&#39;</span><span class="p">,</span> <span class="nx">readonly</span><span class="p">);</span>
+        <span class="k">else</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;readonly&#39;</span><span class="p">,</span> <span class="nx">view</span><span class="p">[</span><span class="nx">readonly</span><span class="p">].</span><span class="nx">call</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">modelAttr</span><span class="p">));</span>
       <span class="p">}</span> <span class="k">else</span>
-        <span class="nx">$el</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;disabled&#39;</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+        <span class="nx">$el</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;readonly&#39;</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
     <span class="p">};</span>
     
-    <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;input[type=text]&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;textarea&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;input[type=password]&#39;</span><span class="p">))</span> <span class="p">{</span>
-      <span class="nx">originalVal</span> <span class="o">=</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">val</span><span class="p">();</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">originalVal</span> <span class="o">!=</span> <span class="nx">val</span><span class="p">)</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
-      <span class="nx">markReadonly</span><span class="p">();</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;input[type=radio]&#39;</span><span class="p">))</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;input[type=radio]&#39;</span><span class="p">))</span> <span class="p">{</span>
       <span class="nx">$el</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="s1">&#39;[value=&#39;</span><span class="o">+</span><span class="nx">val</span><span class="o">+</span><span class="s1">&#39;]&#39;</span><span class="p">).</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;checked&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
       <span class="nx">markReadonly</span><span class="p">();</span>
     <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;input[type=checkbox]&#39;</span><span class="p">))</span> <span class="p">{</span>
       <span class="nx">$el</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;checked&#39;</span><span class="p">,</span> <span class="nx">val</span> <span class="o">===</span> <span class="kc">true</span><span class="p">);</span>
       <span class="nx">markReadonly</span><span class="p">();</span>
-    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;select&#39;</span><span class="p">))</span> <span class="p">{</span></pre></div>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;textarea&#39;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="nx">originalVal</span> <span class="o">=</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">val</span><span class="p">();</span>
+      <span class="k">if</span> <span class="p">(</span><span class="nx">originalVal</span> <span class="o">!=</span> <span class="nx">val</span><span class="p">)</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
+      <span class="nx">markReadonly</span><span class="p">();</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;select&#39;</span><span class="p">))</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">optList</span><span class="p">,</span> <span class="nx">list</span> <span class="o">=</span> <span class="nx">selectConfig</span><span class="p">.</span><span class="nx">collection</span><span class="p">,</span> <span class="nx">fieldVal</span> <span class="o">=</span> <span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">modelAttr</span><span class="p">);</span>
+      <span class="nx">$el</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span></pre></div>
       </td>
     </tr>
     <tr id='section-28'>
@@ -437,10 +438,11 @@ configuration, or the result of its execution in the case that it is a function.
         <div class="pilwrap">
           <a class="pilcrow" href="#section-28">&#182;</a>
         </div>
-        <p>Create the select options list.</p>
+        <p>The <code>list</code> configuration is a function that returns the options list or a string
+which represents the path to the list relative to <code>window</code>.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>      <span class="kd">var</span> <span class="nx">optList</span><span class="p">,</span> <span class="nx">list</span> <span class="o">=</span> <span class="nx">selectConfig</span><span class="p">.</span><span class="nx">collection</span><span class="p">,</span> <span class="nx">fieldVal</span> <span class="o">=</span> <span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">modelAttr</span><span class="p">);</span></pre></div>
+        <div class='highlight'><pre>      <span class="nx">optList</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">list</span><span class="p">)</span> <span class="o">?</span> <span class="nx">list</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">view</span><span class="p">)</span> <span class="o">:</span> <span class="nx">evaluatePath</span><span class="p">(</span><span class="nb">window</span><span class="p">,</span> <span class="nx">list</span><span class="p">);</span></pre></div>
       </td>
     </tr>
     <tr id='section-29'>
@@ -448,16 +450,14 @@ configuration, or the result of its execution in the case that it is a function.
         <div class="pilwrap">
           <a class="pilcrow" href="#section-29">&#182;</a>
         </div>
-        <p>The <code>list</code> configuration is a function that returns the options list or a string
-which represents the path to the list relative to <code>window</code>.</p>
+        <p>Add an empty default option if the current model attribute isn&rsquo;t defined.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>      <span class="nx">optList</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">list</span><span class="p">)</span> <span class="o">?</span> <span class="nx">list</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">view</span><span class="p">)</span> <span class="o">:</span> <span class="nx">evaluatePath</span><span class="p">(</span><span class="nb">window</span><span class="p">,</span> <span class="nx">list</span><span class="p">);</span>
+        <div class='highlight'><pre>      <span class="k">if</span> <span class="p">(</span><span class="nx">fieldVal</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span>
+        <span class="nx">$el</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;option/&gt;&#39;</span><span class="p">).</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;option&#39;</span><span class="p">).</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;selected&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;stickit_bind_val&#39;</span><span class="p">,</span> <span class="nx">fieldVal</span><span class="p">);</span>
 
-      <span class="nx">$el</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">).</span><span class="nx">append</span><span class="p">(</span><span class="s1">&#39;&lt;option/&gt;&#39;</span><span class="p">);</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">optList</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">option</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;option/&gt;&#39;</span><span class="p">).</span><span class="nx">text</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">selectConfig</span><span class="p">.</span><span class="nx">labelPath</span><span class="p">]),</span>
-          <span class="nx">optionVal</span> <span class="o">=</span> <span class="nx">evaluatePath</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">selectConfig</span><span class="p">.</span><span class="nx">valuePath</span><span class="p">);</span></pre></div>
+      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">optList</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">option</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;option/&gt;&#39;</span><span class="p">),</span> <span class="nx">optionVal</span> <span class="o">=</span> <span class="nx">obj</span><span class="p">;</span></pre></div>
       </td>
     </tr>
     <tr id='section-30'>
@@ -465,10 +465,14 @@ which represents the path to the list relative to <code>window</code>.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-30">&#182;</a>
         </div>
-        <p>Save the option value so that we can reference it later.</p>
+        <p>If the list contains a null/undefined value, then an empty option should
+be appended in the list; otherwise, fill the option with text and value.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>        <span class="nx">option</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;val&#39;</span><span class="p">,</span> <span class="nx">optionVal</span><span class="p">);</span></pre></div>
+        <div class='highlight'><pre>        <span class="k">if</span> <span class="p">(</span><span class="nx">obj</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">option</span><span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">selectConfig</span><span class="p">.</span><span class="nx">labelPath</span><span class="p">]);</span>
+          <span class="nx">optionVal</span> <span class="o">=</span> <span class="nx">evaluatePath</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">selectConfig</span><span class="p">.</span><span class="nx">valuePath</span><span class="p">);</span>
+        <span class="p">}</span></pre></div>
       </td>
     </tr>
     <tr id='section-31'>
@@ -476,11 +480,10 @@ which represents the path to the list relative to <code>window</code>.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-31">&#182;</a>
         </div>
-        <p>Determine if this option is selected.</p>
+        <p>Save the option value so that we can reference it later.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>        <span class="k">if</span> <span class="p">(</span><span class="nx">optionVal</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">fieldVal</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-          <span class="kd">var</span> <span class="nx">compareField</span> <span class="o">=</span> <span class="nx">selectConfig</span><span class="p">.</span><span class="nx">comparatorPath</span><span class="p">;</span></pre></div>
+        <div class='highlight'><pre>        <span class="nx">option</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;stickit_bind_val&#39;</span><span class="p">,</span> <span class="nx">optionVal</span><span class="p">);</span></pre></div>
       </td>
     </tr>
     <tr id='section-32'>
@@ -488,15 +491,14 @@ which represents the path to the list relative to <code>window</code>.</p>
         <div class="pilwrap">
           <a class="pilcrow" href="#section-32">&#182;</a>
         </div>
-        <p>Set selected if the option value equals the field value, or if both values are objects use the
-given comparator field to compare values, or do a deep comparison of the two objects.</p>
+        <p>Determine if this option is selected.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>          <span class="k">if</span> <span class="p">(</span><span class="nx">optionVal</span> <span class="o">==</span> <span class="nx">fieldVal</span> <span class="o">||</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">optionVal</span> <span class="o">==</span> <span class="s2">&quot;object&quot;</span> <span class="o">&amp;&amp;</span> <span class="nx">compareField</span> <span class="o">&amp;&amp;</span> <span class="nx">optionVal</span><span class="p">[</span><span class="nx">compareField</span><span class="p">]</span> <span class="o">==</span> <span class="nx">fieldVal</span><span class="p">[</span><span class="nx">compareField</span><span class="p">]</span> <span class="o">||</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isEqual</span><span class="p">(</span><span class="nx">optionVal</span><span class="p">,</span> <span class="nx">fieldVal</span><span class="p">)))</span>
-            <span class="nx">option</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;selected&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
-        <span class="p">}</span>
+        <div class='highlight'><pre>        <span class="k">if</span> <span class="p">(</span><span class="nx">optionVal</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">fieldVal</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">optionVal</span> <span class="o">==</span> <span class="nx">fieldVal</span> <span class="o">||</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">fieldVal</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isEqual</span><span class="p">(</span><span class="nx">optionVal</span><span class="p">,</span> <span class="nx">fieldVal</span><span class="p">)))</span>
+          <span class="nx">option</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;selected&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
+
         <span class="nx">$el</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">option</span><span class="p">);</span>
-      <span class="p">},</span> <span class="k">this</span><span class="p">));</span>
+      <span class="p">});</span>
       <span class="nx">markReadonly</span><span class="p">();</span>
     <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
       <span class="nx">$el</span><span class="p">[</span><span class="nx">updateMethod</span><span class="p">](</span><span class="nx">val</span><span class="p">);</span>
@@ -512,7 +514,7 @@ given comparator field to compare values, or do a deep comparison of the two obj
 
       </td>
       <td class=code>
-        <div class='highlight'><pre>    <span class="nx">applyViewFn</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">afterUpdate</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">val</span><span class="p">);</span>
+        <div class='highlight'><pre>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isInitializing</span><span class="p">)</span> <span class="nx">applyViewFn</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">afterUpdate</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">val</span><span class="p">);</span>
   <span class="p">};</span>
 
 <span class="p">})(</span><span class="nb">window</span><span class="p">.</span><span class="nx">jQuery</span> <span class="o">||</span> <span class="nb">window</span><span class="p">.</span><span class="nx">Zepto</span><span class="p">);</span></pre></div>
