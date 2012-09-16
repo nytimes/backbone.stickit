@@ -1,6 +1,6 @@
 (function($) {
 
-	var evaluatePath, applyViewFn, updateViewBindEl, retrieveAttr;
+	var evaluatePath, applyViewFn, updateViewBindEl, getFormElVal;
 
 	// Backbone.View Mixins
 	// --------------------
@@ -79,7 +79,7 @@
 						formElEvent = 'change';
 					if (formElEvent)
 						self.events[formElEvent+' '+selector] = function(e) {
-							model.set(retrieveAttr($el, modelAttr), config.setOptions);
+							model.set(modelAttr, getFormElVal($el), config.setOptions);
 						};
 
 					// Setup a `bind:modelAttr` observer for the model to keep the view element in sync.
@@ -104,8 +104,8 @@
 	// Backbone.Model.set Wrapper
 	// --------------------------
 
-	// Wraps `Backbone.Model.set` with the following custom functionality:
-	//  - A `bind:[attribute_name]` event will be fired for each changed attribute, unless there is a {bind:false} option.
+	// Wrap set and fire a `bind:[attribute_name]` for each changed attribute,
+	// unless there is a {bind:false} option.
 	Backbone.Model.prototype.set = _.wrap(Backbone.Model.prototype.set, function(oldSet, key, value, oldOptions) {
 		var attrs, attr, val, ret,
 			options = oldOptions && _.clone(oldOptions) || {},
@@ -149,14 +149,13 @@
 		if (fn) return (_.isString(fn) ? view[fn] : fn).apply(view, _.toArray(arguments).slice(2));
 	};
 
-	// Gets the value from `$el` and returns the following: {field_name:val}.
-	retrieveAttr = function($el, fieldName) {
-		var attr = {}, val;
+	// Gets the value from the given form element.
+	getFormElVal = function($el) {
+		var val;
 		if ($el.is('input[type=checkbox]')) val = $el.prop('checked');
-		else if ($el.is('select')) val = $el.find('option:selected').data('val');
+		else if ($el.is('select')) val = $el.find('option:selected').data('stickit_bind_val');
 		else val = $el.val();
-		attr[fieldName] = val;
-		return attr;
+		return val;
 	};
 
 	// Update the value of `$el` in `view` using the given configuration.
@@ -168,50 +167,57 @@
 			selectConfig = config.selectOptions,
 			updateMethod = config.updateMethod || 'text';
 
-		// Sets the disabled property of the bind element based on the truthiness of the `readonly`
+		// Sets the readonly property of the bind element based on the truthiness of the `readonly`
 		// configuration, or the result of its execution in the case that it is a function.
 		markReadonly = function() {
 			if (readonly) {
-				if (_.isBoolean(readonly)) $el.prop('disabled', readonly);
-				else $el.prop('disabled', view[readonly].call(view, modelAttr));
+				if (_.isBoolean(readonly)) $el.prop('readonly', readonly);
+				else $el.prop('readonly', view[readonly].call(view, modelAttr));
 			} else
-				$el.prop('disabled', false);
+				$el.prop('readonly', false);
 		};
 		
-		if ($el.is('input[type=text]') || $el.is('textarea') || $el.is('input[type=password]')) {
-			originalVal = $el.val();
-			if (originalVal != val) $el.val(val);
-			markReadonly();
-		} else if ($el.is('input[type=radio]')) {
+		if ($el.is('input[type=radio]')) {
 			$el.filter('[value='+val+']').prop('checked', true);
 			markReadonly();
 		} else if ($el.is('input[type=checkbox]')) {
 			$el.prop('checked', val === true);
 			markReadonly();
+		} else if ($el.is('input') || $el.is('textarea')) {
+			originalVal = $el.val();
+			if (originalVal != val) $el.val(val);
+			markReadonly();
 		} else if ($el.is('select')) {
-			// Create the select options list.
 			var optList, list = selectConfig.collection, fieldVal = model.get(modelAttr);
+			$el.html('');
 
 			// The `list` configuration is a function that returns the options list or a string
 			// which represents the path to the list relative to `window`.
 			optList = _.isFunction(list) ? list.call(view) : evaluatePath(window, list);
 
-			$el.html('').append('<option/>');
-			_.each(optList, _.bind(function(obj) {
-				var option = $('<option/>').text(obj[selectConfig.labelPath]),
+			// Add an empty default option if the current model attribute isn't defined.
+			if (fieldVal == null)
+				$el.append('<option/>').find('option').prop('selected', true).data('stickit_bind_val', fieldVal);
+
+			_.each(optList, function(obj) {
+				var option = $('<option/>'), optionVal = obj;
+
+				// If the list contains a null/undefined value, then an empty option should
+				// be appended in the list; otherwise, fill the option with text and value.
+				if (obj != null) {
+					option.text(obj[selectConfig.labelPath]);
 					optionVal = evaluatePath(obj, selectConfig.valuePath);
-				// Save the option value so that we can reference it later.
-				option.data('val', optionVal);
-				// Determine if this option is selected.
-				if (optionVal != null && fieldVal != null) {
-					var compareField = selectConfig.comparatorPath;
-					// Set selected if the option value equals the field value, or if both values are objects use the
-					// given comparator field to compare values, or do a deep comparison of the two objects.
-					if (optionVal == fieldVal || (typeof optionVal == "object" && compareField && optionVal[compareField] == fieldVal[compareField] || _.isEqual(optionVal, fieldVal)))
-						option.prop('selected', true);
 				}
+
+				// Save the option value so that we can reference it later.
+				option.data('stickit_bind_val', optionVal);
+
+				// Determine if this option is selected.
+				if (optionVal != null && fieldVal != null && optionVal == fieldVal || (_.isObject(fieldVal) && _.isEqual(optionVal, fieldVal)))
+					option.prop('selected', true);
+
 				$el.append(option);
-			}, this));
+			});
 			markReadonly();
 		} else {
 			$el[updateMethod](val);
