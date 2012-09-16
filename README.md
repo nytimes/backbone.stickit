@@ -2,15 +2,15 @@
 
 ## Introduction
 
-Backbone.stickit is yet another model-view binding extension for Backbone. Like the other extensions, Stickit will wire up a two-way binding that will keep form elements, innerHTML, text, and attribute values bound with model attributes. 
+Backbone.stickit is yet another model-view binding plugin for Backbone. Like the other plugins, Stickit will wire up a two-way binding that will keep form elements, innerHTML, text, and attribute values bound with model attributes. 
 
-Stickit differs, however, in that it is a more natural fit with Backbone's style and functionality. In Backbone fashion, stickit leaves rendering up to you, with no special attributes, configuration, or markup needed in the DOM; in fact, stickit will probably clean up your templates, as you will need to interpolate less variables while rendering. Similar to `view.events`, stickit is configured with a `view.bindings` object, which is like `events` on steroids. Lastly, stickit leverages the `view.events` object so delegating, undelegating, and removing bindings will be seamless in the lifetime of a Backbone view. 
+Stickit differs, however, in that it is a more natural fit with Backbone's style and functionality. In Backbone fashion, stickit leaves rendering up to you, with no special attributes, configuration, or markup needed in the DOM; in fact, stickit will probably clean up your templates, as you will need to interpolate fewer variables while rendering. Similar to `view.events`, stickit is configured with a `view.bindings` object, which is like events on steroids. Lastly, stickit leverages the `view.events` object so delegating, undelegating, and removing bindings will be seamless in the lifetime of a Backbone view. 
 
 ## Download + Source
 
-[version 0.5.0](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.5.0.zip)
+[download v0.5.0](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.5.0.zip)
 
-[annotated source](http://nytimes.github.com/backbone.stickit/docs/annotated/)
+[view annotated source](http://nytimes.github.com/backbone.stickit/docs/annotated/)
 
 ## Usage
 
@@ -38,22 +38,26 @@ On the initial call, stickit will initialize bound elements with their values so
 ## API
 
 ### stickit
-`view.stickit(optionalModel, optionalBindingsConfig)` - uses `view.bindings` to bind elements in `view.el` with attributes in `view.model`. `stickit()` can be called more than once with different models or binding configurations.
+`view.stickit(optionalModel, optionalBindingsConfig)`
+
+Uses `view.bindings` to bind elements in `view.el` with attributes in `view.model`. Stickit can be called more than once with different models or binding configurations.
 
 ```javascript  
   render: function() {
     // render this.$el.html()
     // Use this.bindings and this.model to bind this.$el
     this.stickit();
-    // Optionally, in addition to, or instead, pass in a different model and bindings configuration.
+    // In addition to, or instead, pass in a different model and bindings configuration.
     this.stickit(this.otherModel, this.otherBindings);
   }
 ```
 
 ### unstickModel
-`view.unstickModel()` - Removes event bindings from any models used by stickit. Removing model events will be taken care of in `view.remove()`, but if you want to unbind the model early, use this.
+`view.unstickModel()`
 
-## bindings
+Removes event bindings from any models used by stickit. Removing model events will be taken care of in `view.remove()`, but if you want to unbind the model early, use this.
+
+## Bindings
 
 The `view.bindings` is a hash of jQuery or Zepto selector keys with binding configuration values. When stickit is initialized, bound elements will update with their respective model attribute values.
 
@@ -87,19 +91,6 @@ A string function reference or function which returns a formatted version of the
   }
  ```
 
-### escape
-
-A boolean which when true escapes the model before setting it in the view - internally, gets the attribute value by calling `model.escape('attribute')`.
-
-```javascript  
-  bindings: {
-    '#header': {
-        modelAttr: 'headerName',
-        escape: true
-    }
-  }
- ```
-
 ### afterUpdate
 
 A string function reference or function which is called after a value is updated in the dom.
@@ -127,6 +118,20 @@ Method used to update the matched dom element value. Defaults to 'text', but 'ht
         modelAttr: 'headerName',
         updateMethod: 'html',
         format: function(val) { return '<div id="headerVal">' + val + '</div>'; }
+    }
+  }
+ ```
+
+### escape
+
+A boolean which when true escapes the model before setting it in the view - internally, gets the attribute value by calling `model.escape('attribute')`. This is only useful when `updateMethod` is "html".
+
+```javascript  
+  bindings: {
+    '#header': {
+        modelAttr: 'headerName',
+        updateMethod: 'html',
+        escape: true
     }
   }
  ```
@@ -167,6 +172,8 @@ The following are the configuration options for `selectOptions` which binds an o
  - `labelPath`: the path to the label value for select options within the collection of objects.
  - `valuePath`: the path to the values for select options within the collection of objects. When an options is selected, the value that is defined for the given option is set in the model. Leave this undefined if the whole object is the value.
 
+When bindings are initialized, Stickit will build the `select` element with the options and bindings configured. 
+
 The following example references a collection of stooges at `window.app.stooges` with the following value:  
 
 ```javascript  
@@ -175,7 +182,7 @@ The following example references a collection of stooges at `window.app.stooges`
 
 ```javascript  
   bindings: {
-    '#header': {
+    'select#stooges': {
         modelAttr: 'stooge',
         selectOptions: {
           collection: 'app.stooges',
@@ -232,7 +239,7 @@ Binds element attributes with observed model attributes, using the following opt
 
 JavaScript frameworks seem to be headed in the wrong direction - controller callbacks, configuration, and special tags are being forced into the template/presentation layer. Who wants to program and debug templates? 
 
-If you are writing a custom frontend, then you're going to need to write custom JavaScript. Backbone can help you organize, but gets the hell out of your way, especially when it comes to your templates. Stickit tries to stay true to Backbone's style; where most template libraries muck up the presentation layer with obtrusive JavaScript, stickit defines your configuration and callbacks in the place that it should be - in the view/controller/JavaScript.
+If you are writing a custom frontend, then you're going to need to write custom JavaScript. Backbone helps you organize, but then gets the hell out of your way, especially when it comes to your presentation. Stickit tries to stay true to Backbone's style; where most frameworks or other Backbone plugins muck up the presentation layer with obtrusive JavaScript, stickit defines configuration and callbacks in the place that they should be - in the view/controller/JavaScript.
 
 ### Dependencies
 
