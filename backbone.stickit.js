@@ -37,7 +37,7 @@
 			// Iterate through the selectors in the bindings configuration and configure
 			// the various options for each field.
 			_.each(_.keys(bindings), function(selector) {
-				var getVal, modelEvents, bindAttrCallback, formElEvent,
+				var getVal, modelEvents, formElEvent,
 					config = bindings[selector] || {},
 					$el = self.$(selector),
 					format = config.format,
@@ -79,12 +79,14 @@
 						formElEvent = 'keyup';
 					if (formElEvent)
 						self.events[formElEvent+' '+selector] = function(e) {
-							model.set(modelAttr, getFormElVal($el), config.setOptions);
+							var options = _.extend({bind:false}, config.setOptions || {});
+							model.set(modelAttr, getFormElVal($el), options);
 						};
 
 					// Setup a `bind:modelAttr` observer for the model to keep the view element in sync.
-					bindAttrCallback = function() { updateViewBindEl(self, $el, config, getVal(modelAttr)); };
-					observeModelEvent('bind:'+modelAttr, bindAttrCallback);
+					observeModelEvent('bind:'+modelAttr, function() {
+						updateViewBindEl(self, $el, config, getVal(modelAttr));
+					});
 
 					updateViewBindEl(self, $el, config, getVal(modelAttr), true);
 				}
@@ -127,7 +129,8 @@
 		// Iterate through the attributes that were just set.
 		_.each(_.keys(attrs), _.bind(function(attr) {
 			// Trigger a custom "bind" event for each attribute that has changed, unless {bind:false} option.
-			if (options.bind !== false || !_.isEqual(now[attr], val) || (options.unset && _.has(now, attr)))
+			console.log(options.bind === false);
+			if (options.bind !== false && (!_.isEqual(now[attr], val) || (options.unset && _.has(now, attr))))
 				this.trigger('bind:' + attr, attrs[attr]);
 		}, this));
 
@@ -160,7 +163,7 @@
 
 	// Update the value of `$el` in `view` using the given configuration.
 	updateViewBindEl = function(view, $el, config, val, isInitializing) {
-		var markReadonly, originalVal,
+		var markReadonly, originalVal, tempSelection,
 			modelAttr = config.modelAttr,
 			readonly = config.readonly,
 			afterUpdate = config.afterUpdate,
@@ -178,9 +181,12 @@
 		};
 		
 		if ($el.is('input[type=radio]')) {
-			$el.filter('[value='+val+']').prop('checked', true);
+			tempSelection = $el.filter('[value='+val+']');
+			originalVal = tempSelection.prop('checked');
+			tempSelection.prop('checked', true);
 			markReadonly();
 		} else if ($el.is('input[type=checkbox]')) {
+			originalVal = $el.prop('checked');
 			$el.prop('checked', val === true);
 			markReadonly();
 		} else if ($el.is('input') || $el.is('textarea')) {
@@ -189,6 +195,11 @@
 			markReadonly();
 		} else if ($el.is('select')) {
 			var optList, list = selectConfig.collection, fieldVal = model.get(modelAttr);
+
+			// Get the current selected option value if the select options exist.
+			if ($el[0].options && $el[0].selectedIndex)
+				originalVal = $($el[0].options[$el[0].selectedIndex]).data('stickit_bind_val');
+			
 			$el.html('');
 
 			// The `list` configuration is a function that returns the options list or a string
@@ -224,7 +235,7 @@
 		}
 
 		// Execute the `afterUpdate` callback from the `bindings` config.
-		if (!isInitializing) applyViewFn(view, afterUpdate, $el, val);
+		if (!isInitializing) applyViewFn(view, afterUpdate, $el, val, originalVal);
 	};
 
 })(window.jQuery || window.Zepto);

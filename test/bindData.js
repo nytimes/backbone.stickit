@@ -259,9 +259,10 @@ $(document).ready(function() {
 		view.bindings = {
 			'#test1': {
 				modelAttr: 'water',
-				afterUpdate: function($el, val) {
+				afterUpdate: function($el, val, originalVal) {
 					equal($el.val(), model.get('water'));
-					equal(val, model.get('water'));
+					equal(val, 'evian');
+					equal(originalVal, 'fountain');
 				}
 			}
 		};
