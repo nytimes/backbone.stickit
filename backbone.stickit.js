@@ -73,10 +73,10 @@
 				if (modelAttr) {
 					// If the bind element is a form element, then configure `this.events` bindings
 					// so that the model stays in sync with user input/changes.
-					if ($el.is('input[type=text]') || $el.is('textarea') || $el.is('input[type=password]'))
-						formElEvent = 'keyup';
-					else if ($el.is('input[type=radio]') || $el.is('input[type=checkbox]') || $el.is('select'))
+					if ($el.is('input[type=radio]') || $el.is('input[type=checkbox]') || $el.is('select'))
 						formElEvent = 'change';
+					else if ($el.is('input') || $el.is('textarea'))
+						formElEvent = 'keyup';
 					if (formElEvent)
 						self.events[formElEvent+' '+selector] = function(e) {
 							model.set(modelAttr, getFormElVal($el), config.setOptions);
