@@ -59,7 +59,9 @@
 					var lastClass = '',
 						observed = attrConfig.observe || modelAttr,
 						updateAttr = function() {
-							var val = applyViewFn(self, attrConfig.format, model.get(observed)) || model.get(modelAttr);
+							var val;
+							if (attrConfig.format) val = applyViewFn(self, attrConfig.format, model.get(observed));
+							else val = model.get(observed);
 							// If it is a class then we need to remove the last value and add the new.
 							if (attrConfig.name == 'class') {
 								$el.removeClass(lastClass).addClass(val);
