@@ -57,8 +57,9 @@
 				// Setup the attributes configuration.
 				_.each(attributes, function(attrConfig) {
 					var lastClass = '',
+						observed = attrConfig.observe || modelAttr,
 						updateAttr = function() {
-							var val = applyViewFn(self, attrConfig.format) || model.get(modelAttr);
+							var val = applyViewFn(self, attrConfig.format, model.get(observed)) || model.get(modelAttr);
 							// If it is a class then we need to remove the last value and add the new.
 							if (attrConfig.name == 'class') {
 								$el.removeClass(lastClass).addClass(val);
@@ -66,7 +67,7 @@
 							}
 							else $el.attr(attrConfig.name, val);
 						};
-					observeModelEvent('bind:' + (attrConfig.observe || modelAttr), updateAttr);
+					observeModelEvent('bind:' + observed, updateAttr);
 					updateAttr();
 				});
 

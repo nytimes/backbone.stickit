@@ -434,7 +434,10 @@ $(document).ready(function() {
 				attributes: [{
 					name: 'data-name',
 					observe: 'candy',
-					format: function() { return this.model.get('water') + '-' + this.model.get('candy'); }
+					format: function(val) {
+						equal(val, this.model.get('candy'));
+						return this.model.get('water') + '-' + this.model.get('candy');
+					}
 				}]
 			}
 		};
