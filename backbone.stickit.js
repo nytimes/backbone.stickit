@@ -51,7 +51,7 @@
 				getVal = function(field) {
 					var val = config.escape ? model.escape(field) : model.get(field);
 					if (_.isUndefined(val)) val = '';
-					return format ? applyViewFn(self, format, val) : val;
+					return format ? applyViewFn(self, format, val, modelAttr) : val;
 				};
 
 				// Setup the attributes configuration.
@@ -60,7 +60,7 @@
 						observed = attrConfig.observe || modelAttr,
 						updateAttr = function() {
 							var val;
-							if (attrConfig.format) val = applyViewFn(self, attrConfig.format, model.get(observed));
+							if (attrConfig.format) val = applyViewFn(self, attrConfig.format, model.get(observed), observed);
 							else val = model.get(observed);
 							// If it is a class then we need to remove the last value and add the new.
 							if (attrConfig.name == 'class') {

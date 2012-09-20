@@ -226,13 +226,13 @@ $(document).ready(function() {
 		view.bindings = {
 			'#test5': {
 				modelAttr: 'water',
-				format: function(val) { return '_' + val; }
+				format: function(val, modelAttr) { return '_' + val + '_' + modelAttr; }
 			}
 		};
 
 		$('#qunit-fixture').html(view.render().el);
 
-		equal(view.$('#test5').text(), '_fountain');
+		equal(view.$('#test5').text(), '_fountain_water');
 	});
 
 	test('bindings:readonly', function() {
@@ -411,17 +411,17 @@ $(document).ready(function() {
 				modelAttr: 'water',
 				attributes: [{
 					name: 'data-name',
-					format: function() { return this.model.get('water') + '-ralph'; }
+					format: function(val, modelAttr) { return '_' + val + '_' + modelAttr; }
 				}]
 			}
 		};
 
 		$('#qunit-fixture').html(view.render().el);
 
-		equal(view.$('#test5').attr('data-name'), 'fountain-ralph');
+		equal(view.$('#test5').attr('data-name'), '_fountain_water');
 
 		model.set('water', 'evian');
-		equal(view.$('#test5').attr('data-name'), 'evian-ralph');
+		equal(view.$('#test5').attr('data-name'), '_evian_water');
 	});
 
 	test('bindings:attributes:observe', function() {
