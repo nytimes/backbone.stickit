@@ -90,10 +90,10 @@
 					// Setup a `bind:modelAttr` observer for the model to keep the view element in sync.
 					observeModelEvent('bind:'+modelAttr, function(val, options) {
 						if (options && options.bindKey != bindKey)
-							updateViewBindEl(self, $el, config, getVal(modelAttr));
+							updateViewBindEl(self, $el, config, getVal(modelAttr), model);
 					});
 
-					updateViewBindEl(self, $el, config, getVal(modelAttr), true);
+					updateViewBindEl(self, $el, config, getVal(modelAttr), model, true);
 				}
 			});
 			
@@ -166,7 +166,7 @@
 	};
 
 	// Update the value of `$el` in `view` using the given configuration.
-	updateViewBindEl = function(view, $el, config, val, isInitializing) {
+	updateViewBindEl = function(view, $el, config, val, model, isInitializing) {
 		var markReadonly, originalVal, tempSelection,
 			modelAttr = config.modelAttr,
 			readonly = config.readonly,
