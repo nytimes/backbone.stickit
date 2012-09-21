@@ -42,7 +42,8 @@
 					$el = self.$(selector),
 					format = config.format,
 					modelAttr = config.modelAttr,
-					attributes = config.attributes || [];
+					attributes = config.attributes || [],
+					bindKey = _.uniqueId();
 
 				// Fail fast if the selector didn't match an element.
 				if (!$el.length) return false;
@@ -82,13 +83,14 @@
 						formElEvent = 'keyup';
 					if (formElEvent)
 						self.events[formElEvent+' '+selector] = function(e) {
-							var options = _.extend({bind:false}, config.setOptions || {});
+							var options = _.extend({bindKey:bindKey}, config.setOptions || {});
 							model.set(modelAttr, getFormElVal($el), options);
 						};
 
 					// Setup a `bind:modelAttr` observer for the model to keep the view element in sync.
-					observeModelEvent('bind:'+modelAttr, function() {
-						updateViewBindEl(self, $el, config, getVal(modelAttr));
+					observeModelEvent('bind:'+modelAttr, function(val, options) {
+						if (options && options.bindKey != bindKey)
+							updateViewBindEl(self, $el, config, getVal(modelAttr));
 					});
 
 					updateViewBindEl(self, $el, config, getVal(modelAttr), true);
@@ -132,8 +134,8 @@
 		// Iterate through the attributes that were just set.
 		_.each(_.keys(attrs), _.bind(function(attr) {
 			// Trigger a custom "bind" event for each attribute that has changed, unless {bind:false} option.
-			if (options.bind !== false && (!_.isEqual(now[attr], val) || (options.unset && _.has(now, attr))))
-				this.trigger('bind:' + attr, attrs[attr]);
+			if (!_.isEqual(now[attr], val) || (options.unset && _.has(now, attr)))
+				this.trigger('bind:' + attr, attrs[attr], options);
 		}, this));
 
 		return ret;
