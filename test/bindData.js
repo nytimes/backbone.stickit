@@ -450,4 +450,22 @@ $(document).ready(function() {
 		equal(view.$('#test5').attr('data-name'), 'evian-snickers');
 	});
 
+	test('input:number', function() {
+		
+		model.set({'code':1});
+		view.model = model;
+		view.templateId = 'jst11';
+		view.bindings = {
+			'#test11': {
+				modelAttr: 'code'
+			}
+		};
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(Number(view.$('#test11').val()), 1);
+
+		model.set('code', 2);
+		equal(Number(view.$('#test11').val()), 2);
+	});
+
 });
