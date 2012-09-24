@@ -104,6 +104,23 @@ $(document).ready(function() {
 		equal(view.$('#test5').text(), 'evian');
 	});
 
+	test('stickit (shorthand bindings)', function() {
+		model.set({'water':'fountain'});
+		view.model = model;
+		view.templateId = 'jst5';
+		view.bindings = {
+			'#test5': 'water'
+		};
+		$('#qunit-fixture').html(view.render().el);
+		
+		equal(view.$('#test5').text(), 'fountain');
+
+		model.set('water', 'evian');
+
+		equal(view.$('#test5').text(), 'evian');
+
+	});
+
 	test('stickit (multiple models and bindings)', function() {
 	
 		// Test sticking two times to two different models and configs.

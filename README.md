@@ -73,6 +73,14 @@ A string value which is used to map a model attribute value to the selected view
   }
  ```
 
+This simple binding can also be expressed in shortform.
+
+```javascript  
+  bindings: {
+    '#header': 'headerName'
+  }
+```
+
 The value of `view.model.get('headerName')` is bound to `view.$('#header')`.
 
 ### format
