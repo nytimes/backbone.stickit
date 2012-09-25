@@ -167,6 +167,7 @@
 		var val;
 		if ($el.is('input[type=checkbox]')) val = $el.prop('checked');
 		else if ($el.is('select')) val = $el.find('option:selected').data('stickit_bind_val');
+		else if ($el.is('input[type=number]')) val = Number($el.val());
 		else val = $el.val();
 		return val;
 	};
