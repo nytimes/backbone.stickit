@@ -37,21 +37,21 @@
 			// Iterate through the selectors in the bindings configuration and configure
 			// the various options for each field.
 			_.each(_.keys(bindings), function(selector) {
-				var getVal, modelEvents, formElEvent, $el, format, modelAttr, attributes,
+				var getVal, modelEvents, eventCallback, format, modelAttr, attributes,
 					config = bindings[selector] || {},
-					bindKey = _.uniqueId();
-				
-				// Allow shorthand setting of model attributes
-				if (typeof config === 'string') config = {modelAttr:config};
-
-				$el = self.$(selector);
-				format = config.format;
-				modelAttr = config.modelAttr;
-				attributes = config.attributes || [];
+					bindKey = _.uniqueId(),
+					$el = self.$(selector);
 				
 				// Fail fast if the selector didn't match an element.
 				if (!$el.length) return false;
 		
+				// Allow shorthand setting of model attributes
+				if (typeof config === 'string') config = {modelAttr:config};
+
+				format = config.format;
+				modelAttr = config.modelAttr;
+				attributes = config.attributes || [];
+				
 				// Returns the given `field`'s value from the model, escaping and formatting if necessary.
 				getVal = function(field) {
 					var val = config.escape ? model.escape(field) : model.get(field);
@@ -81,15 +81,17 @@
 				if (modelAttr) {
 					// If the bind element is a form element, then configure `this.events` bindings
 					// so that the model stays in sync with user input/changes.
-					if ($el.is('input[type=radio]') || $el.is('input[type=checkbox]') || $el.is('select'))
-						formElEvent = 'change';
-					else if ($el.is('input') || $el.is('textarea'))
-						formElEvent = 'keyup';
-					if (formElEvent)
-						self.events[formElEvent+' '+selector] = function(e) {
+					eventCallback = function(e) {
 							var options = _.extend({bindKey:bindKey}, config.setOptions || {});
 							model.set(modelAttr, getFormElVal($el), options);
 						};
+					if ($el.is('input[type=radio]') || $el.is('input[type=checkbox]') || $el.is('select'))
+						self.events['change '+selector] =  eventCallback;
+					else if ($el.is('input') || $el.is('textarea')) {
+						self.events['keyup '+selector] =  eventCallback;
+						self.events['change '+selector] =  eventCallback;
+					}
+						
 
 					// Setup a `bind:modelAttr` observer for the model to keep the view element in sync.
 					observeModelEvent('bind:'+modelAttr, function(val, options) {
