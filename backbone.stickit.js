@@ -37,14 +37,18 @@
 			// Iterate through the selectors in the bindings configuration and configure
 			// the various options for each field.
 			_.each(_.keys(bindings), function(selector) {
-				var getVal, modelEvents, formElEvent,
+				var getVal, modelEvents, formElEvent, $el, format, modelAttr, attributes,
 					config = bindings[selector] || {},
-					$el = self.$(selector),
-					format = config.format,
-					modelAttr = config.modelAttr,
-					attributes = config.attributes || [],
 					bindKey = _.uniqueId();
+				
+				// Allow shorthand setting of model attributes
+				if (typeof config === 'string') config = {modelAttr:config};
 
+				$el = self.$(selector);
+				format = config.format;
+				modelAttr = config.modelAttr;
+				attributes = config.attributes || [];
+				
 				// Fail fast if the selector didn't match an element.
 				if (!$el.length) return false;
 		
