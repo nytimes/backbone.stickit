@@ -26,7 +26,7 @@
 				model = optionalModel || this.model,
 				bindings = optionalBindingsConfig || this.bindings || {};
 
-			this._modelBindings = [];
+			this._modelBindings || (this._modelBindings = []);
 
 			this.events || (this.events = {});
 
