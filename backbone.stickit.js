@@ -9,7 +9,7 @@
 
 		// Collection of model event bindings.
 		//   [{model,event,fn}, ...]
-		_modelBindings: [],
+		_modelBindings: null,
 
 		// Unbind the model bindings that are referenced in `this._modelBindings`.
 		unstickModel: function() {
@@ -25,6 +25,8 @@
 			var self = this, observeModelEvent,
 				model = optionalModel || this.model,
 				bindings = optionalBindingsConfig || this.bindings || {};
+
+			this._modelBindings = [];
 
 			this.events || (this.events = {});
 
