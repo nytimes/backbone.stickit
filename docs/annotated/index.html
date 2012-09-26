@@ -21,7 +21,7 @@
         <div class="pilwrap">
           <a class="pilcrow" href="#section-1">&#182;</a>
         </div>
-        <p>backbone.stickit v0.5.1</p>
+        <p>backbone.stickit v0.5.2</p>
 
 <p>The MIT License
 Copyright &copy; 2012 The New York Times, CMS Group, Matthew DeLambo <a href="mailto:delambo@gmail.com">delambo@gmail.com</a></p>
@@ -212,9 +212,9 @@ so that the model stays in sync with user input/changes.</p>
       </td>
       <td class=code>
         <div class='highlight'><pre>          <span class="nx">eventCallback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-              <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span><span class="nx">bindKey</span><span class="o">:</span><span class="nx">bindKey</span><span class="p">},</span> <span class="nx">config</span><span class="p">.</span><span class="nx">setOptions</span> <span class="o">||</span> <span class="p">{});</span>
-              <span class="nx">model</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">modelAttr</span><span class="p">,</span> <span class="nx">getFormElVal</span><span class="p">(</span><span class="nx">$el</span><span class="p">),</span> <span class="nx">options</span><span class="p">);</span>
-            <span class="p">};</span>
+            <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span><span class="nx">bindKey</span><span class="o">:</span><span class="nx">bindKey</span><span class="p">},</span> <span class="nx">config</span><span class="p">.</span><span class="nx">setOptions</span> <span class="o">||</span> <span class="p">{});</span>
+            <span class="nx">model</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">modelAttr</span><span class="p">,</span> <span class="nx">getFormElVal</span><span class="p">(</span><span class="nx">$el</span><span class="p">),</span> <span class="nx">options</span><span class="p">);</span>
+          <span class="p">};</span>
           <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;input[type=radio]&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;input[type=checkbox]&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;select&#39;</span><span class="p">))</span>
             <span class="nx">self</span><span class="p">.</span><span class="nx">events</span><span class="p">[</span><span class="s1">&#39;change &#39;</span><span class="o">+</span><span class="nx">selector</span><span class="p">]</span> <span class="o">=</span>  <span class="nx">eventCallback</span><span class="p">;</span>
           <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">)</span> <span class="o">||</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;textarea&#39;</span><span class="p">))</span> <span class="p">{</span>
@@ -469,7 +469,7 @@ configuration, or the result of its execution in the case that it is a function.
         <p>Get the current selected option value if the select options exist.</p>
       </td>
       <td class=code>
-        <div class='highlight'><pre>      <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">options</span> <span class="o">&amp;&amp;</span> <span class="nx">$el</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">selectedIndex</span><span class="p">)</span>
+        <div class='highlight'><pre>      <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">options</span><span class="p">.</span><span class="nx">length</span> <span class="o">&amp;&amp;</span> <span class="nx">$el</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">selectedIndex</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
         <span class="nx">originalVal</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">$el</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">options</span><span class="p">[</span><span class="nx">$el</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="nx">selectedIndex</span><span class="p">]).</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;stickit_bind_val&#39;</span><span class="p">);</span>
       
       <span class="nx">$el</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span></pre></div>
