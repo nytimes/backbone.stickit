@@ -4,11 +4,11 @@
 
 Backbone.stickit is yet another model-view binding plugin for Backbone. Like the other plugins, Stickit will wire up a two-way binding that will keep form elements, innerHTML, text, and attribute values bound with model attributes. 
 
-Stickit differs, however, in that it is a more natural fit with Backbone's style and functionality. In Backbone fashion, stickit leaves rendering up to you, with no special attributes, configuration, or markup needed in the DOM; in fact, stickit will probably clean up your templates, as you will need to interpolate fewer variables while rendering. Similar to `view.events`, stickit is configured with a `view.bindings` object, which is like events on steroids. Lastly, stickit leverages the `view.events` object so delegating, undelegating, and removing bindings will be seamless in the lifetime of a Backbone view. 
+Stickit differs, however, in that it is a more natural fit with Backbone's style and functionality. In Backbone fashion, stickit leaves rendering up to you, with no special attributes, configuration, or markup needed in the template; in fact, stickit will clean up your templates, as you will need to interpolate fewer variables while rendering. Similar to `view.events`, stickit is configured with a `view.bindings` object, which is like events on steroids. Lastly, stickit leverages the `view.events` object so delegating, undelegating, and removing bindings will be seamless in the lifetime of a Backbone view. 
 
 ## Download + Source
 
-[download v0.5.0](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.5.0.zip)
+[download v0.5.1](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.5.1.zip)
 
 [view annotated source](http://nytimes.github.com/backbone.stickit/docs/annotated/)
 
@@ -63,17 +63,18 @@ The `view.bindings` is a hash of jQuery or Zepto selector keys with binding conf
 
 ### modelAttr
 
-A string value which is used to map a model attribute value to the selected view element.
+A string value which is used to map a model attribute value to the selected view element. If `modelAttr` is the only configuration, then it can be written in short form where the attribute name is the value of the whole binding configuration.
 
 ```javascript  
   bindings: {
     '#header': {
       modelAttr: 'headerName'
-    }
+      ...
+    },
+    // Short form...
+    '#body': 'body'
   }
  ```
-
-The value of `view.model.get('headerName')` is bound to `view.$('#header')`.
 
 ### format
 
@@ -86,8 +87,8 @@ A string function reference or function which returns a formatted version of the
         format: 'formatHeader'
     }
   },
-  formatHeader: function(val) {
-    return 'Header: ' + val;
+  formatHeader: function(val, attrName) {
+    return attrName + ': ' + val;
   }
  ```
 
@@ -140,14 +141,15 @@ A boolean which when true escapes the model before setting it in the view - inte
 
 Form elements will be configured with two-way bindings, connecting user input/changes and model attribute values. The following form elements are supported:  
 
- - input[text|password] and textarea - `modelAttr` value bound with form element value
- - input[checkbox] - `checked` property determined by `modelAttr` truthiness, or use `format` to return boolean
- - input[radio] - `modelAttr` value matches a radio group `value` attribute
+ - input and textarea - `modelAttr` value bound with form element value
+ - input[type=number] - `modelAttr` will be updated with number value.
+ - input[type=checkbox] - `checked` property determined by `modelAttr` truthiness, or use `format` to return boolean
+ - input[type=radio] - `modelAttr` value matches a radio group `value` attribute
  - select - see the `selectOptions` configuration
 
 ### readonly
 
-Sets the matched form element to disabled/readonly when readonly is `true` or, if in the case that it is a function reference, the function returns true.
+Sets the matched form element to readonly when readonly is `true` or, if in the case that it is a function reference, the function returns true.
 
 ```javascript  
   bindings: {
@@ -228,7 +230,7 @@ Binds element attributes with observed model attributes, using the following opt
       }]
     }
   },
-  formatWings: function(val) {
+  formatWings: function(val, attrName) {
     return val ? 'has-wings' : 'no-wings';
   }
  ```
@@ -248,3 +250,16 @@ If you are writing a custom frontend, then you're going to need to write custom 
 ### License
 
 MIT
+
+## Change Log
+
+#### 0.5.1
+
+ - Shorthand binding for model attributes: `'#selector':attrName`.
+ - Added support for input[type=number] where values will be bound to model attributes as the Number type.
+ - Attribute name is passed in as the second parameter of `format` callbacks.
+ - Bug fixes: issue [#1](https://github.com/NYTimes/backbone.stickit/issues/1), [#2](https://github.com/NYTimes/backbone.stickit/issues/2), [#4](https://github.com/NYTimes/backbone.stickit/issues/4), [#6](https://github.com/NYTimes/backbone.stickit/issues/6), [#8](https://github.com/NYTimes/backbone.stickit/issues/8)
+
+#### 0.5.0
+
+ - Initial release (extracted and cleaned up from the backend of cn.nytimes.com).
