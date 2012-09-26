@@ -253,6 +253,10 @@ MIT
 
 ## Change Log
 
+#### 0.5.2
+
+ - Fix IE7/8 select options bug ([issue #9](https://github.com/NYTimes/backbone.stickit/pull/9))
+
 #### 0.5.1
 
  - Shorthand binding for model attributes: `'#selector':attrName`.
