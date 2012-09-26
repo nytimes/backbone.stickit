@@ -8,7 +8,7 @@ Stickit differs, however, in that it is a more natural fit with Backbone's style
 
 ## Download + Source
 
-[download v0.5.1](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.5.1.zip)
+[download v0.5.2](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.5.2.zip)
 
 [view annotated source](http://nytimes.github.com/backbone.stickit/docs/annotated/)
 
