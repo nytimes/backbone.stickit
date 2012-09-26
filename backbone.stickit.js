@@ -210,7 +210,7 @@
 			var optList, list = selectConfig.collection, fieldVal = model.get(modelAttr);
 
 			// Get the current selected option value if the select options exist.
-			if ($el[0].options && $el[0].selectedIndex)
+			if ($el[0].options.length && $el[0].selectedIndex >= 0)
 				originalVal = $($el[0].options[$el[0].selectedIndex]).data('stickit_bind_val');
 			
 			$el.html('');
