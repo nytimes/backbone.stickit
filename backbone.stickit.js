@@ -140,7 +140,7 @@
 		ret = oldSet.call(this, attrs, options);
 
 		// Iterate through the attributes that were just set.
-		_.each(_.keys(attrs), _.bind(function(attr) {
+		_.each(_.keys(attrs || {}), _.bind(function(attr) {
 			// Trigger a custom "bind" event for each attribute that has changed, unless {bind:false} option.
 			if (!_.isEqual(now[attr], val) || (options.unset && _.has(now, attr)))
 				this.trigger('bind:' + attr, attrs[attr], options);
