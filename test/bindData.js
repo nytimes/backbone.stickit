@@ -82,7 +82,7 @@ $(document).ready(function() {
 		model.set('water', 'evian');
 		equal(view.$('.test4:checked').val(), 'evian');
 		
-		view.$('.test4').prop('checked', true).change();
+		view.$('.test4[value=fountain]').prop('checked', true).change();
 		equal(model.get('water'), 'fountain');
 	});
 
