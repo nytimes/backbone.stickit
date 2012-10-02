@@ -205,7 +205,7 @@
 			markReadonly();
 		} else if ($el.is('input') || $el.is('textarea')) {
 			originalVal = $el.val();
-			if (originalVal != val) $el.val(val);
+			if (originalVal !== val) $el.val(val);
 			markReadonly();
 		} else if ($el.is('select')) {
 			var optList, list = selectConfig.collection, fieldVal = model.get(modelAttr);
