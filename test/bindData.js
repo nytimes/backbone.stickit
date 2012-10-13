@@ -252,22 +252,6 @@ $(document).ready(function() {
 		equal(view.$('#test5').text(), '_fountain_water');
 	});
 
-	test('bindings:readonly', function() {
-		
-		model.set({'water':'fountain'});
-		view.model = model;
-		view.templateId = 'jst1';
-		view.bindings = {
-			'#test1': {
-				modelAttr: 'water',
-				readonly: true
-			}
-		};
-		$('#qunit-fixture').html(view.render().el);
-
-		ok(view.$('#test1').prop('readonly'));
-	});
-
 	test('bindings:afterUpdate', function() {
 		
 		model.set({'water':'fountain'});
@@ -465,6 +449,28 @@ $(document).ready(function() {
 
 		model.set({'water':'evian', 'candy':'snickers'});
 		equal(view.$('#test5').attr('data-name'), 'evian-snickers');
+	});
+
+	test('bindings:attributes (properties)', function() {
+		
+		model.set({'water':true});
+		view.model = model;
+		view.templateId = 'jst1';
+		view.bindings = {
+			'#test1': {
+				attributes: [{
+					name: 'readonly',
+					observe: 'water'
+				}]
+			}
+		};
+
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test1').prop('readonly'), true);
+
+		model.set({'water':false});
+		equal(view.$('#test1').prop('readonly'), false);
 	});
 
 	test('input:number', function() {

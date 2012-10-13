@@ -24,7 +24,8 @@
 		stickit: function(optionalModel, optionalBindingsConfig) {
 			var self = this, observeModelEvent,
 				model = optionalModel || this.model,
-				bindings = optionalBindingsConfig || this.bindings || {};
+				bindings = optionalBindingsConfig || this.bindings || {},
+				props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'];
 
 			this._modelBindings || (this._modelBindings = []);
 
@@ -61,12 +62,21 @@
 					return format ? applyViewFn(self, format, val, modelAttr) : val;
 				};
 
-				// Setup the attributes configuration.
+				// Setup the attributes configuration - a list that maps an attribute or
+				// property `name`, to an `observe`d model attribute, using an optional
+				// `format`ter.
+				//
+				//     [{
+				//       name: 'attributeOrPropertyName',
+				//       observe: 'modelAttrName'
+				//       format: function(modelAttrVal, modelAttrName) { ... }
+				//     }, ...]
+				//
 				_.each(attributes, function(attrConfig) {
 					var lastClass = '',
 						observed = attrConfig.observe || modelAttr,
 						updateAttr = function() {
-							var val;
+							var val, updateType = _.indexOf(props, attrConfig.name) > -1 ? 'prop' : 'attr';
 							if (attrConfig.format) val = applyViewFn(self, attrConfig.format, model.get(observed), observed);
 							else val = model.get(observed);
 							// If it is a class then we need to remove the last value and add the new.
@@ -74,7 +84,7 @@
 								$el.removeClass(lastClass).addClass(val);
 								lastClass = val;
 							}
-							else $el.attr(attrConfig.name, val);
+							else $el[updateType](attrConfig.name, val);
 						};
 					observeModelEvent('bind:' + observed, updateAttr);
 					updateAttr();
@@ -84,16 +94,15 @@
 					// If the bind element is a form element, then configure `this.events` bindings
 					// so that the model stays in sync with user input/changes.
 					eventCallback = function(e) {
-							var options = _.extend({bindKey:bindKey}, config.setOptions || {});
-							model.set(modelAttr, getFormElVal($el), options);
-						};
+						var options = _.extend({bindKey:bindKey}, config.setOptions || {});
+						model.set(modelAttr, getFormElVal($el), options);
+					};
 					if ($el.is('input[type=radio]') || $el.is('input[type=checkbox]') || $el.is('select'))
 						self.events['change '+selector] =  eventCallback;
 					else if ($el.is('input') || $el.is('textarea')) {
 						self.events['keyup '+selector] =  eventCallback;
 						self.events['change '+selector] =  eventCallback;
 					}
-						
 
 					// Setup a `bind:modelAttr` observer for the model to keep the view element in sync.
 					observeModelEvent('bind:'+modelAttr, function(val, options) {
@@ -177,36 +186,22 @@
 
 	// Update the value of `$el` in `view` using the given configuration.
 	updateViewBindEl = function(view, $el, config, val, model, isInitializing) {
-		var markReadonly, originalVal, tempSelection,
+		var originalVal, radioEl,
 			modelAttr = config.modelAttr,
-			readonly = config.readonly,
 			afterUpdate = config.afterUpdate,
 			selectConfig = config.selectOptions,
 			updateMethod = config.updateMethod || 'text';
 
-		// Sets the readonly property of the bind element based on the truthiness of the `readonly`
-		// configuration, or the result of its execution in the case that it is a function.
-		markReadonly = function() {
-			if (readonly) {
-				if (_.isBoolean(readonly)) $el.prop('readonly', readonly);
-				else $el.prop('readonly', view[readonly].call(view, modelAttr));
-			} else
-				$el.prop('readonly', false);
-		};
-		
 		if ($el.is('input[type=radio]')) {
-			tempSelection = $el.filter('[value='+val+']');
-			originalVal = tempSelection.prop('checked');
-			tempSelection.prop('checked', true);
-			markReadonly();
+			radioEl = $el.filter('[value='+val+']');
+			originalVal = radioEl.prop('checked');
+			radioEl.prop('checked', true);
 		} else if ($el.is('input[type=checkbox]')) {
 			originalVal = $el.prop('checked');
 			$el.prop('checked', val === true);
-			markReadonly();
 		} else if ($el.is('input') || $el.is('textarea')) {
 			originalVal = $el.val();
 			if (originalVal !== val) $el.val(val);
-			markReadonly();
 		} else if ($el.is('select')) {
 			var optList, list = selectConfig.collection, fieldVal = model.get(modelAttr);
 
@@ -243,7 +238,6 @@
 
 				$el.append(option);
 			});
-			markReadonly();
 		} else {
 			originalVal = $el[updateMethod]();
 			$el[updateMethod](val);
