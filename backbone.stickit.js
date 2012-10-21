@@ -11,12 +11,16 @@
 		//   [{model,event,fn}, ...]
 		_modelBindings: null,
 
-		// Unbind the model bindings that are referenced in `this._modelBindings`.
-		unstickModel: function() {
-			_.each(this._modelBindings, function(binding) {
+		// Unbind the model bindings that are referenced in `this._modelBindings`. If
+		// the optional `model` parameter is defined, then only delete bindings for
+		// the given `model`.
+		unstickModel: function(model) {
+			_.each(this._modelBindings, _.bind(function(binding, i) {
+				if (model && binding.model !== model) return false;
 				binding.model.off(binding.event, binding.fn);
-			});
-			this._modelBindings = [];
+				delete this._modelBindings[i];
+			}, this));
+			this._modelBindings = _.compact(this._modelBindings);
 		},
 
 		// Using `this.bindings` configuration or the `optionalBindingsConfig`, binds `this.model`
@@ -28,6 +32,7 @@
 				props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'];
 
 			this._modelBindings || (this._modelBindings = []);
+			this.unstickModel(model);
 
 			this.events || (this.events = {});
 
