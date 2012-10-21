@@ -81,7 +81,7 @@
 					var lastClass = '',
 						observed = attrConfig.observe || modelAttr,
 						updateAttr = function() {
-							var val, updateType = _.indexOf(props, attrConfig.name) > -1 ? 'prop' : 'attr';
+							var val, updateType = _.indexOf(props, attrConfig.name, true) > -1 ? 'prop' : 'attr';
 							if (attrConfig.format) val = applyViewFn(self, attrConfig.format, model.get(observed), observed);
 							else val = model.get(observed);
 							// If it is a class then we need to remove the last value and add the new.
