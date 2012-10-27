@@ -1,6 +1,6 @@
 (function($) {
 
-	var evaluatePath, applyViewFn, updateViewBindEl, getFormElVal;
+	var evaluatePath, applyViewFn, updateViewBindEl, getFormElVal, updateVisibleBindEl;
 
 	// Backbone.View Mixins
 	// --------------------
@@ -45,7 +45,7 @@
 			// Iterate through the selectors in the bindings configuration and configure
 			// the various options for each field.
 			_.each(_.keys(bindings), function(selector) {
-				var getVal, modelEvents, eventCallback, format, modelAttr, attributes,
+				var getVal, modelEvents, eventCallback, format, modelAttr, attributes, visibleCb,
 					config = bindings[selector] || {},
 					bindKey = _.uniqueId(),
 					$el = self.$(selector);
@@ -71,11 +71,11 @@
 				// property `name`, to an `observe`d model attribute, using an optional
 				// `format`ter.
 				//
-				//     [{
-				//       name: 'attributeOrPropertyName',
-				//       observe: 'modelAttrName'
-				//       format: function(modelAttrVal, modelAttrName) { ... }
-				//     }, ...]
+				//   [{
+				//     name: 'attributeOrPropertyName',
+				//     observe: 'modelAttrName'
+				//     format: function(modelAttrVal, modelAttrName) { ... }
+				//   }, ...]
 				//
 				_.each(attributes, function(attrConfig) {
 					var lastClass = '',
@@ -95,10 +95,24 @@
 					updateAttr();
 				});
 
+				// If the `visible` config is configured, then the view element will be
+				// shown/hidden based on the truthiness of the modelattr's value or the
+				// result of the given callback. If a `visibleFn` is also supplied, then
+				// that callback will be executed to manually handle showing/hiding the
+				// view element.
+				if (config.visible) {
+					visibleCb = function() {
+						updateVisibleBindEl($el, getVal(modelAttr), modelAttr, config, this);
+					};
+					observeModelEvent('bind:' + modelAttr, visibleCb);
+					visibleCb();
+					return false;
+				}
+
 				if (modelAttr) {
 					// If the bind element is a form element, then configure `this.events` bindings
 					// so that the model stays in sync with user input/changes.
-					eventCallback = function(e) {
+					eventCallback = function() {
 						var options = _.extend({bindKey:bindKey}, config.setOptions || {});
 						model.set(modelAttr, getFormElVal($el), options);
 					};
@@ -187,6 +201,18 @@
 		else if ($el.is('input[type="radio"]')) val = $el.filter(':checked').val();
 		else val = $el.val();
 		return val;
+	};
+
+	updateVisibleBindEl = function($el, val, attrName, config, context) {
+		var visible = config.visible, visibleFn = config.visibleFn, isVisible = !!val;
+		if (_.isFunction(visible))
+			isVisible = applyViewFn(context, visible, val, attrName);
+		if (visibleFn)
+			applyViewFn(context, visibleFn, $el, isVisible, attrName);
+		else {
+			if (isVisible) $el.show();
+			else $el.hide();
+		}
 	};
 
 	// Update the value of `$el` in `view` using the given configuration.
