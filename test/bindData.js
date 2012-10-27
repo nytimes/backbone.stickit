@@ -491,4 +491,47 @@ $(document).ready(function() {
 		equal(Number(view.$('#test11').val()), 2);
 	});
 
+	test('visible', 16, function() {
+		
+		model.set({'water':false, 'candy':'twix', 'costume':false});
+		view.model = model;
+		view.templateId = 'jst14';
+		view.bindings = {
+			'#test14-1': {
+				modelAttr: 'water',
+				visible: true
+			},
+			'#test14-2': {
+				modelAttr: 'candy',
+				visible: function(val, attrName) {
+					equal(val, this.model.get('candy'));
+					equal(attrName, 'candy');
+					return this.model.get('candy') == 'twix';
+				}
+			},
+			'#test14-3': {
+				modelAttr: 'costume',
+				visible: true,
+				visibleFn: function($el, val, attrName) {
+					equal($el.attr('id'), 'test14-3');
+					equal(val, this.model.get('costume'));
+					equal(attrName, 'costume');
+				}
+			}
+		};
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test14-1').css('display') == 'block' , false);
+		equal(view.$('#test14-2').css('display') == 'block' , true);
+		equal(view.$('#test14-3').css('display') == 'block' , true);
+
+		model.set('water', true);
+		model.set('candy', 'snickers');
+		model.set('costume', true);
+		
+		equal(view.$('#test14-1').css('display') == 'block' , true);
+		equal(view.$('#test14-2').css('display') == 'block' , false);
+		equal(view.$('#test14-3').css('display') == 'block' , true);
+	});
+
 });
