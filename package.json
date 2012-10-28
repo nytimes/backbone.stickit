@@ -1,0 +1,32 @@
+{
+  "name": "backbone.stickit",
+
+  "description": "Model binding in Backbone style.",
+
+  "version": "0.5.2",
+
+  "author": "Matthew DeLambo <delambo@gmail.com>",
+
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/nytimes/backbone.stickit"
+  },
+
+  "main": "backbone.stickit.js",
+
+  "devDependencies": {
+    "grunt-contrib": "~0.3.0",
+    "grunt-docco": "~0.1.2"
+  },
+
+  "bugs": {
+    "url" : "http://github.com/nytimes/backbone.stickit/issues"
+  },
+  
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/nytimes/backbone.stickit/blob/master/LICENSE"
+    }
+  ]
+}

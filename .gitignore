@@ -1,4 +1,7 @@
 build
+dist
+node_modules
+docs
 gh-pages
 *.diff
 *.patch
