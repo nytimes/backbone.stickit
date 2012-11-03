@@ -204,7 +204,7 @@
 	getFormElVal = function($el) {
 		var val;
 		if ($el.is('input[type=checkbox]')) val = $el.prop('checked');
-		else if ($el.is('select')) val = $el.find('option:selected').data('stickit_bind_val');
+		else if ($el.is('select')) val = $el.find('option:selected').data('stickit_bind_val') || $el.val();
 		else if ($el.is('input[type=number]')) val = Number($el.val());
 		else if ($el.is('input[type="radio"]')) val = $el.filter(':checked').val();
 		else val = $el.val();
