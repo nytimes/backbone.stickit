@@ -104,6 +104,24 @@ $(document).ready(function() {
 		equal(view.$('#test5').text(), 'evian');
 	});
 
+	test(':el selector', function() {
+		
+		model.set({'water':'fountain'});
+		view.model = model;
+		view.templateId = 'jst5';
+		view.bindings = {
+			':el': {
+				modelAttr: 'water'
+			}
+		};
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$el.text(), 'fountain');
+
+		model.set('water', 'evian');
+		equal(view.$el.text(), 'evian');
+	});
+
 	test('stickit (shorthand bindings)', function() {
 		model.set({'water':'fountain'});
 		view.model = model;
