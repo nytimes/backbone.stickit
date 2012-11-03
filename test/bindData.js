@@ -552,4 +552,26 @@ $(document).ready(function() {
 		equal(view.$('#test14-3').css('display') == 'block' , true);
 	});
 
+	test('oneWay', function() {
+		
+		model.set({'water':'fountain'});
+		view.model = model;
+		view.templateId = 'jst1';
+		view.bindings = {
+			'#test1': {
+				oneWay: true,
+				modelAttr: 'water'
+			}
+		};
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test1').val(), 'fountain');
+
+		model.set('water', 'evian');
+		equal(view.$('#test1').val(), 'evian');
+		
+		view.$('#test1').val('dasina').keyup();
+		equal(model.get('water'), 'evian');
+	});
+
 });
