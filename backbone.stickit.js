@@ -45,11 +45,17 @@
 			// Iterate through the selectors in the bindings configuration and configure
 			// the various options for each field.
 			_.each(_.keys(bindings), function(selector) {
-				var getVal, modelEvents, eventCallback, format, modelAttr, attributes, visibleCb,
+				var $el, getVal, modelEvents, eventCallback, format, modelAttr, attributes, visibleCb,
 					config = bindings[selector] || {},
-					bindKey = _.uniqueId(),
-					$el = self.$(selector);
+					bindKey = _.uniqueId();
 				
+				// Support ':el' selector - special case selector for the view managed delegate.
+				if (selector != ':el') $el = self.$(selector);
+				else {
+					$el = self.$el;
+					selector = '';
+				}
+
 				// Fail fast if the selector didn't match an element.
 				if (!$el.length) return false;
 		
