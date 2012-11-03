@@ -116,17 +116,19 @@
 				}
 
 				if (modelAttr) {
-					// If the bind element is a form element, then configure `this.events` bindings
-					// so that the model stays in sync with user input/changes.
-					eventCallback = function() {
-						var options = _.extend({bindKey:bindKey}, config.setOptions || {});
-						model.set(modelAttr, getFormElVal($el), options);
-					};
-					if ($el.is('input[type=radio]') || $el.is('input[type=checkbox]') || $el.is('select'))
-						self.events['change '+selector] =  eventCallback;
-					else if ($el.is('input') || $el.is('textarea')) {
-						self.events['keyup '+selector] =  eventCallback;
-						self.events['change '+selector] =  eventCallback;
+					if (!config.oneWay) {
+						// If the bind element is a form element, then configure `this.events` bindings
+						// so that the model stays in sync with user input/changes.
+						eventCallback = function() {
+							var options = _.extend({bindKey:bindKey}, config.setOptions || {});
+							model.set(modelAttr, getFormElVal($el), options);
+						};
+						if ($el.is('input[type=radio]') || $el.is('input[type=checkbox]') || $el.is('select'))
+							self.events['change '+selector] =  eventCallback;
+						else if ($el.is('input') || $el.is('textarea')) {
+							self.events['keyup '+selector] =  eventCallback;
+							self.events['change '+selector] =  eventCallback;
+						}
 					}
 
 					// Setup a `bind:modelAttr` observer for the model to keep the view element in sync.
