@@ -205,7 +205,7 @@
 		var val;
 		if (_.indexOf(['CHECKBOX', 'INPUT', 'SELECT', 'TEXTAREA'], $el[0].nodeName) > -1) {
 			if ($el.is('input[type=checkbox]')) val = $el.prop('checked');
-			else if ($el.is('select')) val = $el.find('option:selected').data('stickit_bind_val') || $el.val();
+			else if ($el.is('select')) val = $el.find('option:selected').data('stickit_bind_val');
 			else if ($el.is('input[type=number]')) val = Number($el.val());
 			else if ($el.is('input[type="radio"]')) val = $el.filter(':checked').val();
 			else val = $el.val();
