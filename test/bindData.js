@@ -272,14 +272,55 @@ $(document).ready(function() {
 
 	test('bindings:afterUpdate', function() {
 		
-		model.set({'water':'fountain'});
+		model.set({'water':'fountain', 'candy':true});
 		view.model = model;
-		view.templateId = 'jst1';
+		view.templateId = 'jst15';
 		view.bindings = {
-			'#test1': {
+			'#test15-1': {
+				modelAttr: 'water',
+				afterUpdate: function($el, val, originalVal) {
+					equal($el.text(), model.get('water'));
+					equal(val, 'evian');
+					equal(originalVal, 'fountain');
+				}
+			},
+			'#test15-2': {
 				modelAttr: 'water',
 				afterUpdate: function($el, val, originalVal) {
 					equal($el.val(), model.get('water'));
+					equal(val, 'evian');
+					equal(originalVal, 'fountain');
+				}
+			},
+			'#test15-3': {
+				modelAttr: 'candy',
+				afterUpdate: function($el, val, originalVal) {
+					equal(val, false);
+					equal(originalVal, true);
+				}
+			},
+			'.test15-4': {
+				modelAttr: 'water',
+				afterUpdate: function($el, val, originalVal) {
+					equal(val, 'evian');
+					equal(originalVal, 'fountain');
+				}
+			},
+			'#test15-6': {
+				modelAttr: 'water',
+				afterUpdate: function($el, val, originalVal) {
+					equal(val, 'evian');
+					equal(originalVal, 'fountain');
+				}
+			},
+			'#test15-7': {
+				modelAttr: 'water',
+				selectOptions: {
+					collection: function() { return [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]; },
+					labelPath: 'name',
+					valuePath: 'name'
+				},
+				afterUpdate: function($el, val, originalVal) {
 					equal(val, 'evian');
 					equal(originalVal, 'fountain');
 				}
@@ -288,6 +329,7 @@ $(document).ready(function() {
 		$('#qunit-fixture').html(view.render().el);
 
 		model.set('water', 'evian');
+		model.set('candy', false);
 	});
 
 	test('bindings:selectOptions', function() {
@@ -334,14 +376,13 @@ $(document).ready(function() {
 				}
 			}
 		};
-
 		$('#qunit-fixture').html(view.render().el);
 
 		equal(view.$('#test8 option:selected').data('stickit_bind_val').id, 1);
 
 		model.set('water', {id:2, name:'evian'});
 		equal(view.$('#test8 option:selected').data('stickit_bind_val').id, 2);
-		
+
 		view.$('#test8 option:eq(3)').prop('selected', true).change();
 		equal(model.get('water').id, 3);
 	});
