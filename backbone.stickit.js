@@ -1,6 +1,6 @@
 (function($) {
 
-	var evaluatePath, applyViewFn, updateViewBindEl, getFormElVal, updateVisibleBindEl;
+	var evaluatePath, applyViewFn, updateViewBindEl, getElVal, updateVisibleBindEl;
 
 	// Backbone.View Mixins
 	// --------------------
@@ -121,7 +121,7 @@
 						// so that the model stays in sync with user input/changes.
 						eventCallback = function() {
 							var options = _.extend({bindKey:bindKey}, config.setOptions || {});
-							model.set(modelAttr, getFormElVal($el), options);
+							model.set(modelAttr, getElVal($el), options);
 						};
 						if ($el.is('input[type=radio]') || $el.is('input[type=checkbox]') || $el.is('select'))
 							self.events['change '+selector] =  eventCallback;
@@ -200,17 +200,23 @@
 		if (fn) return (_.isString(fn) ? view[fn] : fn).apply(view, _.toArray(arguments).slice(2));
 	};
 
-	// Gets the value from the given form element.
-	getFormElVal = function($el) {
+	// Gets the value from the given element, with the optional hint that the value is html.
+	getElVal = function($el, isHTML) {
 		var val;
-		if ($el.is('input[type=checkbox]')) val = $el.prop('checked');
-		else if ($el.is('select')) val = $el.find('option:selected').data('stickit_bind_val') || $el.val();
-		else if ($el.is('input[type=number]')) val = Number($el.val());
-		else if ($el.is('input[type="radio"]')) val = $el.filter(':checked').val();
-		else val = $el.val();
+		if (_.indexOf(['CHECKBOX', 'INPUT', 'SELECT', 'TEXTAREA'], $el[0].nodeName) > -1) {
+			if ($el.is('input[type=checkbox]')) val = $el.prop('checked');
+			else if ($el.is('select')) val = $el.find('option:selected').data('stickit_bind_val') || $el.val();
+			else if ($el.is('input[type=number]')) val = Number($el.val());
+			else if ($el.is('input[type="radio"]')) val = $el.filter(':checked').val();
+			else val = $el.val();
+		} else {
+			if (isHTML) val = $el.html();
+			else val = $el.text();
+		}
 		return val;
 	};
 
+	// Updates the given element according to the rules for the `visible` api key.
 	updateVisibleBindEl = function($el, val, attrName, config, context) {
 		var visible = config.visible, visibleFn = config.visibleFn, isVisible = !!val;
 		if (_.isFunction(visible))
@@ -225,29 +231,21 @@
 
 	// Update the value of `$el` in `view` using the given configuration.
 	updateViewBindEl = function(view, $el, config, val, model, isInitializing) {
-		var originalVal, radioEl,
-			modelAttr = config.modelAttr,
+		var modelAttr = config.modelAttr,
 			afterUpdate = config.afterUpdate,
 			selectConfig = config.selectOptions,
-			updateMethod = config.updateMethod || 'text';
+			updateMethod = config.updateMethod || 'text',
+			originalVal = getElVal($el, config.updateMethod == 'html');
 
 		if ($el.is('input[type=radio]')) {
-			radioEl = $el.filter('[value='+val+']');
-			originalVal = radioEl.prop('checked');
-			radioEl.prop('checked', true);
+			$el.filter('[value='+val+']').prop('checked', true);
 		} else if ($el.is('input[type=checkbox]')) {
-			originalVal = $el.prop('checked');
-			$el.prop('checked', val === true);
+			$el.prop('checked', !!val);
 		} else if ($el.is('input') || $el.is('textarea')) {
-			originalVal = $el.val();
-			if (originalVal !== val) $el.val(val);
+			$el.val(val);
 		} else if ($el.is('select')) {
 			var optList, list = selectConfig.collection, fieldVal = model.get(modelAttr);
 
-			// Get the current selected option value if the select options exist.
-			if ($el[0].options.length && $el[0].selectedIndex >= 0)
-				originalVal = $($el[0].options[$el[0].selectedIndex]).data('stickit_bind_val');
-			
 			$el.html('');
 
 			// The `list` configuration is a function that returns the options list or a string
@@ -264,9 +262,9 @@
 				// If the list contains a null/undefined value, then an empty option should
 				// be appended in the list; otherwise, fill the option with text and value.
 				if (obj != null) {
-					option.text(obj[selectConfig.labelPath]);
+					option.text(evaluatePath(obj, selectConfig.labelPath));
 					optionVal = evaluatePath(obj, selectConfig.valuePath);
-				}
+				} else if ($el.find('option').length && $el.find('option:eq(0)').data('stickit_bind_val') == null) return false;
 
 				// Save the option value so that we can reference it later.
 				option.data('stickit_bind_val', optionVal);
@@ -278,7 +276,6 @@
 				$el.append(option);
 			});
 		} else {
-			originalVal = $el[updateMethod]();
 			$el[updateMethod](val);
 		}
 
