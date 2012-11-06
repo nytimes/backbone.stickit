@@ -97,7 +97,7 @@
 							}
 							else $el[updateType](attrConfig.name, val);
 						};
-					observeModelEvent('bind:' + observed, updateAttr);
+					observeModelEvent('change:' + observed, updateAttr);
 					updateAttr();
 				});
 
@@ -110,16 +110,18 @@
 					visibleCb = function() {
 						updateVisibleBindEl($el, getVal(modelAttr), modelAttr, config, this);
 					};
-					observeModelEvent('bind:' + modelAttr, visibleCb);
+					observeModelEvent('change:' + modelAttr, visibleCb);
 					visibleCb();
 					return false;
 				}
 
 				if (modelAttr) {
+					// By default, form elements are bound two-way unless `oneWay:true` is configured.
 					if (!config.oneWay) {
-						// If the bind element is a form element, then configure `this.events` bindings
-						// so that the model stays in sync with user input/changes.
+						// Wire up two-way bindings for form elements.
 						eventCallback = function() {
+							// Send a unique `bindKey` option so that we can avoid
+							// double-binding in the `change:attribute` event handler.
 							var options = _.extend({bindKey:bindKey}, config.setOptions || {});
 							model.set(modelAttr, getElVal($el), options);
 						};
@@ -131,8 +133,8 @@
 						}
 					}
 
-					// Setup a `bind:modelAttr` observer for the model to keep the view element in sync.
-					observeModelEvent('bind:'+modelAttr, function(val, options) {
+					// Setup a `change:modelAttr` observer for the model to keep the view element in sync.
+					observeModelEvent('change:'+modelAttr, function(options) {
 						if (options && options.bindKey != bindKey)
 							updateViewBindEl(self, $el, config, getVal(modelAttr), model);
 					});
@@ -150,39 +152,6 @@
 				oldRemove && oldRemove.call(self);
 			});
 		}
-	});
-
-	// Backbone.Model.set Wrapper
-	// --------------------------
-
-	// Wrap set and fire a `bind:[attribute_name]` for each changed attribute,
-	// unless there is a {bind:false} option.
-	Backbone.Model.prototype.set = _.wrap(Backbone.Model.prototype.set, function(oldSet, key, value, oldOptions) {
-		var attrs, attr, val, ret,
-			options = oldOptions && _.clone(oldOptions) || {},
-			now = this.attributes;
-		
-		// Use the parameters to get the `attrs` and `options` objects.
-		if (_.isObject(key) || key == null) {
-			attrs = key;
-			options = value;
-		} else {
-			attrs = {};
-			attrs[key] = value;
-		}
-		options || (options = {});
-
-		// Delegating to Backbone's model.set().
-		ret = oldSet.call(this, attrs, options);
-
-		// Iterate through the attributes that were just set.
-		_.each(_.keys(attrs || {}), _.bind(function(attr) {
-			// Trigger a custom "bind" event for each attribute that has changed, unless {bind:false} option.
-			if (!_.isEqual(now[attr], val) || (options.unset && _.has(now, attr)))
-				this.trigger('bind:' + attr, attrs[attr], options);
-		}, this));
-
-		return ret;
 	});
 
 	// Utilities
