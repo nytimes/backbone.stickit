@@ -615,4 +615,31 @@ $(document).ready(function() {
 		equal(model.get('water'), 'evian');
 	});
 
+	test('modelAttr (multiple; array)', 12, function() {
+		
+		model.set({'water':'fountain', 'candy':'twix'});
+		view.model = model;
+		view.templateId = 'jst5';
+		view.bindings = {
+			'#test5': {
+				modelAttr: ['water', 'candy'],
+				format: function(val, modelAttr) {
+					equal(val, '');
+					equal(modelAttr[0], 'water');
+					equal(modelAttr[1], 'candy');
+					return model.get('water') + ' ' + model.get('candy');
+				}
+			}
+		};
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test5').text(), 'fountain twix');
+
+		model.set('water', 'evian');
+		equal(view.$('#test5').text(), 'evian twix');
+
+		model.set('candy', 'snickers');
+		equal(view.$('#test5').text(), 'evian snickers');
+	});
+
 });
