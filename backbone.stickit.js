@@ -1,6 +1,7 @@
 (function($) {
 
-	var evaluatePath, applyViewFn, updateViewBindEl, getElVal, updateVisibleBindEl;
+	var evaluatePath, applyViewFn, updateViewBindEl, getElVal, updateVisibleBindEl,
+		getVal, isFormEl, isInput, isTextarea, isNumber, isCheckbox, isRadio, isSelect;
 
 	// Backbone.View Mixins
 	// --------------------
@@ -45,7 +46,7 @@
 			// Iterate through the selectors in the bindings configuration and configure
 			// the various options for each field.
 			_.each(_.keys(bindings), function(selector) {
-				var $el, getVal, modelEvents, eventCallback, format, modelAttr, attributes, visibleCb,
+				var $el, modelEvents, eventCallback, modelAttr, visibleCb,
 					config = bindings[selector] || {},
 					bindKey = _.uniqueId();
 				
@@ -59,19 +60,10 @@
 				// Fail fast if the selector didn't match an element.
 				if (!$el.length) return false;
 		
-				// Allow shorthand setting of model attributes
+				// Allow shorthand setting of model attributes - `'selector':'modelAttr'`.
 				if (typeof config === 'string') config = {modelAttr:config};
 
-				format = config.format;
 				modelAttr = config.modelAttr;
-				attributes = config.attributes || [];
-				
-				// Returns the given `field`'s value from the model, escaping and formatting if necessary.
-				getVal = function(field) {
-					var val = config.escape ? model.escape(field) : model.get(field);
-					if (_.isUndefined(val)) val = '';
-					return format ? applyViewFn(self, format, val, modelAttr) : val;
-				};
 
 				// Setup the attributes configuration - a list that maps an attribute or
 				// property `name`, to an `observe`d model attribute, using an optional
@@ -83,7 +75,7 @@
 				//     format: function(modelAttrVal, modelAttrName) { ... }
 				//   }, ...]
 				//
-				_.each(attributes, function(attrConfig) {
+				_.each(config.attributes || [], function(attrConfig) {
 					var lastClass = '',
 						observed = attrConfig.observe || modelAttr,
 						updateAttr = function() {
@@ -108,7 +100,7 @@
 				// view element.
 				if (config.visible) {
 					visibleCb = function() {
-						updateVisibleBindEl($el, getVal(modelAttr), modelAttr, config, this);
+						updateVisibleBindEl($el, getVal(model, modelAttr, config), modelAttr, config, this);
 					};
 					observeModelEvent('change:' + modelAttr, visibleCb);
 					visibleCb();
@@ -117,7 +109,9 @@
 
 				if (modelAttr) {
 					// By default, form elements are bound two-way unless `oneWay:true` is configured.
-					if (!config.oneWay) {
+					if (!config.oneWay && isFormEl($el)) {
+						if (_.isArray(modelAttr)) throw new Error("Form elements with two-way bindings can only be bound to one model attribute.");
+
 						// Wire up two-way bindings for form elements.
 						eventCallback = function() {
 							// Send a unique `bindKey` option so that we can avoid
@@ -125,21 +119,24 @@
 							var options = _.extend({bindKey:bindKey}, config.setOptions || {});
 							model.set(modelAttr, getElVal($el), options);
 						};
-						if ($el.is('input[type=radio]') || $el.is('input[type=checkbox]') || $el.is('select'))
+						if (isRadio($el) || isCheckbox($el) || isSelect($el))
 							self.events['change '+selector] =  eventCallback;
-						else if ($el.is('input') || $el.is('textarea')) {
+						else if (isInput($el) || isTextarea($el)) {
 							self.events['keyup '+selector] =  eventCallback;
 							self.events['change '+selector] =  eventCallback;
 						}
 					}
 
-					// Setup a `change:modelAttr` observer for the model to keep the view element in sync.
-					observeModelEvent('change:'+modelAttr, function(options) {
-						if (options && options.bindKey != bindKey)
-							updateViewBindEl(self, $el, config, getVal(modelAttr), model);
+					// Setup a `change:modelAttr` observer to keep the view element in sync.
+					// `modelAttr` may be an array of attributes or a single string value.
+					_.each(_.flatten([modelAttr]), function(attr) {
+						observeModelEvent('change:'+attr, function(options) {
+							if (options && options.bindKey != bindKey)
+								updateViewBindEl(self, $el, config, getVal(model, modelAttr, config), model);
+						});
 					});
 
-					updateViewBindEl(self, $el, config, getVal(modelAttr), model, true);
+					updateViewBindEl(self, $el, config, getVal(model, modelAttr, config), model, true);
 				}
 			});
 			
@@ -169,14 +166,37 @@
 		if (fn) return (_.isString(fn) ? view[fn] : fn).apply(view, _.toArray(arguments).slice(2));
 	};
 
+	isFormEl = function($el) {
+		return _.indexOf(['CHECKBOX', 'INPUT', 'SELECT', 'TEXTAREA'], $el[0].nodeName, true) > -1;
+	};
+
+	isCheckbox = function($el) { return $el.is('input[type=checkbox]'); };
+
+	isRadio = function($el) { return $el.is('input[type="radio"]'); };
+
+	isNumber = function($el) { return $el.is('input[type=number]'); };
+
+	isSelect = function($el) { return $el.is('select'); };
+
+	isTextarea = function($el) { return $el.is('textarea'); };
+
+	isInput = function($el) { return $el.is('input'); };
+
+	// Returns the given `field`'s value from the `model`, escaping and formatting if necessary.
+	getVal = function(model, field, config) {
+		var val = config.escape ? model.escape(field) : model.get(field);
+		if (_.isUndefined(val)) val = '';
+		return config.format ? applyViewFn(self, config.format, val, field) : val;
+	};
+
 	// Gets the value from the given element, with the optional hint that the value is html.
 	getElVal = function($el, isHTML) {
 		var val;
-		if (_.indexOf(['CHECKBOX', 'INPUT', 'SELECT', 'TEXTAREA'], $el[0].nodeName) > -1) {
-			if ($el.is('input[type=checkbox]')) val = $el.prop('checked');
-			else if ($el.is('select')) val = $el.find('option:selected').data('stickit_bind_val');
-			else if ($el.is('input[type=number]')) val = Number($el.val());
-			else if ($el.is('input[type="radio"]')) val = $el.filter(':checked').val();
+		if (isFormEl($el)) {
+			if (isCheckbox($el)) val = $el.prop('checked');
+			else if (isSelect($el)) val = $el.find('option:selected').data('stickit_bind_val');
+			else if (isNumber($el)) val = Number($el.val());
+			else if (isRadio($el)) val = $el.filter(':checked').val();
 			else val = $el.val();
 		} else {
 			if (isHTML) val = $el.html();
@@ -188,10 +208,12 @@
 	// Updates the given element according to the rules for the `visible` api key.
 	updateVisibleBindEl = function($el, val, attrName, config, context) {
 		var visible = config.visible, visibleFn = config.visibleFn, isVisible = !!val;
-		if (_.isFunction(visible))
-			isVisible = applyViewFn(context, visible, val, attrName);
-		if (visibleFn)
-			applyViewFn(context, visibleFn, $el, isVisible, attrName);
+
+		// If `visible` is a function then it should return a boolean result to show/hide.
+		if (_.isFunction(visible)) isVisible = applyViewFn(context, visible, val, attrName);
+		
+		// Either use the custom `visibleFn`, if provided, or execute a standard jQuery show/hide.
+		if (visibleFn) applyViewFn(context, visibleFn, $el, isVisible, attrName);
 		else {
 			if (isVisible) $el.show();
 			else $el.hide();
@@ -206,13 +228,10 @@
 			updateMethod = config.updateMethod || 'text',
 			originalVal = getElVal($el, config.updateMethod == 'html');
 
-		if ($el.is('input[type=radio]')) {
-			$el.filter('[value='+val+']').prop('checked', true);
-		} else if ($el.is('input[type=checkbox]')) {
-			$el.prop('checked', !!val);
-		} else if ($el.is('input') || $el.is('textarea')) {
-			$el.val(val);
-		} else if ($el.is('select')) {
+		if (isRadio($el)) $el.filter('[value='+val+']').prop('checked', true);
+		else if (isCheckbox($el)) $el.prop('checked', !!val);
+		else if (isInput($el) || isTextarea($el)) $el.val(val);
+		else if (isSelect($el)) {
 			var optList, list = selectConfig.collection, fieldVal = model.get(modelAttr);
 
 			$el.html('');
@@ -253,3 +272,4 @@
 	};
 
 })(window.jQuery || window.Zepto);
+
