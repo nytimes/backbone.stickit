@@ -100,7 +100,7 @@
 				// view element.
 				if (config.visible) {
 					visibleCb = function() {
-						updateVisibleBindEl($el, getVal(model, modelAttr, config), modelAttr, config, this);
+						updateVisibleBindEl($el, getVal(model, modelAttr, config, self), modelAttr, config, this);
 					};
 					observeModelEvent('change:' + modelAttr, visibleCb);
 					visibleCb();
@@ -132,11 +132,11 @@
 					_.each(_.flatten([modelAttr]), function(attr) {
 						observeModelEvent('change:'+attr, function(options) {
 							if (options && options.bindKey != bindKey)
-								updateViewBindEl(self, $el, config, getVal(model, modelAttr, config), model);
+								updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self), model);
 						});
 					});
 
-					updateViewBindEl(self, $el, config, getVal(model, modelAttr, config), model, true);
+					updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self), model, true);
 				}
 			});
 			
@@ -183,10 +183,10 @@
 	isInput = function($el) { return $el.is('input'); };
 
 	// Returns the given `field`'s value from the `model`, escaping and formatting if necessary.
-	getVal = function(model, field, config) {
+	getVal = function(model, field, config, context) {
 		var val = config.escape ? model.escape(field) : model.get(field);
 		if (_.isUndefined(val)) val = '';
-		return config.format ? applyViewFn(self, config.format, val, field) : val;
+		return config.format ? applyViewFn(context, config.format, val, field) : val;
 	};
 
 	// Gets the value from the given element, with the optional hint that the value is html.

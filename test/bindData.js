@@ -253,7 +253,7 @@ $(document).ready(function() {
 		equal(view.$('#test5').text(), '<a href="www.test.com">river</a>');
 	});
 
-	test('bindings:format', function() {
+	test('bindings:format', 3, function() {
 		
 		model.set({'water':'fountain'});
 		view.model = model;
@@ -261,7 +261,11 @@ $(document).ready(function() {
 		view.bindings = {
 			'#test5': {
 				modelAttr: 'water',
-				format: function(val, modelAttr) { return '_' + val + '_' + modelAttr; }
+				format: function(val, modelAttr) {
+					equal(val, this.model.get('water'));
+					equal(modelAttr, 'water');
+					return '_' + val + '_' + modelAttr;
+				}
 			}
 		};
 
