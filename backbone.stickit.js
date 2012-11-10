@@ -183,9 +183,13 @@
 	isInput = function($el) { return $el.is('input'); };
 
 	// Returns the given `field`'s value from the `model`, escaping and formatting if necessary.
+	// If `field` is an array, then an array of respective values will be returned.
 	getVal = function(model, field, config, context) {
-		var val = config.escape ? model.escape(field) : model.get(field);
-		if (_.isUndefined(val)) val = '';
+		var val, retrieveVal = function(attr) {
+			var retrieved = config.escape ? model.escape(attr) : model.get(attr);
+			return _.isUndefined(retrieved) ? '' : retrieved;
+		};
+		val = _.isArray(field) ? _.map(field, retrieveVal) : retrieveVal(field);
 		return config.format ? applyViewFn(context, config.format, val, field) : val;
 	};
 

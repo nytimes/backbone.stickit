@@ -628,9 +628,10 @@ $(document).ready(function() {
 			'#test5': {
 				modelAttr: ['water', 'candy'],
 				format: function(val, modelAttr) {
-					equal(val, '');
-					equal(modelAttr[0], 'water');
-					equal(modelAttr[1], 'candy');
+					_.each(modelAttr, _.bind(function(attr, i) {
+						equal(val[i], this.model.get(attr));
+					}, this));
+					equal(modelAttr.toString(), 'water,candy');
 					return model.get('water') + ' ' + model.get('candy');
 				}
 			}
