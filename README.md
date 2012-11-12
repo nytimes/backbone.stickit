@@ -4,7 +4,7 @@
 
 Backbone.stickit is yet another model-view binding plugin for Backbone. Like the other plugins, Stickit will wire up bindings that will keep form elements, innerHTML, text, and attribute values bound with events and/or model attributes. 
 
-Stickit differs, however, in that it is a more natural fit with Backbone's style and functionality. Stickit has a simple and intuitive configuration, which, like Backbone, stays out of the view html; in fact, stickit will clean up your templates, as you will need to interpolate fewer variables (if any at all) while rendering. Also, stickit internally leverages the `view.events` object so delegating, undelegating, and removing bindings will be seamless in the lifetime of a Backbone view. 
+Stickit differs, however, in that it is a more natural fit with Backbone's style and functionality. Stickit has a simple and intuitive configuration, which, like Backbone, stays out of the view html; in fact, Stickit will clean up your templates, as you will need to interpolate fewer variables (if any at all) while rendering. Also, stickit internally leverages the `view.events` object so delegating, undelegating, and removing bindings will be seamless in the lifetime of a Backbone view. 
 
 ## Download + Source
 
@@ -297,6 +297,7 @@ Another example where a collection is returned by callback and the collection ob
         // Leaving `valuePath` undefined so that the collection objects are used as option values.
     }
   }
+```
 
 ### setOptions
 
