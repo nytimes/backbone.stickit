@@ -8,11 +8,11 @@ module.exports = function(grunt) {
     pkg: '<json:package.json>',
     
     meta: {
-      banner: '/**\n' +
-        ' * <%= pkg.name %> - v<%= pkg.version %>\n' +
-        ' * The MIT License\n' +
-        ' * Copyright (c) 2012 The New York Times, CMS Group, Matthew DeLambo <delambo@gmail.com> \n' +
-        ' */'
+      banner: '//\n' +
+        ' // <%= pkg.name %> - v<%= pkg.version %>\n' +
+        ' // The MIT License\n' +
+        ' // Copyright (c) 2012 The New York Times, CMS Group, Matthew DeLambo <delambo@gmail.com> \n' +
+        ' //'
     },
 
     lint: {
@@ -69,7 +69,7 @@ module.exports = function(grunt) {
       zip: {
         files: {
           "dist/backbone.stickit.gz": "dist/backbone.stickit.min.js",
-          "dist/backbone.stickit-<%= pkg.version %>.zip": ["dist/**"]
+          "dist/backbone.stickit_<%= pkg.version %>.zip": ["dist/**"]
         }
       }
     },
