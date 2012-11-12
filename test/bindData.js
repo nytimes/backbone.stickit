@@ -647,4 +647,29 @@ $(document).ready(function() {
 		equal(view.$('#test5').text(), 'evian snickers');
 	});
 
+	test('events', 5, function() {
+		
+		model.set({'water':'fountain'});
+		view.model = model;
+		view.templateId = 'jst5';
+		view.eventHandler = function($el, event) {
+			equal($el.attr('id'), 'test5');
+			equal($(event.target).attr('id'), 'test5');
+		};
+		view.bindings = {
+			'#test5': {
+				modelAttr: 'water',
+				format: function() { return 'water events'; },
+				click: 'eventHandler',
+				customEvent: 'eventHandler'
+			}
+		};
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test5').text(), 'water events');
+
+		view.$('#test5').click();
+		view.$('#test5').trigger('customEvent');
+	});
+
 });

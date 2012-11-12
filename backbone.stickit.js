@@ -30,7 +30,8 @@
 			var self = this, observeModelEvent,
 				model = optionalModel || this.model,
 				bindings = optionalBindingsConfig || this.bindings || {},
-				props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'];
+				props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'],
+				bindingsKeys = ['afterUpdate', 'attributes', 'escape', 'format', 'modelAttr', 'oneWay', 'setOptions', 'selectOptions', 'updateMethod', 'visible', 'visibleFn'];
 
 			this._modelBindings || (this._modelBindings = []);
 			this.unstickModel(model);
@@ -138,6 +139,14 @@
 
 					updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self), model, true);
 				}
+
+				// Any key in the configuration that is outside of the api is
+				// considered an event and is wired up in `view.events`.
+				_.each(_.difference(_.keys(config), bindingsKeys), function(event) {
+					self.events[event+' '+selector] = function(e) {
+						return applyViewFn(self, config[event], $el, e);
+					};
+				});
 			});
 			
 			// We added to `this.events` so we need to re-delegate.
