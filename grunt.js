@@ -9,10 +9,10 @@ module.exports = function(grunt) {
     
     meta: {
       banner: '//\n' +
-        ' // <%= pkg.name %> - v<%= pkg.version %>\n' +
-        ' // The MIT License\n' +
-        ' // Copyright (c) 2012 The New York Times, CMS Group, Matthew DeLambo <delambo@gmail.com> \n' +
-        ' //'
+        '// <%= pkg.name %> - v<%= pkg.version %>\n' +
+        '// The MIT License\n' +
+        '// Copyright (c) 2012 The New York Times, CMS Group, Matthew DeLambo <delambo@gmail.com> \n' +
+        '//'
     },
 
     lint: {
@@ -54,7 +54,7 @@ module.exports = function(grunt) {
     
     min: {
       dist: {
-        src: ['dist/backbone.stickit.js'],
+        src: ['<banner>', 'dist/backbone.stickit.js'],
         dest: 'dist/backbone.stickit.min.js'
       }
     },
