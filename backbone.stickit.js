@@ -207,8 +207,15 @@
 		var val;
 		if (isFormEl($el)) {
 			if (isCheckbox($el)) val = $el.prop('checked');
-			else if (isSelect($el)) val = $el.find('option:selected').data('stickit_bind_val');
-			else if (isNumber($el)) val = Number($el.val());
+			else if (isSelect($el)) {
+				if ($el.prop('multiple')) {
+					val = $el.find('option:selected').map(function() {
+						return $(this).data('stickit_bind_val');
+					}).get();
+				} else {
+					val = $el.find('option:selected').data('stickit_bind_val');
+				}
+			} else if (isNumber($el)) val = Number($el.val());
 			else if (isRadio($el)) val = $el.filter(':checked').val();
 			else val = $el.val();
 		} else {
@@ -245,7 +252,7 @@
 		else if (isCheckbox($el)) $el.prop('checked', !!val);
 		else if (isInput($el) || isTextarea($el)) $el.val(val);
 		else if (isSelect($el)) {
-			var optList, list = selectConfig.collection, fieldVal = model.get(modelAttr);
+			var optList, list = selectConfig.collection, fieldVal = model.get(modelAttr), isMultiple = $el.prop('multiple');
 
 			$el.html('');
 
@@ -268,14 +275,23 @@
 				} else if ($el.find('option').length && $el.find('option:eq(0)').data('stickit_bind_val') == null) return false;
 
 				// Save the option value so that we can reference it later.
-				option.data('stickit_bind_val', optionVal);
+				option.attr('value', optionVal).data('stickit_bind_val', optionVal);
 
 				// Determine if this option is selected.
-				if (optionVal != null && fieldVal != null && optionVal == fieldVal || (_.isObject(fieldVal) && _.isEqual(optionVal, fieldVal)))
+				if (!isMultiple && optionVal != null && fieldVal != null && optionVal == fieldVal || (_.isObject(fieldVal) && _.isEqual(optionVal, fieldVal)))
 					option.prop('selected', true);
 
 				$el.append(option);
 			});
+			if (isMultiple && _.isArray(fieldVal)) {
+				_.each(fieldVal, function(value) {
+					var optionVal = value;
+					if (_.isObject(value)) {
+						optionVal = evaluatePath(value, selectConfig.valuePath);
+					}
+					$el.find('[value='+optionVal+']').prop('selected', true);
+				});
+			}
 		} else {
 			$el[updateMethod](val);
 		}
