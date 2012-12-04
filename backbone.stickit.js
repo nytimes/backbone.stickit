@@ -291,18 +291,6 @@
 
 				$el.append(option);
 			});
-			/*if (isMultiple && _.isArray(fieldVal)) {
-				_.each(fieldVal, function(value) {
-					var optionVal = value;
-					if (_.isObject(value)) optionVal = evaluatePath(value, selectConfig.valuePath);
-
-					$el.find('option').filter(function() {
-						var $this = $(this), bindVal = $this.data('stickit_bind_val');
-						if (bindVal == optionVal || (_.isObject(bindVal) && _.isEqual(optionVal, bindVal)))
-							$this.prop('selected', true);
-					});
-				});
-			}*/
 		} else {
 			$el[updateMethod](val);
 		}
