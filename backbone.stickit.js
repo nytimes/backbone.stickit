@@ -207,6 +207,8 @@
 		var val;
 		if (isFormEl($el)) {
 			if (isCheckbox($el)) val = $el.prop('checked');
+			else if (isNumber($el)) val = Number($el.val());
+			else if (isRadio($el)) val = $el.filter(':checked').val();
 			else if (isSelect($el)) {
 				if ($el.prop('multiple')) {
 					val = $el.find('option:selected').map(function() {
@@ -215,8 +217,7 @@
 				} else {
 					val = $el.find('option:selected').data('stickit_bind_val');
 				}
-			} else if (isNumber($el)) val = Number($el.val());
-			else if (isRadio($el)) val = $el.filter(':checked').val();
+			}
 			else val = $el.val();
 		} else {
 			if (isHTML) val = $el.html();
@@ -275,23 +276,33 @@
 				} else if ($el.find('option').length && $el.find('option:eq(0)').data('stickit_bind_val') == null) return false;
 
 				// Save the option value so that we can reference it later.
-				option.attr('value', optionVal).data('stickit_bind_val', optionVal);
+				option.data('stickit_bind_val', optionVal);
 
 				// Determine if this option is selected.
 				if (!isMultiple && optionVal != null && fieldVal != null && optionVal == fieldVal || (_.isObject(fieldVal) && _.isEqual(optionVal, fieldVal)))
 					option.prop('selected', true);
+				else if (isMultiple && _.isArray(fieldVal)) {
+					_.each(fieldVal, function(val) {
+						if (_.isObject(val)) val = evaluatePath(val, selectConfig.valuePath);
+						if (val == optionVal || (_.isObject(val) && _.isEqual(optionVal, val)))
+							option.prop('selected', true);
+					});
+				}
 
 				$el.append(option);
 			});
-			if (isMultiple && _.isArray(fieldVal)) {
+			/*if (isMultiple && _.isArray(fieldVal)) {
 				_.each(fieldVal, function(value) {
 					var optionVal = value;
-					if (_.isObject(value)) {
-						optionVal = evaluatePath(value, selectConfig.valuePath);
-					}
-					$el.find('[value='+optionVal+']').prop('selected', true);
+					if (_.isObject(value)) optionVal = evaluatePath(value, selectConfig.valuePath);
+
+					$el.find('option').filter(function() {
+						var $this = $(this), bindVal = $this.data('stickit_bind_val');
+						if (bindVal == optionVal || (_.isObject(bindVal) && _.isEqual(optionVal, bindVal)))
+							$this.prop('selected', true);
+					});
 				});
-			}
+			}*/
 		} else {
 			$el[updateMethod](val);
 		}

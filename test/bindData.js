@@ -420,6 +420,75 @@ $(document).ready(function() {
 		equal(model.get('water'), null);
 	});
 
+	test('bindings:selectOptions (multi-select without valuePath)', function() {
+
+		var collection = [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}, {id:4,name:'aquafina'}];
+		
+		model.set({'water': [{id:1,name:'fountain'}, {id:3,name:'dasina'}] });
+		view.model = model;
+		view.templateId = 'jst16';
+		view.bindings = {
+			'#test16': {
+				modelAttr: 'water',
+				selectOptions: {
+					collection: function() { return collection; },
+					labelPath: 'name'
+				}
+			}
+		};
+
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test16 option:selected:eq(0)').data('stickit_bind_val').name, 'fountain');
+		equal(view.$('#test16 option:selected:eq(1)').data('stickit_bind_val').name, 'dasina');
+
+		var field = _.clone(model.get('water'));
+		field.push({id:2,name:'evian'});
+
+		model.set({'water':field});
+		equal(view.$('#test16 option:selected:eq(1)').data('stickit_bind_val').name, 'evian');
+
+		view.$('#test16 option:eq(3)').prop('selected', true).change();
+
+		equal(model.get('water').length, 4);
+
+	});
+
+	test('bindings:selectOptions (multi-select with valuePath)', function() {
+
+		var collection = [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}, {id:4,name:'aquafina'}];
+		
+		model.set({'water': [1, 3]});
+		view.model = model;
+		view.templateId = 'jst16';
+		view.bindings = {
+			'#test16': {
+				modelAttr: 'water',
+				selectOptions: {
+					collection: function() { return collection; },
+					labelPath: 'name',
+					valuePath: 'id'
+				}
+			}
+		};
+
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test16 option:selected:eq(0)').data('stickit_bind_val'), 1);
+		equal(view.$('#test16 option:selected:eq(1)').data('stickit_bind_val'), 3);
+
+		var field = _.clone(model.get('water'));
+		field.push(2);
+
+		model.set({'water':field});
+		equal(view.$('#test16 option:selected:eq(1)').data('stickit_bind_val'), 2);
+
+		view.$('#test16 option:eq(3)').prop('selected', true).change();
+
+		equal(model.get('water').length, 4);
+
+	});
+
 	test('bindings:attributes:name', function() {
 		
 		model.set({'water':'fountain'});
