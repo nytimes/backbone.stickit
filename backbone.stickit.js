@@ -131,7 +131,7 @@
 					// Setup a `change:modelAttr` observer to keep the view element in sync.
 					// `modelAttr` may be an array of attributes or a single string value.
 					_.each(_.flatten([modelAttr]), function(attr) {
-						observeModelEvent('change:'+attr, function(options) {
+						observeModelEvent('change:'+attr, function(model, val, options) {
 							if (options && options.bindKey != bindKey)
 								updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self), model);
 						});
