@@ -49,7 +49,8 @@
 			_.each(_.keys(bindings), function(selector) {
 				var $el, modelEvents, eventCallback, modelAttr, visibleCb,
 					config = bindings[selector] || {},
-					bindKey = _.uniqueId();
+					bindKey = _.uniqueId(),
+					options = _.extend({bindKey:bindKey}, config.setOptions || {});
 				
 				// Support ':el' selector - special case selector for the view managed delegate.
 				if (selector != ':el') $el = self.$(selector);
@@ -115,9 +116,8 @@
 
 						// Wire up two-way bindings for form elements.
 						eventCallback = function() {
-							// Send a unique `bindKey` option so that we can avoid
+							// Send a unique `bindKey` in the options so that we can avoid
 							// double-binding in the `change:attribute` event handler.
-							var options = _.extend({bindKey:bindKey}, config.setOptions || {});
 							model.set(modelAttr, getElVal($el), options);
 						};
 						if (isRadio($el) || isCheckbox($el) || isSelect($el))
@@ -144,7 +144,7 @@
 				// considered an event and is wired up in `view.events`.
 				_.each(_.difference(_.keys(config), bindingsKeys), function(event) {
 					self.events[event+' '+selector] = function(e) {
-						return applyViewFn(self, config[event], $el, e);
+						return applyViewFn(self, config[event], $el, e, options);
 					};
 				});
 			});

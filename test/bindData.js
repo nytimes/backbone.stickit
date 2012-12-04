@@ -716,14 +716,15 @@ $(document).ready(function() {
 		equal(view.$('#test5').text(), 'evian snickers');
 	});
 
-	test('events', 5, function() {
+	test('events', 7, function() {
 		
 		model.set({'water':'fountain'});
 		view.model = model;
 		view.templateId = 'jst5';
-		view.eventHandler = function($el, event) {
+		view.eventHandler = function($el, event, options) {
 			equal($el.attr('id'), 'test5');
 			equal($(event.target).attr('id'), 'test5');
+			ok(_.has(options, 'bindKey'));
 		};
 		view.bindings = {
 			'#test5': {
