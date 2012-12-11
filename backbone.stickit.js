@@ -102,7 +102,7 @@
 				// view element.
 				if (config.visible) {
 					visibleCb = function() {
-						updateVisibleBindEl($el, getVal(model, modelAttr, config, self), modelAttr, config, this);
+						updateVisibleBindEl($el, getVal(model, modelAttr, config, self), modelAttr, config, self);
 					};
 					observeModelEvent('change:' + modelAttr, visibleCb);
 					visibleCb();
@@ -231,7 +231,7 @@
 		var visible = config.visible, visibleFn = config.visibleFn, isVisible = !!val;
 
 		// If `visible` is a function then it should return a boolean result to show/hide.
-		if (_.isFunction(visible)) isVisible = applyViewFn(context, visible, val, attrName);
+		if (_.isFunction(visible) || _.isString(visible)) isVisible = applyViewFn(context, visible, val, attrName);
 		
 		// Either use the custom `visibleFn`, if provided, or execute a standard jQuery show/hide.
 		if (visibleFn) applyViewFn(context, visibleFn, $el, isVisible, attrName);
