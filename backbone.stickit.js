@@ -16,12 +16,14 @@
 		// the optional `model` parameter is defined, then only delete bindings for
 		// the given `model`.
 		unstickModel: function(model) {
-			_.each(this._modelBindings, _.bind(function(binding, i) {
-				if (model && binding.model !== model) return false;
-				binding.model.off(binding.event, binding.fn);
-				delete this._modelBindings[i];
-			}, this));
-			this._modelBindings = _.compact(this._modelBindings);
+			if(this._modelBindings){
+				_.each(this._modelBindings, _.bind(function(binding, i) {
+					if (model && binding.model !== model) return false;
+					binding.model.off(binding.event, binding.fn);
+					delete this._modelBindings[i];
+				}, this));
+				this._modelBindings = _.compact(this._modelBindings);
+			}
 		},
 
 		// Using `this.bindings` configuration or the `optionalBindingsConfig`, binds `this.model`
@@ -33,10 +35,10 @@
 				props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'],
 				bindingsKeys = ['afterUpdate', 'attributes', 'escape', 'format', 'modelAttr', 'oneWay', 'setOptions', 'selectOptions', 'updateMethod', 'visible', 'visibleFn'];
 
-			this._modelBindings || (this._modelBindings = []);
+			this._modelBindings = this._modelBindings || [];
 			this.unstickModel(model);
 
-			this.events || (this.events = {});
+			this.events = this.events || {};
 
 			// Setup a model event binding with the given function, and track the event in this._modelBindings.
 			observeModelEvent = function(event, fn) {
@@ -51,7 +53,7 @@
 					config = bindings[selector] || {},
 					bindKey = _.uniqueId(),
 					options = _.extend({bindKey:bindKey}, config.setOptions || {});
-				
+
 				// Support ':el' selector - special case selector for the view managed delegate.
 				if (selector != ':el') $el = self.$(selector);
 				else {
@@ -61,7 +63,7 @@
 
 				// Fail fast if the selector didn't match an element.
 				if (!$el.length) return false;
-		
+
 				// Allow shorthand setting of model attributes - `'selector':'modelAttr'`.
 				if (typeof config === 'string') config = {modelAttr:config};
 
@@ -148,14 +150,14 @@
 					};
 				});
 			});
-			
+
 			// We added to `this.events` so we need to re-delegate.
 			this.delegateEvents();
 
 			// Wrap remove so that we can remove model events when this view is removed.
 			this.remove = _.wrap(this.remove, function(oldRemove) {
 				self.unstickModel();
-				oldRemove && oldRemove.call(self);
+				if(oldRemove) oldRemove.call(self);
 			});
 		}
 	});
@@ -232,7 +234,7 @@
 
 		// If `visible` is a function then it should return a boolean result to show/hide.
 		if (_.isFunction(visible)) isVisible = applyViewFn(context, visible, val, attrName);
-		
+
 		// Either use the custom `visibleFn`, if provided, or execute a standard jQuery show/hide.
 		if (visibleFn) applyViewFn(context, visibleFn, $el, isVisible, attrName);
 		else {
