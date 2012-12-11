@@ -1,7 +1,8 @@
 (function($) {
 
 	var evaluatePath, applyViewFn, updateViewBindEl, getElVal, updateVisibleBindEl,
-		getVal, isFormEl, isInput, isTextarea, isNumber, isCheckbox, isRadio, isSelect;
+		getVal, isFormEl, isInput, isTextarea, isNumber, isCheckbox, isRadio, isSelect,
+		modelSet, modelGet;
 
 	// Backbone.View Mixins
 	// --------------------
@@ -31,12 +32,12 @@
 				model = optionalModel || this.model,
 				bindings = optionalBindingsConfig || this.bindings || {},
 				props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'],
-				bindingsKeys = ['afterUpdate', 'attributes', 'escape', 'format', 'modelAttr', 'oneWay', 'setOptions', 'selectOptions', 'updateMethod', 'visible', 'visibleFn'];
+				bindingsKeys = ['afterUpdate', 'attributes', 'escape', 'format', 'modelAttr', 'oneWay', 'setOptions', 'selectOptions', 'updateMethod', 'visible', 'visibleFn', 'setter', 'getter'];
 
-			this._modelBindings || (this._modelBindings = []);
+			this._modelBindings = this._modelBindings || [];
 			this.unstickModel(model);
 
-			this.events || (this.events = {});
+			this.events = this.events || {};
 
 			// Setup a model event binding with the given function, and track the event in this._modelBindings.
 			observeModelEvent = function(event, fn) {
@@ -51,7 +52,7 @@
 					config = bindings[selector] || {},
 					bindKey = _.uniqueId(),
 					options = _.extend({bindKey:bindKey}, config.setOptions || {});
-				
+
 				// Support ':el' selector - special case selector for the view managed delegate.
 				if (selector != ':el') $el = self.$(selector);
 				else {
@@ -61,7 +62,7 @@
 
 				// Fail fast if the selector didn't match an element.
 				if (!$el.length) return false;
-		
+
 				// Allow shorthand setting of model attributes - `'selector':'modelAttr'`.
 				if (typeof config === 'string') config = {modelAttr:config};
 
@@ -81,9 +82,10 @@
 					var lastClass = '',
 						observed = attrConfig.observe || modelAttr,
 						updateAttr = function() {
-							var val, updateType = _.indexOf(props, attrConfig.name, true) > -1 ? 'prop' : 'attr';
-							if (attrConfig.format) val = applyViewFn(self, attrConfig.format, model.get(observed), observed);
-							else val = model.get(observed);
+							var val, updateType = _.indexOf(props, attrConfig.name, true) > -1 ? 'prop' : 'attr', tempVal = modelGet.call(self, config, model, observed, $el);
+
+							if (attrConfig.format) val = applyViewFn(self, attrConfig.format, tempVal, observed);
+							else val = tempVal;
 							// If it is a class then we need to remove the last value and add the new.
 							if (attrConfig.name == 'class') {
 								$el.removeClass(lastClass).addClass(val);
@@ -113,12 +115,11 @@
 					// By default, form elements are bound two-way unless `oneWay:true` is configured.
 					if (!config.oneWay && isFormEl($el)) {
 						if (_.isArray(modelAttr)) throw new Error("Form elements with two-way bindings can only be bound to one model attribute.");
-
 						// Wire up two-way bindings for form elements.
 						eventCallback = function() {
 							// Send a unique `bindKey` in the options so that we can avoid
 							// double-binding in the `change:attribute` event handler.
-							model.set(modelAttr, getElVal($el), options);
+							modelSet.call(self, config, model, modelAttr, getElVal($el), options, $el);
 						};
 						if (isRadio($el) || isCheckbox($el) || isSelect($el))
 							self.events['change '+selector] =  eventCallback;
@@ -137,7 +138,7 @@
 						});
 					});
 
-					updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self), model, true);
+					updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self, $el), model, true);
 				}
 
 				// Any key in the configuration that is outside of the api is
@@ -148,14 +149,14 @@
 					};
 				});
 			});
-			
+
 			// We added to `this.events` so we need to re-delegate.
 			this.delegateEvents();
 
 			// Wrap remove so that we can remove model events when this view is removed.
 			this.remove = _.wrap(this.remove, function(oldRemove) {
 				self.unstickModel();
-				oldRemove && oldRemove.call(self);
+				if(oldRemove) oldRemove.call(self);
 			});
 		}
 	});
@@ -193,9 +194,9 @@
 
 	// Returns the given `field`'s value from the `model`, escaping and formatting if necessary.
 	// If `field` is an array, then an array of respective values will be returned.
-	getVal = function(model, field, config, context) {
+	getVal = function(model, field, config, context, el) {
 		var val, retrieveVal = function(attr) {
-			var retrieved = config.escape ? model.escape(attr) : model.get(attr);
+			var retrieved = modelGet.call(context, config, model, attr, el);
 			return _.isUndefined(retrieved) ? '' : retrieved;
 		};
 		val = _.isArray(field) ? _.map(field, retrieveVal) : retrieveVal(field);
@@ -232,13 +233,50 @@
 
 		// If `visible` is a function then it should return a boolean result to show/hide.
 		if (_.isFunction(visible)) isVisible = applyViewFn(context, visible, val, attrName);
-		
+
 		// Either use the custom `visibleFn`, if provided, or execute a standard jQuery show/hide.
 		if (visibleFn) applyViewFn(context, visibleFn, $el, isVisible, attrName);
 		else {
 			if (isVisible) $el.show();
 			else $el.hide();
 		}
+	};
+
+	// Sets model value
+	modelSet = function(config, model, attr, value, options, el){
+		//grab setter from view
+		var setter;
+
+		if(config.setter){
+			if(typeof config.setter == "string") setter = this[config.setter];
+			else setter = config.setter;
+		}
+		//use defined setter
+		if(setter){
+			value = setter.call(this, value, attr, model, el);
+		}
+
+		model.set(attr, value, options);
+	};
+
+	modelGet = function(config, model, attr, el){
+		var val = config.escape ? model.escape(attr) : model.get(attr);
+
+		var getter;
+		if(config.getter){
+			if(typeof config.getter == "string"){
+				getter = this[config.getter];
+			} else {
+				getter = config.getter;
+			}
+		}
+
+		//use defined getter
+		if(getter){
+			val = getter.call(this, val, attr, model, el);
+		}
+
+		return val;
 	};
 
 	// Update the value of `$el` in `view` using the given configuration.
