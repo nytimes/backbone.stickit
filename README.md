@@ -2,9 +2,9 @@
 
 ## Introduction
 
-Backbone.stickit is yet another model-view binding plugin for Backbone. Like the other plugins, Stickit will wire up bindings that will keep form elements, innerHTML, text, and attribute values bound with events and/or model attributes. 
+Backbone.stickit is yet another model-view binding plugin for Backbone. Like the other plugins, Stickit will wire up bindings that will keep form elements, innerHTML, text, and attribute values bound with events and/or model attributes.
 
-Stickit differs, however, in that it is a more natural fit with Backbone's style and functionality. Stickit has a simple and intuitive configuration, which, like Backbone, stays out of the view html; in fact, Stickit will clean up your templates, as you will need to interpolate fewer variables (if any at all) while rendering. Also, stickit internally leverages the `view.events` object so delegating, undelegating, and removing bindings will be seamless in the lifetime of a Backbone view. 
+Stickit differs, however, in that it is a more natural fit with Backbone's style and functionality. Stickit has a simple and intuitive configuration, which, like Backbone, stays out of the view html; in fact, Stickit will clean up your templates, as you will need to interpolate fewer variables (if any at all) while rendering. Also, stickit internally leverages the `view.events` object so delegating, undelegating, and removing bindings will be seamless in the lifetime of a Backbone view.
 
 ## Download + Source
 
@@ -29,7 +29,7 @@ Similar to `view.events`, you can define `view.bindings` to map selectors to mod
 
 When the view's html is rendered, usually the last call will be to stickit. By convention, and in the following example, stickit will use `view.model` and the `view.bindings` configuration to initialize:
 
-```javascript  
+```javascript
   render: function() {
     this.$el.html('<div id="header"/> <button id="search"/>');
     this.stickit();
@@ -45,7 +45,7 @@ On the initial call, stickit will initialize the innerHTML of `view.$('#header')
 
 Uses `view.bindings`, or the given bindings, and `this.model`, or the given model, to setup model and event bindings. Stickit can be called more than once with different models and binding configurations. Note: multiple models can be bound to a view, but any subsequent attempts to bind a previously bound model will delete the previous bindings for (only) that model.
 
-```javascript  
+```javascript
   render: function() {
     this.$el.html(/* ... */);
     // Initialize stickit with view.bindings and view.model
@@ -62,7 +62,7 @@ Removes event bindings from all models, or (only) the given model, used by stick
 
 ## Bindings
 
-The `view.bindings` is a hash of jQuery or Zepto selector keys with binding configuration values. Bindings can be configured with events - see the `events` section - and/or model attributes. Similar to the callback definitions configured in `view.events`, an actual function or a string function name may be configured. 
+The `view.bindings` is a hash of jQuery or Zepto selector keys with binding configuration values. Bindings can be configured with events - see the `events` section - and/or model attributes. Similar to the callback definitions configured in `view.events`, an actual function or a string function name may be configured.
 
 ### modelAttr
 
@@ -70,7 +70,7 @@ A string or array which is used to map a model attribute to a view element. If b
 
 Note, binding to multiple model attributes using an array configuration only applies to one-way bindings (model->view), and should be paired with a `format` callback.
 
-```javascript  
+```javascript
   bindings: {
     // Short form binding
     '#name': 'name',
@@ -91,13 +91,13 @@ Note, binding to multiple model attributes using an array configuration only app
 
 ### events
 
-Any binding key that is outside of the known bindings configurations will be wired up as an event for the bound view element. jQuery/Zepto event names, like the following, can be used for binding along with any custom event names:  
+Any binding key that is outside of the known bindings configurations will be wired up as an event for the bound view element. jQuery/Zepto event names, like the following, can be used for binding along with any custom event names:
 
 `change`, `click`, `dblclick`, `focusin`, `focusout`, `keydown`, `keypress`, `keyup`, `mousedown`, `mouseenter`, `mouseleave`, `mousemove`, `mouseup`, `submit`, ...
 
 Since form elements are two-way bindings by default, you can override any of the event bindings that stickit uses by defining your own handler. Review the form element bindings to find out what events are used and can be overriden.
 
-```javascript  
+```javascript
   bindings: {
     '#header': {
       modelAttr: 'headerName',
@@ -114,7 +114,7 @@ Since form elements are two-way bindings by default, you can override any of the
 
 A special selector value that binds to the view delegate (view.$el).
 
-```javascript  
+```javascript
   tagName: 'form',
   bindings: {
     ':el': {
@@ -127,7 +127,7 @@ A special selector value that binds to the view delegate (view.$el).
 
 A callback which returns a formatted version of the model attribute value that is passed in before setting it in the bound view element.
 
-```javascript  
+```javascript
   bindings: {
     '#header': {
       modelAttr: 'headerName',
@@ -143,7 +143,7 @@ A callback which returns a formatted version of the model attribute value that i
 
 A string function reference or function which is called after a value is updated in the dom.
 
-```javascript  
+```javascript
   bindings: {
     '#header': {
       modelAttr: 'headerName',
@@ -159,7 +159,7 @@ A string function reference or function which is called after a value is updated
 
 Method used to update the inner value of the view element. Defaults to 'text', but 'html' may also be used to update the dom element's innerHTML.
 
-```javascript  
+```javascript
   bindings: {
     '#header': {
       modelAttr: 'headerName',
@@ -173,7 +173,7 @@ Method used to update the inner value of the view element. Defaults to 'text', b
 
 A boolean which when true escapes the model before setting it in the view - internally, gets the attribute value by calling `model.escape('attribute')`. This is only useful when `updateMethod` is "html".
 
-```javascript  
+```javascript
   bindings: {
     '#header': {
       modelAttr: 'headerName',
@@ -183,13 +183,38 @@ A boolean which when true escapes the model before setting it in the view - inte
   }
  ```
 
+### setter / getter
+
+A method that transforms a value before defined on a model / retrieved from model.
+
+```javascript
+  bindings: {
+    '#check': {
+      modelAttr: 'todo',
+      //value will be set on model
+      setter: function(value, attr, model, el){
+        return (value) ? "yes" : "no";
+      },
+      getter: "getValue",
+      escape: true
+    }
+  },
+
+  //can also define method on view
+  //will transform values from model -> element
+  //returns a boolean for checkbox
+  getValue: function(value, attr, model, el){
+    return value == "yes";
+  }
+ ```
+
 ### visible and visibleFn
 
 When true, `visible` shows or hides the view element based on the model attribute's truthiness. `visible` may also be defined with a callback which should return a truthy value.
 
-If more than the standard jQuery show/hide is required, then you can manually take control by defining `visibleFn` with a callback. 
+If more than the standard jQuery show/hide is required, then you can manually take control by defining `visibleFn` with a callback.
 
-```javascript  
+```javascript
   bindings: {
     '#author': {
       modelAttr: 'isDeleuze',
@@ -198,7 +223,7 @@ If more than the standard jQuery show/hide is required, then you can manually ta
   }
 ```
 
-```javascript  
+```javascript
   bindings: {
     '#title': {
       modelAttr: 'title',
@@ -207,7 +232,7 @@ If more than the standard jQuery show/hide is required, then you can manually ta
   }
 ```
 
-```javascript  
+```javascript
   bindings: {
     '#body': {
       modelAttr: 'isWithoutOrgans',
@@ -225,11 +250,11 @@ If more than the standard jQuery show/hide is required, then you can manually ta
 
 By default, form elements will be configured with two-way bindings, syncing changes in the view elements and model attributes. Optionally, one-way bindings can be configured with the `oneWay` key so that only changes to model attributes will be synced to view elements. Using the manual event bindings, you can override default event handlers or add other custom event handlers.
 
-The following is a list of the supported form elements, their binding details, and the default events used for syncing:  
+The following is a list of the supported form elements, their binding details, and the default events used for syncing:
 
  - input and textarea
    - element value synced with model attribute value
-   - input[type=number] will update the model with a Number value 
+   - input[type=number] will update the model with a Number value
    - both `keyup` and `change` events are used for handling
  - input[type=checkbox]
    - `checked` property determined by the truthiness of the model attribute or the result of `format`
@@ -245,7 +270,7 @@ The following is a list of the supported form elements, their binding details, a
 
 Opt to bind form elements in one direction - model attribute changes will be reflected in the view, but changes to the view will not update the model.
 
-```javascript  
+```javascript
   bindings: {
     '#header': {
       modelAttr: 'headerName',
@@ -262,15 +287,15 @@ Binds an object collection, html select box, and a model attribute value. The fo
  - `labelPath`: the path to the label value for select options within the collection of objects.
  - `valuePath`: the path to the values for select options within the collection of objects. When an options is selected, the value that is defined for the given option is set in the model. Leave this undefined if the whole object is the value.
 
-When bindings are initialized, Stickit will build the `select` element with the options and bindings configured. 
+When bindings are initialized, Stickit will build the `select` element with the options and bindings configured.
 
-The following example references a collection of stooges at `window.app.stooges` with the following value:  
+The following example references a collection of stooges at `window.app.stooges` with the following value:
 
-```javascript  
+```javascript
   [{name : 'moe', age : 40}, {name : 'larry', age : 50}, {name : 'curly', age : 60}]
 ```
 
-```javascript  
+```javascript
   bindings: {
     'select#stooges': {
       modelAttr: 'stooge',
@@ -284,7 +309,7 @@ The following example references a collection of stooges at `window.app.stooges`
 
 Another example where a collection is returned by callback and the collection objects are used as option values:
 
-```javascript  
+```javascript
   bindings: {
     'select#states': {
       modelAttr: 'state',
@@ -303,7 +328,7 @@ Another example where a collection is returned by callback and the collection ob
 
 An object which is used as the set options when setting values in the model. This is only used when binding to form elements, as their changes would update the model.
 
-```javascript  
+```javascript
   bindings: {
     'input#name': {
       modelAttr: 'name',
@@ -322,7 +347,7 @@ Binds element attributes and properties with observed model attributes, using th
  - `observe`: observes the given model attribute. If left undefined, then the main configuration `modelAttr` is observed.
  - `format`: formats the observed model attribute value before it is set in the matched element.
 
-```javascript  
+```javascript
   bindings: {
     '#header': {
       attributes: [{
@@ -344,7 +369,7 @@ Binds element attributes and properties with observed model attributes, using th
 
 ### Why Stickit?
 
-JavaScript frameworks seem to be headed in the wrong direction - controller callbacks/directives, configuration, and special tags are being forced into the template/presentation layer. Who wants to program and debug templates? 
+JavaScript frameworks seem to be headed in the wrong direction - controller callbacks/directives, configuration, and special tags are being forced into the template/presentation layer. Who wants to program and debug templates?
 
 If you are writing a custom frontend, then you're going to need to write custom JavaScript. Backbone helps you organize, but then gets the hell out of your way, especially when it comes to your presentation. Stickit tries to stay true to Backbone's style; where most frameworks or other Backbone plugins muck up the presentation layer with obtrusive JavaScript, stickit defines configuration and callbacks in the place that they should be - in the view/controller/JavaScript.
 
@@ -357,6 +382,10 @@ If you are writing a custom frontend, then you're going to need to write custom 
 MIT
 
 ## Change Log
+
+#### 0.6.1
+
+- Added getter and setter transformers.
 
 #### 0.6.0
 
