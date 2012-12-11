@@ -16,14 +16,12 @@
 		// the optional `model` parameter is defined, then only delete bindings for
 		// the given `model`.
 		unstickModel: function(model) {
-			if(this._modelBindings){
-				_.each(this._modelBindings, _.bind(function(binding, i) {
-					if (model && binding.model !== model) return false;
-					binding.model.off(binding.event, binding.fn);
-					delete this._modelBindings[i];
-				}, this));
-				this._modelBindings = _.compact(this._modelBindings);
-			}
+			_.each(this._modelBindings, _.bind(function(binding, i) {
+				if (model && binding.model !== model) return false;
+				binding.model.off(binding.event, binding.fn);
+				delete this._modelBindings[i];
+			}, this));
+			this._modelBindings = _.compact(this._modelBindings);
 		},
 
 		// Using `this.bindings` configuration or the `optionalBindingsConfig`, binds `this.model`

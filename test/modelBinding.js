@@ -3,7 +3,7 @@ $(document).ready(function() {
 	module("view.unstickModel");
 
 	test('unstickModel', function() {
-		
+
 		model.set({'water':'fountain', 'test':'nada', 'copy':'cat', 'fickle':'brat'});
 		view.model = model;
 		view.templateId = 'jst10';
@@ -19,6 +19,10 @@ $(document).ready(function() {
 				}]
 			}
 		};
+
+		//can unstick before sticking
+		view.unstickModel();
+
 		$('#qunit-fixture').html(view.render().el);
 
 		equal(_.keys(view.model._callbacks).length, 3);
@@ -29,7 +33,7 @@ $(document).ready(function() {
 	});
 
 	test('unstickModel (multiple models across multiple views)', function() {
-		
+
 		var model1, model2, view, view2, model3;
 
 		model1 = new (Backbone.Model)({one:'', two:''});
