@@ -100,7 +100,7 @@
 				// result of the given callback. If a `visibleFn` is also supplied, then
 				// that callback will be executed to manually handle showing/hiding the
 				// view element.
-				if (config.visible) {
+				if (config.visible != null) {
 					visibleCb = function() {
 						updateVisibleBindEl($el, getVal(model, modelAttr, config, self), modelAttr, config, self);
 					};
