@@ -132,7 +132,7 @@
 					// `modelAttr` may be an array of attributes or a single string value.
 					_.each(_.flatten([modelAttr]), function(attr) {
 						observeModelEvent('change:'+attr, function(model, val, options) {
-							if (options && options.bindKey != bindKey)
+							if (options == null || options.bindKey != bindKey)
 								updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self), model);
 						});
 					});
