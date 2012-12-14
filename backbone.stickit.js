@@ -114,23 +114,18 @@
 				}
 
 				if (modelAttr) {
-					// By default, form elements are bound two-way unless `oneWay:true` is configured.
-					if (!config.oneWay && isFormEl($el)) {
-						if (_.isArray(modelAttr)) throw new Error("Form elements with two-way bindings can only be bound to one model attribute.");
-
-						// Wire up two-way bindings for form elements.
-						eventCallback = function() {
-							var val = getElVal($el);
-							// Don't update the model if false is returned from the `updateModel` configuration.
-							if (config.updateModel == null || evaluateBoolean(self, config.updateModel, val, modelAttr))
-								model.set(modelAttr, val, options);
-						};
-						if (isRadio($el) || isCheckbox($el) || isSelect($el))
-							self.events['change '+selector] =  eventCallback;
-						else if (isInput($el) || isTextarea($el)) {
-							self.events['keyup '+selector] =  eventCallback;
-							self.events['change '+selector] =  eventCallback;
-						}
+					// Wire up two-way bindings for form elements.
+					eventCallback = function() {
+						var val = getElVal($el);
+						// Don't update the model if false is returned from the `updateModel` configuration.
+						if (config.updateModel == null || evaluateBoolean(self, config.updateModel, val, modelAttr))
+							model.set(modelAttr, val, options);
+					};
+					if (isRadio($el) || isCheckbox($el) || isSelect($el))
+						self.events['change '+selector] =  eventCallback;
+					else if (isInput($el) || isTextarea($el)) {
+						self.events['keyup '+selector] =  eventCallback;
+						self.events['change '+selector] =  eventCallback;
 					}
 
 					// Setup a `change:modelAttr` observer to keep the view element in sync.
