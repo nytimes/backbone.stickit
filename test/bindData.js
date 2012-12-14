@@ -742,4 +742,53 @@ $(document).ready(function() {
 		view.$('#test5').trigger('customEvent');
 	});
 
+	test('bindings:updateView', 6, function() {
+		
+		model.set({'water':'fountain'});
+		view.model = model;
+		view.templateId = 'jst1';
+		view.bindings = {
+			'#test1': {
+				modelAttr: 'water',
+				updateView: function(val) {
+					equal(val, model.get('water'));
+					return val == 'evian';
+				}
+			}
+		};
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test1').val(), '');
+
+		model.set({water:'evian'});
+		equal(view.$('#test1').val(), 'evian');
+
+		model.set({water:'dasina'});
+		equal(view.$('#test1').val(), 'evian');
+	});
+
+	test('bindings:udpateModel', 6, function() {
+		
+		model.set({'water':'fountain'});
+		view.model = model;
+		view.templateId = 'jst1';
+		view.bindings = {
+			'#test1': {
+				modelAttr: 'water',
+				updateModel: function(val, attrName) {
+					equal(val, view.$('#test1').val());
+					equal(attrName, 'water');
+					return val == 'evian';
+				}
+			}
+		};
+		$('#qunit-fixture').html(view.render().el);
+
+		view.$('#test1').val('dasina').keyup();
+		equal(model.get('water'), 'fountain');
+
+		view.$('#test1').val('evian').keyup();
+		equal(model.get('water'), 'evian');
+	});
+
 });
