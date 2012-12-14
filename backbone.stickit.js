@@ -2,7 +2,7 @@
 
 	var evaluatePath, applyViewFn, updateViewBindEl, getElVal, updateVisibleBindEl,
 		getVal, isFormEl, isInput, isTextarea, isNumber, isCheckbox, isRadio, isSelect,
-		evaluateBoolean;
+		evaluateBoolean, observeModelEvent;
 
 	// Backbone.View Mixins
 	// --------------------
@@ -28,7 +28,7 @@
 		// Using `this.bindings` configuration or the `optionalBindingsConfig`, binds `this.model`
 		// or the `optionalModel` to elements in the view.
 		stickit: function(optionalModel, optionalBindingsConfig) {
-			var self = this, observeModelEvent,
+			var self = this,
 				model = optionalModel || this.model,
 				bindings = optionalBindingsConfig || this.bindings || {},
 				props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'],
@@ -38,12 +38,6 @@
 			this.unstickModel(model);
 
 			this.events || (this.events = {});
-
-			// Setup a model event binding with the given function, and track the event in this._modelBindings.
-			observeModelEvent = function(event, fn) {
-				model.on(event, fn, self);
-				self._modelBindings.push({model:model, event:event, fn:fn});
-			};
 
 			// Iterate through the selectors in the bindings configuration and configure
 			// the various options for each field.
@@ -63,7 +57,7 @@
 				if (!$el.length) return false;
 		
 				// Allow shorthand setting of model attributes - `'selector':'modelAttr'`.
-				if (typeof config === 'string') config = {modelAttr:config};
+				if (_.isString(config)) config = {modelAttr:config};
 
 				modelAttr = config.modelAttr;
 
@@ -85,9 +79,8 @@
 					var lastClass = '',
 						observed = attrConfig.observe || modelAttr,
 						updateAttr = function() {
-							var val, updateType = _.indexOf(props, attrConfig.name, true) > -1 ? 'prop' : 'attr';
-							if (attrConfig.format) val = applyViewFn(self, attrConfig.format, model.get(observed), observed);
-							else val = model.get(observed);
+							var updateType = _.indexOf(props, attrConfig.name, true) > -1 ? 'prop' : 'attr',
+								val = getVal(model, observed, attrConfig, self);
 							// If it is a class then we need to remove the last value and add the new.
 							if (attrConfig.name == 'class') {
 								$el.removeClass(lastClass).addClass(val);
@@ -95,20 +88,21 @@
 							}
 							else $el[updateType](attrConfig.name, val);
 						};
-					observeModelEvent('change:' + observed, updateAttr);
+					_.each(_.flatten([observed]), function(attr) {
+						observeModelEvent(model, self, 'change:' + attr, updateAttr);
+					});
 					updateAttr();
 				});
 
-				// If the `visible` config is configured, then the view element will be
-				// shown/hidden based on the truthiness of the modelattr's value or the
-				// result of the given callback. If a `visibleFn` is also supplied, then
-				// that callback will be executed to manually handle showing/hiding the
-				// view element.
+				// If `visible` is configured, then the view element will be shown/hidden
+				// based on the truthiness of the modelattr's value or the result of the
+				// given callback. If a `visibleFn` is also supplied, then that callback
+				// will be executed to manually handle showing/hiding the view element.
 				if (config.visible != null) {
 					visibleCb = function() {
 						updateVisibleBindEl($el, getVal(model, modelAttr, config, self), modelAttr, config, self);
 					};
-					observeModelEvent('change:' + modelAttr, visibleCb);
+					observeModelEvent(model, self, 'change:' + modelAttr, visibleCb);
 					visibleCb();
 					return false;
 				}
@@ -131,7 +125,7 @@
 					// Setup a `change:modelAttr` observer to keep the view element in sync.
 					// `modelAttr` may be an array of attributes or a single string value.
 					_.each(_.flatten([modelAttr]), function(attr) {
-						observeModelEvent('change:'+attr, function(model, val, options) {
+						observeModelEvent(model, self, 'change:'+attr, function(model, val, options) {
 							if (options == null || options.bindKey != bindKey)
 								updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self), model);
 						});
@@ -199,6 +193,13 @@
 			return applyViewFn.apply(this, _.toArray(arguments));
 		return false;
 	},
+
+	// Setup a model event binding with the given function, and track the
+	// event in the view's _modelBindings.
+	observeModelEvent = function(model, view, event, fn) {
+		model.on(event, fn, view);
+		view._modelBindings.push({model:model, event:event, fn:fn});
+	};
 
 	// Returns the given `field`'s value from the `model`, escaping and formatting if necessary.
 	// If `field` is an array, then an array of respective values will be returned.

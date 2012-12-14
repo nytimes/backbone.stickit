@@ -583,6 +583,35 @@ $(document).ready(function() {
 		equal(view.$('#test5').attr('data-name'), 'evian-snickers');
 	});
 
+	test('bindings:attributes:observe (array)', 11, function() {
+		
+		model.set({'water':'fountain', 'candy':'twix'});
+		view.model = model;
+		view.templateId = 'jst5';
+		view.bindings = {
+			'#test5': {
+				attributes: [{
+					name: 'data-name',
+					observe: ['water', 'candy'],
+					format: function(val, modelAttr) {
+						_.each(modelAttr, _.bind(function(attr, i) {
+							equal(val[i], this.model.get(attr));
+						}, this));
+						equal(modelAttr.toString(), 'water,candy');
+						return model.get('water') + '-' + model.get('candy');
+					}
+				}]
+			}
+		};
+
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test5').attr('data-name'), 'fountain-twix');
+
+		model.set({'water':'evian', 'candy':'snickers'});
+		equal(view.$('#test5').attr('data-name'), 'evian-snickers');
+	});
+
 	test('bindings:attributes (properties)', function() {
 		
 		model.set({'water':true});
