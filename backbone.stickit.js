@@ -274,44 +274,63 @@
 
 			// The `list` configuration is a function that returns the options list or a string
 			// which represents the path to the list relative to `window`.
-			optList = _.isFunction(list) ? list.call(view) : evaluatePath(window, list);
+			optList = _.isFunction(list) ? applyViewFn(view, list) : evaluatePath(window, list);
 
 			// Add an empty default option if the current model attribute isn't defined.
 			if (fieldVal == null)
 				$el.append('<option/>').find('option').prop('selected', true).data('stickit_bind_val', fieldVal);
 
-			_.each(optList, function(obj) {
-				var option = $('<option/>'), optionVal = obj;
-
-				// If the list contains a null/undefined value, then an empty option should
-				// be appended in the list; otherwise, fill the option with text and value.
-				if (obj != null) {
-					option.text(evaluatePath(obj, selectConfig.labelPath));
-					optionVal = evaluatePath(obj, selectConfig.valuePath);
-				} else if ($el.find('option').length && $el.find('option:eq(0)').data('stickit_bind_val') == null) return false;
-
-				// Save the option value so that we can reference it later.
-				option.data('stickit_bind_val', optionVal);
-
-				// Determine if this option is selected.
-				if (!isMultiple && optionVal != null && fieldVal != null && optionVal == fieldVal || (_.isObject(fieldVal) && _.isEqual(optionVal, fieldVal)))
-					option.prop('selected', true);
-				else if (isMultiple && _.isArray(fieldVal)) {
-					_.each(fieldVal, function(val) {
-						if (_.isObject(val)) val = evaluatePath(val, selectConfig.valuePath);
-						if (val == optionVal || (_.isObject(val) && _.isEqual(optionVal, val)))
-							option.prop('selected', true);
-					});
-				}
-
-				$el.append(option);
-			});
+			if (_.isArray(optList)) {
+				addSelectOptions(optList, $el, selectConfig, fieldVal, isMultiple);
+			} else {
+				// If the optList is an object, then it should be used to define an optgroup. An
+				// optgroup object configuration looks like the following:
+				//   {
+				//      'opt_labels': ['Looney Tunes', 'Three Stooges'],
+				//      'Looney Tunes': [{id: 1, name: 'Bugs Bunny'}, {id: 2, name: 'Donald Duck'}],
+				//      'Three Stooges': [{id: 3, name : 'moe'}, {id: 4, name : 'larry'}, {id: 5, name : 'curly'}]
+				//   }
+				_.each(optList.opt_labels, function(label) {
+					var $group = $('<optgroup/>').attr('label', label);
+					addSelectOptions(optList[label], $group, selectConfig, fieldVal, isMultiple);
+					$el.append($group);
+				});
+			}
 		} else {
 			$el[updateMethod](val);
 		}
 
 		// Execute the `afterUpdate` callback from the `bindings` config.
 		if (!isInitializing) applyViewFn(view, afterUpdate, $el, val, originalVal);
+	};
+
+	var addSelectOptions = function(optList, $el, selectConfig, fieldVal, isMultiple) {
+		_.each(optList, function(obj) {
+			var option = $('<option/>'), optionVal = obj;
+
+			// If the list contains a null/undefined value, then an empty option should
+			// be appended in the list; otherwise, fill the option with text and value.
+			if (obj != null) {
+				option.text(evaluatePath(obj, selectConfig.labelPath));
+				optionVal = evaluatePath(obj, selectConfig.valuePath);
+			} else if ($el.find('option').length && $el.find('option:eq(0)').data('stickit_bind_val') == null) return false;
+
+			// Save the option value so that we can reference it later.
+			option.data('stickit_bind_val', optionVal);
+
+			// Determine if this option is selected.
+			if (!isMultiple && optionVal != null && fieldVal != null && optionVal == fieldVal || (_.isObject(fieldVal) && _.isEqual(optionVal, fieldVal)))
+				option.prop('selected', true);
+			else if (isMultiple && _.isArray(fieldVal)) {
+				_.each(fieldVal, function(val) {
+					if (_.isObject(val)) val = evaluatePath(val, selectConfig.valuePath);
+					if (val == optionVal || (_.isObject(val) && _.isEqual(optionVal, val)))
+						option.prop('selected', true);
+				});
+			}
+
+			$el.append(option);
+		});
 	};
 
 })(window.jQuery || window.Zepto);

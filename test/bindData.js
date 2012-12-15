@@ -510,6 +510,41 @@ $(document).ready(function() {
 
 	});
 
+	test('bindings:selectOptions (optgroup)', function() {
+
+		model.set({'character':3});
+		view.model = model;
+		view.templateId = 'jst8';
+		view.bindings = {
+			'#test8': {
+				modelAttr: 'character',
+				selectOptions: {
+					collection: function() {
+						return {
+							'opt_labels': ['Looney Tunes', 'Three Stooges'],
+							'Looney Tunes': [{id: 1, name: 'Bugs Bunny'}, {id: 2, name: 'Donald Duck'}],
+							'Three Stooges': [{id: 3, name : 'moe'}, {id: 4, name : 'larry'}, {id: 5, name : 'curly'}]
+						};
+					},
+					labelPath: 'name',
+					valuePath: 'id'
+				}
+			}
+		};
+
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test8 option:selected').parent().is('optgroup'), true);
+		equal(view.$('#test8 option:selected').parent().attr('label'), 'Three Stooges');
+		equal(view.$('#test8 option:selected').data('stickit_bind_val'), 3);
+
+		model.set({'character':2});
+		equal(view.$('#test8 option:selected').data('stickit_bind_val'), 2);
+
+		view.$('#test8 option:eq(3)').prop('selected', true).change();
+		equal(model.get('character'), 4);
+	});
+
 	test('bindings:attributes:name', function() {
 		
 		model.set({'water':'fountain'});
