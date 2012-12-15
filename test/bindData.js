@@ -44,6 +44,27 @@ $(document).ready(function() {
 		equal(model.get('water'), 'dasina');
 	});
 
+	test('contenteditable', function() {
+		
+		model.set({'water':'<span>fountain</span>'});
+		view.model = model;
+		view.templateId = 'jst17';
+		view.bindings = {
+			'#test17': {
+				modelAttr: 'water'
+			}
+		};
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test17').html(), '<span>fountain</span>');
+
+		model.set('water', '<span>evian</span>');
+		equal(view.$('#test17').html(), '<span>evian</span>');
+		
+		view.$('#test17').html('<span>dasina</span>').keyup();
+		equal(model.get('water'), '<span>dasina</span>');
+	});
+
 	test('checkbox', function() {
 		
 		model.set({'water':true});

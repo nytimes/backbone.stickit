@@ -1,9 +1,5 @@
 (function($) {
 
-	var evaluatePath, applyViewFn, updateViewBindEl, getElVal, updateVisibleBindEl,
-		getVal, isFormEl, isInput, isTextarea, isNumber, isCheckbox, isRadio, isSelect,
-		evaluateBoolean, observeModelEvent;
-
 	// Backbone.View Mixins
 	// --------------------
 
@@ -110,16 +106,19 @@
 				if (modelAttr) {
 					// Wire up two-way bindings for form elements.
 					eventCallback = function() {
-						var val = getElVal($el);
+						var val = getElVal($el, isContenteditable($el));
 						// Don't update the model if false is returned from the `updateModel` configuration.
 						if (config.updateModel == null || evaluateBoolean(self, config.updateModel, val, modelAttr))
 							model.set(modelAttr, val, options);
 					};
 					if (isRadio($el) || isCheckbox($el) || isSelect($el))
 						self.events['change '+selector] =  eventCallback;
-					else if (isInput($el) || isTextarea($el)) {
-						self.events['keyup '+selector] =  eventCallback;
-						self.events['change '+selector] =  eventCallback;
+					else if (isInput($el) || isTextarea($el) || isContenteditable($el)) {
+						// It would be nice to use the `oninput` event handler but IE9- has buggy to no support,
+						// and using feature detection doesn't work because it is hard to sniff in Firefox.
+						_.each(['keyup', 'change', 'paste', 'cut'], function(type) {
+							self.events[type+' '+selector] =  eventCallback;
+						});
 					}
 
 					// Setup a `change:modelAttr` observer to keep the view element in sync.
@@ -149,7 +148,7 @@
 			// Wrap remove so that we can remove model events when this view is removed.
 			this.remove = _.wrap(this.remove, function(oldRemove) {
 				self.unstickModel();
-				oldRemove && oldRemove.call(self);
+				if (oldRemove) oldRemove.call(self);
 			});
 		}
 	});
@@ -158,52 +157,54 @@
 	// -------
 
 	// Evaluates the given `path` (in object/dot-notation) relative to the given `obj`.
-	evaluatePath = function(obj, path) {
+	var evaluatePath = function(obj, path) {
 		var pathParts = (path || '').split('.');
 		return _.reduce(pathParts, function(memo, i) { return memo[i]; }, obj) || obj;
 	};
 
 	// If the given `fn` is a string, then view[fn] is called, otherwise it is a function
 	// that should be executed.
-	applyViewFn = function(view, fn) {
+	var applyViewFn = function(view, fn) {
 		if (fn) return (_.isString(fn) ? view[fn] : fn).apply(view, _.toArray(arguments).slice(2));
 	};
 
-	isFormEl = function($el) {
+	var isFormEl = function($el) {
 		return _.indexOf(['CHECKBOX', 'INPUT', 'SELECT', 'TEXTAREA'], $el[0].nodeName, true) > -1;
 	};
 
-	isCheckbox = function($el) { return $el.is('input[type=checkbox]'); };
+	var isCheckbox = function($el) { return $el.is('input[type=checkbox]'); };
 
-	isRadio = function($el) { return $el.is('input[type="radio"]'); };
+	var isRadio = function($el) { return $el.is('input[type="radio"]'); };
 
-	isNumber = function($el) { return $el.is('input[type=number]'); };
+	var isNumber = function($el) { return $el.is('input[type=number]'); };
 
-	isSelect = function($el) { return $el.is('select'); };
+	var isSelect = function($el) { return $el.is('select'); };
 
-	isTextarea = function($el) { return $el.is('textarea'); };
+	var isTextarea = function($el) { return $el.is('textarea'); };
 
-	isInput = function($el) { return $el.is('input'); };
+	var isInput = function($el) { return $el.is('input'); };
+
+	var isContenteditable = function($el) { return $el.is('[contenteditable="true"]'); };
 
 	// Given a function, string (view function reference), or a boolean
 	// value, returns the truthy result. Any other types evaluate as false.
-	evaluateBoolean = function(view, reference) {
+	var evaluateBoolean = function(view, reference) {
 		if (_.isBoolean(reference)) return reference;
 		else if (_.isFunction(reference) || _.isString(reference))
 			return applyViewFn.apply(this, _.toArray(arguments));
 		return false;
-	},
+	};
 
 	// Setup a model event binding with the given function, and track the
 	// event in the view's _modelBindings.
-	observeModelEvent = function(model, view, event, fn) {
+	var observeModelEvent = function(model, view, event, fn) {
 		model.on(event, fn, view);
 		view._modelBindings.push({model:model, event:event, fn:fn});
 	};
 
 	// Returns the given `field`'s value from the `model`, escaping and formatting if necessary.
 	// If `field` is an array, then an array of respective values will be returned.
-	getVal = function(model, field, config, context) {
+	var getVal = function(model, field, config, context) {
 		var val, retrieveVal = function(attr) {
 			var retrieved = config.escape ? model.escape(attr) : model.get(attr);
 			return _.isUndefined(retrieved) ? '' : retrieved;
@@ -213,7 +214,7 @@
 	};
 
 	// Gets the value from the given element, with the optional hint that the value is html.
-	getElVal = function($el, isHTML) {
+	var getElVal = function($el, isHTML) {
 		var val;
 		if (isFormEl($el)) {
 			if (isCheckbox($el)) val = $el.prop('checked');
@@ -237,7 +238,7 @@
 	};
 
 	// Updates the given element according to the rules for the `visible` api key.
-	updateVisibleBindEl = function($el, val, attrName, config, context) {
+	var updateVisibleBindEl = function($el, val, attrName, config, context) {
 		var visible = config.visible, visibleFn = config.visibleFn, isVisible = !!val;
 
 		// If `visible` is a function then it should return a boolean result to show/hide.
@@ -252,12 +253,12 @@
 	};
 
 	// Update the value of `$el` in `view` using the given configuration.
-	updateViewBindEl = function(view, $el, config, val, model, isInitializing) {
+	var updateViewBindEl = function(view, $el, config, val, model, isInitializing) {
 		var modelAttr = config.modelAttr,
 			afterUpdate = config.afterUpdate,
 			selectConfig = config.selectOptions,
 			updateMethod = config.updateMethod || 'text',
-			originalVal = getElVal($el, config.updateMethod == 'html');
+			originalVal = getElVal($el, (config.updateMethod == 'html' || isContenteditable($el)));
 
 		// Don't update the view if `updateView` returns false.
 		if (config.updateView != null && !evaluateBoolean(view, config.updateView, val)) return;
@@ -265,6 +266,7 @@
 		if (isRadio($el)) $el.filter('[value='+val+']').prop('checked', true);
 		else if (isCheckbox($el)) $el.prop('checked', !!val);
 		else if (isInput($el) || isTextarea($el)) $el.val(val);
+		else if (isContenteditable($el)) $el.html(val);
 		else if (isSelect($el)) {
 			var optList, list = selectConfig.collection, fieldVal = model.get(modelAttr), isMultiple = $el.prop('multiple');
 
@@ -313,4 +315,3 @@
 	};
 
 })(window.jQuery || window.Zepto);
-
