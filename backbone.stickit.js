@@ -333,4 +333,4 @@
 		});
 	};
 
-})(window.jQuery || window.Zepto);
+})(Backbone.$);
