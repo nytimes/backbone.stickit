@@ -28,7 +28,7 @@
 				model = optionalModel || this.model,
 				bindings = optionalBindingsConfig || this.bindings || {},
 				props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'],
-				bindingsKeys = ['afterUpdate', 'attributes', 'escape', 'format', 'modelAttr', 'setOptions', 'selectOptions', 'updateMethod', 'updateModel', 'updateView', 'visible', 'visibleFn'];
+				bindingsKeys = ['afterUpdate', 'attributes', 'escape', 'format', 'modelAttr', 'onGet', 'onSet', 'setOptions', 'selectOptions', 'updateMethod', 'updateModel', 'updateView', 'visible', 'visibleFn'];
 
 			this._modelBindings || (this._modelBindings = []);
 			this.unstickModel(model);
@@ -56,6 +56,11 @@
 				if (_.isString(config)) config = {modelAttr:config};
 
 				modelAttr = config.modelAttr;
+				if (config.updateModel == null) config.updateModel = true;
+				if (config.updateView == null) config.updateView = true;
+
+				// Keep backward-compatibility for `format` which is now `onGet`.
+				if (config.format && !config.onGet) config.onGet = config.format;
 
 				// Create the model set options with a unique `bindKey` so that we
 				// can avoid double-binding in the `change:attribute` event handler.
@@ -63,12 +68,12 @@
 
 				// Setup the attributes configuration - a list that maps an attribute or
 				// property `name`, to an `observe`d model attribute, using an optional
-				// `format`ter.
+				// `onGet` formatter.
 				//
 				//   [{
 				//     name: 'attributeOrPropertyName',
 				//     observe: 'modelAttrName'
-				//     format: function(modelAttrVal, modelAttrName) { ... }
+				//     onGet: function(modelAttrVal, modelAttrName) { ... }
 				//   }, ...]
 				//
 				_.each(config.attributes || [], function(attrConfig) {
@@ -84,6 +89,8 @@
 							}
 							else $el[updateType](attrConfig.name, val);
 						};
+					// Keep backward-compatibility for `format` which is now `onGet`.
+					if (attrConfig.format && !attrConfig.onGet) attrConfig.onGet = attrConfig.format;
 					_.each(_.flatten([observed]), function(attr) {
 						observeModelEvent(model, self, 'change:' + attr, updateAttr);
 					});
@@ -108,8 +115,8 @@
 					eventCallback = function() {
 						var val = getElVal($el, isContenteditable($el));
 						// Don't update the model if false is returned from the `updateModel` configuration.
-						if (config.updateModel == null || evaluateBoolean(self, config.updateModel, val, modelAttr))
-							model.set(modelAttr, val, options);
+						if (evaluateBoolean(self, config.updateModel, val, modelAttr))
+							setVal(model, modelAttr, val, options, config.onSet, self);
 					};
 					if (isRadio($el) || isCheckbox($el) || isSelect($el))
 						self.events['change '+selector] =  eventCallback;
@@ -202,6 +209,12 @@
 		view._modelBindings.push({model:model, event:event, fn:fn});
 	};
 
+	// Prepares the given value and sets it into the model.
+	var setVal = function(model, attr, val, options, onSet, context) {
+		if (onSet) val = applyViewFn(context, onSet, val, attr);
+		model.set(attr, val, options);
+	};
+
 	// Returns the given `field`'s value from the `model`, escaping and formatting if necessary.
 	// If `field` is an array, then an array of respective values will be returned.
 	var getVal = function(model, field, config, context) {
@@ -210,7 +223,7 @@
 			return _.isUndefined(retrieved) ? '' : retrieved;
 		};
 		val = _.isArray(field) ? _.map(field, retrieveVal) : retrieveVal(field);
-		return config.format ? applyViewFn(context, config.format, val, field) : val;
+		return config.onGet ? applyViewFn(context, config.onGet, val, field) : val;
 	};
 
 	// Gets the value from the given element, with the optional hint that the value is html.
@@ -261,7 +274,7 @@
 			originalVal = getElVal($el, (config.updateMethod == 'html' || isContenteditable($el)));
 
 		// Don't update the view if `updateView` returns false.
-		if (config.updateView != null && !evaluateBoolean(view, config.updateView, val)) return;
+		if (!evaluateBoolean(view, config.updateView, val)) return;
 
 		if (isRadio($el)) $el.filter('[value='+val+']').prop('checked', true);
 		else if (isCheckbox($el)) $el.prop('checked', !!val);

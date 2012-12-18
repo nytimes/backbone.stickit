@@ -275,6 +275,8 @@ $(document).ready(function() {
 	});
 
 	test('bindings:format', 3, function() {
+
+		// Deprecated version of `onget`.
 		
 		model.set({'water':'fountain'});
 		view.model = model;
@@ -293,6 +295,34 @@ $(document).ready(function() {
 		$('#qunit-fixture').html(view.render().el);
 
 		equal(view.$('#test5').text(), '_fountain_water');
+	});
+
+	test('bindings:onSet/onGet', 6, function() {
+		
+		model.set({'water':'_fountain'});
+		view.model = model;
+		view.templateId = 'jst1';
+		view.bindings = {
+			'#test1': {
+				modelAttr: 'water',
+				onGet: function(val, modelAttr) {
+					equal(val, this.model.get('water'));
+					equal(modelAttr, 'water');
+					return val.substring(1);
+				},
+				onSet: function(val, modelAttr) {
+					equal(val, view.$('#test1').val());
+					equal(modelAttr, 'water');
+					return '_' + val;
+				}
+			}
+		};
+
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test1').val(), 'fountain');
+		view.$('#test1').val('evian').keyup();
+		equal(model.get('water'), '_evian');
 	});
 
 	test('bindings:afterUpdate', function() {
@@ -592,6 +622,8 @@ $(document).ready(function() {
 
 	test('bindings:attributes:format', function() {
 		
+		// Deprecated version of `onGet`
+
 		model.set({'water':'fountain'});
 		view.model = model;
 		view.templateId = 'jst5';
@@ -601,6 +633,29 @@ $(document).ready(function() {
 				attributes: [{
 					name: 'data-name',
 					format: function(val, modelAttr) { return '_' + val + '_' + modelAttr; }
+				}]
+			}
+		};
+
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test5').attr('data-name'), '_fountain_water');
+
+		model.set('water', 'evian');
+		equal(view.$('#test5').attr('data-name'), '_evian_water');
+	});
+
+	test('bindings:attributes:onGet', function() {
+		
+		model.set({'water':'fountain'});
+		view.model = model;
+		view.templateId = 'jst5';
+		view.bindings = {
+			'#test5': {
+				modelAttr: 'water',
+				attributes: [{
+					name: 'data-name',
+					onGet: function(val, modelAttr) { return '_' + val + '_' + modelAttr; }
 				}]
 			}
 		};
@@ -623,7 +678,7 @@ $(document).ready(function() {
 				attributes: [{
 					name: 'data-name',
 					observe: 'candy',
-					format: function(val) {
+					onGet: function(val) {
 						equal(val, this.model.get('candy'));
 						return this.model.get('water') + '-' + this.model.get('candy');
 					}
@@ -649,7 +704,7 @@ $(document).ready(function() {
 				attributes: [{
 					name: 'data-name',
 					observe: ['water', 'candy'],
-					format: function(val, modelAttr) {
+					onGet: function(val, modelAttr) {
 						_.each(modelAttr, _.bind(function(attr, i) {
 							equal(val[i], this.model.get(attr));
 						}, this));
@@ -759,7 +814,7 @@ $(document).ready(function() {
 		view.bindings = {
 			'#test5': {
 				modelAttr: ['water', 'candy'],
-				format: function(val, modelAttr) {
+				onGet: function(val, modelAttr) {
 					_.each(modelAttr, _.bind(function(attr, i) {
 						equal(val[i], this.model.get(attr));
 					}, this));
@@ -792,7 +847,7 @@ $(document).ready(function() {
 		view.bindings = {
 			'#test5': {
 				modelAttr: 'water',
-				format: function() { return 'water events'; },
+				onGet: function() { return 'water events'; },
 				click: 'eventHandler',
 				customEvent: 'eventHandler'
 			}
