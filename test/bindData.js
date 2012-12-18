@@ -540,6 +540,47 @@ $(document).ready(function() {
 
 	});
 
+	test('bindings:selectOptions (multi-select with onGet/onSet)', function() {
+
+		var collection = [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}, {id:4,name:'aquafina'}];
+		
+		model.set({'water':'1-3'});
+		view.model = model;
+		view.templateId = 'jst16';
+		view.bindings = {
+			'#test16': {
+				modelAttr: 'water',
+				onGet: function(val, attr) {
+					return _.map(val.split('-'), function(id) {return Number(id);});
+				},
+				onSet: function(vals, attr) {
+					return vals.join('-');
+				},
+				selectOptions: {
+					collection: function() { return collection; },
+					labelPath: 'name',
+					valuePath: 'id'
+				}
+			}
+		};
+
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test16 option:selected:eq(0)').data('stickit_bind_val'), 1);
+		equal(view.$('#test16 option:selected:eq(1)').data('stickit_bind_val'), 3);
+
+		var field = _.clone(model.get('water'));
+		field += '-2';
+
+		model.set({'water':field});
+		equal(view.$('#test16 option:selected:eq(1)').data('stickit_bind_val'), 2);
+
+		view.$('#test16 option:eq(3)').prop('selected', true).change();
+
+		equal(model.get('water'), '1-2-3-4');
+
+	});
+
 	test('bindings:selectOptions (optgroup)', function() {
 
 		model.set({'character':3});

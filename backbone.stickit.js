@@ -281,7 +281,7 @@
 		else if (isInput($el) || isTextarea($el)) $el.val(val);
 		else if (isContenteditable($el)) $el.html(val);
 		else if (isSelect($el)) {
-			var optList, list = selectConfig.collection, fieldVal = model.get(modelAttr), isMultiple = $el.prop('multiple');
+			var optList, list = selectConfig.collection, isMultiple = $el.prop('multiple');
 
 			$el.html('');
 
@@ -290,11 +290,11 @@
 			optList = _.isFunction(list) ? applyViewFn(view, list) : evaluatePath(window, list);
 
 			// Add an empty default option if the current model attribute isn't defined.
-			if (fieldVal == null)
-				$el.append('<option/>').find('option').prop('selected', true).data('stickit_bind_val', fieldVal);
+			if (val == null)
+				$el.append('<option/>').find('option').prop('selected', true).data('stickit_bind_val', val);
 
 			if (_.isArray(optList)) {
-				addSelectOptions(optList, $el, selectConfig, fieldVal, isMultiple);
+				addSelectOptions(optList, $el, selectConfig, val, isMultiple);
 			} else {
 				// If the optList is an object, then it should be used to define an optgroup. An
 				// optgroup object configuration looks like the following:
@@ -305,7 +305,7 @@
 				//   }
 				_.each(optList.opt_labels, function(label) {
 					var $group = $('<optgroup/>').attr('label', label);
-					addSelectOptions(optList[label], $group, selectConfig, fieldVal, isMultiple);
+					addSelectOptions(optList[label], $group, selectConfig, val, isMultiple);
 					$el.append($group);
 				});
 			}
