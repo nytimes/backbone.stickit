@@ -27,8 +27,7 @@
 			var self = this,
 				model = optionalModel || this.model,
 				bindings = optionalBindingsConfig || this.bindings || {},
-				props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'],
-				bindingsKeys = ['afterUpdate', 'attributes', 'escape', 'format', 'modelAttr', 'onGet', 'onSet', 'setOptions', 'selectOptions', 'updateMethod', 'updateModel', 'updateView', 'visible', 'visibleFn'];
+				props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'];
 
 			this._modelBindings || (this._modelBindings = []);
 			this.unstickModel(model);
@@ -38,7 +37,7 @@
 			// Iterate through the selectors in the bindings configuration and configure
 			// the various options for each field.
 			_.each(_.keys(bindings), function(selector) {
-				var $el, options, modelEvents, eventCallback, modelAttr, visibleCb,
+				var $el, options, modelAttr, visibleCb,
 					config = bindings[selector] || {},
 					bindKey = _.uniqueId();
 				
@@ -111,20 +110,15 @@
 				}
 
 				if (modelAttr) {
-					// Wire up two-way bindings for form elements.
-					eventCallback = function() {
-						var val = getElVal($el, isContenteditable($el));
-						// Don't update the model if false is returned from the `updateModel` configuration.
-						if (evaluateBoolean(self, config.updateModel, val, modelAttr))
-							setVal(model, modelAttr, val, options, config.onSet, self);
-					};
-					if (isRadio($el) || isCheckbox($el) || isSelect($el))
-						self.events['change '+selector] =  eventCallback;
-					else if (isInput($el) || isTextarea($el) || isContenteditable($el)) {
-						// It would be nice to use the `oninput` event handler but IE9- has buggy to no support,
-						// and using feature detection doesn't work because it is hard to sniff in Firefox.
-						_.each(['keyup', 'change', 'paste', 'cut'], function(type) {
-							self.events[type+' '+selector] =  eventCallback;
+					if (isFormEl($el) || isContenteditable($el)) {
+						// Bind events to the element which will update the model with changes.
+						_.each(config.eventsOverride || getModelEvents($el), function(type) {
+							self.events[type+' '+selector] = function() {
+								var val = getElVal($el, isContenteditable($el));
+								// Don't update the model if false is returned from the `updateModel` configuration.
+								if (evaluateBoolean(self, config.updateModel, val, modelAttr))
+								setVal(model, modelAttr, val, options, config.onSet, self);
+							};
 						});
 					}
 
@@ -139,14 +133,6 @@
 
 					updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self), model, true);
 				}
-
-				// Any key in the configuration that is outside of the api is
-				// considered an event and is wired up in `view.events`.
-				_.each(_.difference(_.keys(config), bindingsKeys), function(event) {
-					self.events[event+' '+selector] = function(e) {
-						return applyViewFn(self, config[event], $el, e, options);
-					};
-				});
 			});
 			
 			// We added to `this.events` so we need to re-delegate.
@@ -224,6 +210,15 @@
 		};
 		val = _.isArray(field) ? _.map(field, retrieveVal) : retrieveVal(field);
 		return config.onGet ? applyViewFn(context, config.onGet, val, field) : val;
+	};
+
+	// Returns the list of events needed to bind to the given form element.
+	var getModelEvents = function($el) {
+		// Binding to `oninput` is off the table since IE9- has buggy to no support, and
+		// using feature detection doesn't work because it is hard to sniff in Firefox.
+		if (isInput($el) || isTextarea($el) || isContenteditable($el))
+			return ['keyup', 'change', 'paste', 'cut'];
+		else return ['change'];
 	};
 
 	// Gets the value from the given element, with the optional hint that the value is html.

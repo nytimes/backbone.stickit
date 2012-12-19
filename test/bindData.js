@@ -875,32 +875,6 @@ $(document).ready(function() {
 		equal(view.$('#test5').text(), 'evian snickers');
 	});
 
-	test('events', 7, function() {
-		
-		model.set({'water':'fountain'});
-		view.model = model;
-		view.templateId = 'jst5';
-		view.eventHandler = function($el, event, options) {
-			equal($el.attr('id'), 'test5');
-			equal($(event.target).attr('id'), 'test5');
-			ok(_.has(options, 'bindKey'));
-		};
-		view.bindings = {
-			'#test5': {
-				modelAttr: 'water',
-				onGet: function() { return 'water events'; },
-				click: 'eventHandler',
-				customEvent: 'eventHandler'
-			}
-		};
-		$('#qunit-fixture').html(view.render().el);
-
-		equal(view.$('#test5').text(), 'water events');
-
-		view.$('#test5').click();
-		view.$('#test5').trigger('customEvent');
-	});
-
 	test('bindings:updateView', 6, function() {
 		
 		model.set({'water':'fountain'});
@@ -926,7 +900,7 @@ $(document).ready(function() {
 		equal(view.$('#test1').val(), 'evian');
 	});
 
-	test('bindings:udpateModel', 6, function() {
+	test('bindings:updateModel', 6, function() {
 		
 		model.set({'water':'fountain'});
 		view.model = model;
@@ -947,6 +921,32 @@ $(document).ready(function() {
 		equal(model.get('water'), 'fountain');
 
 		view.$('#test1').val('evian').keyup();
+		equal(model.get('water'), 'evian');
+	});
+
+	test('bindings:eventsOverride', function() {
+		
+		model.set({'water':'fountain'});
+		view.model = model;
+		view.templateId = 'jst1';
+		view.bindings = {
+			'#test1': {
+				modelAttr: 'water',
+				eventsOverride: ['blur', 'keydown']
+			}
+		};
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test1').val(), 'fountain');
+
+		// keyup should be overriden, so no change...
+		view.$('#test1').val('dasina').keyup();
+		equal(model.get('water'), 'fountain');
+
+		view.$('#test1').blur();
+		equal(model.get('water'), 'dasina');
+
+		view.$('#test1').val('evian').keydown();
 		equal(model.get('water'), 'evian');
 	});
 
