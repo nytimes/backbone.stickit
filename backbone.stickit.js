@@ -54,11 +54,13 @@
 				// Allow shorthand setting of model attributes - `'selector':'modelAttr'`.
 				if (_.isString(config)) config = {modelAttr:config};
 
-				modelAttr = config.modelAttr;
+				// Keep backward-compatibility for `modelAttr` which was renamed `observe`.
+				modelAttr = config.observe || config.modelAttr;
+
 				if (config.updateModel == null) config.updateModel = true;
 				if (config.updateView == null) config.updateView = true;
 
-				// Keep backward-compatibility for `format` which is now `onGet`.
+				// Keep backward-compatibility for `format` which was renamed `onGet`.
 				if (config.format && !config.onGet) config.onGet = config.format;
 
 				// Create the model set options with a unique `bindKey` so that we
@@ -262,7 +264,7 @@
 
 	// Update the value of `$el` in `view` using the given configuration.
 	var updateViewBindEl = function(view, $el, config, val, model, isInitializing) {
-		var modelAttr = config.modelAttr,
+		var modelAttr = config.observe || config.modelAttr,
 			afterUpdate = config.afterUpdate,
 			selectConfig = config.selectOptions,
 			updateMethod = config.updateMethod || 'text',

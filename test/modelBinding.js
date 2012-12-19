@@ -9,7 +9,7 @@ $(document).ready(function() {
 		view.templateId = 'jst10';
 		view.bindings = {
 			'.test10': {
-				modelAttr: 'water',
+				observe: 'water',
 				attributes: [{
 					name: 'class',
 					observe: 'copy'

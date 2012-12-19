@@ -9,7 +9,7 @@ $(document).ready(function() {
 		view.templateId = 'jst1';
 		view.bindings = {
 			'#test1': {
-				modelAttr: 'water'
+				observe: 'water'
 			}
 		};
 		$('#qunit-fixture').html(view.render().el);
@@ -30,7 +30,7 @@ $(document).ready(function() {
 		view.templateId = 'jst2';
 		view.bindings = {
 			'#test2': {
-				modelAttr: 'water'
+				observe: 'water'
 			}
 		};
 		$('#qunit-fixture').html(view.render().el);
@@ -51,7 +51,7 @@ $(document).ready(function() {
 		view.templateId = 'jst17';
 		view.bindings = {
 			'#test17': {
-				modelAttr: 'water'
+				observe: 'water'
 			}
 		};
 		$('#qunit-fixture').html(view.render().el);
@@ -72,7 +72,7 @@ $(document).ready(function() {
 		view.templateId = 'jst3';
 		view.bindings = {
 			'#test3': {
-				modelAttr: 'water'
+				observe: 'water'
 			}
 		};
 		$('#qunit-fixture').html(view.render().el);
@@ -93,7 +93,7 @@ $(document).ready(function() {
 		view.templateId = 'jst4';
 		view.bindings = {
 			'.test4': {
-				modelAttr: 'water'
+				observe: 'water'
 			}
 		};
 		$('#qunit-fixture').html(view.render().el);
@@ -114,7 +114,7 @@ $(document).ready(function() {
 		view.templateId = 'jst5';
 		view.bindings = {
 			'#test5': {
-				modelAttr: 'water'
+				observe: 'water'
 			}
 		};
 		$('#qunit-fixture').html(view.render().el);
@@ -132,7 +132,7 @@ $(document).ready(function() {
 		view.templateId = 'jst5';
 		view.bindings = {
 			':el': {
-				modelAttr: 'water'
+				observe: 'water'
 			}
 		};
 		$('#qunit-fixture').html(view.render().el);
@@ -175,18 +175,18 @@ $(document).ready(function() {
 			},
 			bindings: {
 				'#test0-div': {
-					modelAttr: 'water'
+					observe: 'water'
 				},
 				'#test0-textarea': {
-					modelAttr: 'candy'
+					observe: 'candy'
 				}
 			},
 			otherBindings: {
 				'#test0-span': {
-					modelAttr: 'water'
+					observe: 'water'
 				},
 				'#test0-input': {
-					modelAttr: 'candy'
+					observe: 'candy'
 				}
 			},
 			render: function() {
@@ -227,7 +227,7 @@ $(document).ready(function() {
 		view.templateId = 'jst1';
 		view.bindings = {
 			'#test1': {
-				modelAttr: 'water',
+				observe: 'water',
 				setOptions: {silent:true}
 			}
 		};
@@ -247,7 +247,7 @@ $(document).ready(function() {
 		view.templateId = 'jst5';
 		view.bindings = {
 			'#test5': {
-				modelAttr: 'water',
+				observe: 'water',
 				updateMethod: 'html'
 			}
 		};
@@ -263,7 +263,7 @@ $(document).ready(function() {
 		view.templateId = 'jst5';
 		view.bindings = {
 			'#test5': {
-				modelAttr: 'water',
+				observe: 'water',
 				updateMethod: 'html',
 				escape: true
 			}
@@ -283,7 +283,7 @@ $(document).ready(function() {
 		view.templateId = 'jst5';
 		view.bindings = {
 			'#test5': {
-				modelAttr: 'water',
+				observe: 'water',
 				format: function(val, modelAttr) {
 					equal(val, this.model.get('water'));
 					equal(modelAttr, 'water');
@@ -304,7 +304,7 @@ $(document).ready(function() {
 		view.templateId = 'jst1';
 		view.bindings = {
 			'#test1': {
-				modelAttr: 'water',
+				observe: 'water',
 				onGet: function(val, modelAttr) {
 					equal(val, this.model.get('water'));
 					equal(modelAttr, 'water');
@@ -332,7 +332,7 @@ $(document).ready(function() {
 		view.templateId = 'jst15';
 		view.bindings = {
 			'#test15-1': {
-				modelAttr: 'water',
+				observe: 'water',
 				afterUpdate: function($el, val, originalVal) {
 					equal($el.text(), model.get('water'));
 					equal(val, 'evian');
@@ -340,7 +340,7 @@ $(document).ready(function() {
 				}
 			},
 			'#test15-2': {
-				modelAttr: 'water',
+				observe: 'water',
 				afterUpdate: function($el, val, originalVal) {
 					equal($el.val(), model.get('water'));
 					equal(val, 'evian');
@@ -348,28 +348,28 @@ $(document).ready(function() {
 				}
 			},
 			'#test15-3': {
-				modelAttr: 'candy',
+				observe: 'candy',
 				afterUpdate: function($el, val, originalVal) {
 					equal(val, false);
 					equal(originalVal, true);
 				}
 			},
 			'.test15-4': {
-				modelAttr: 'water',
+				observe: 'water',
 				afterUpdate: function($el, val, originalVal) {
 					equal(val, 'evian');
 					equal(originalVal, 'fountain');
 				}
 			},
 			'#test15-6': {
-				modelAttr: 'water',
+				observe: 'water',
 				afterUpdate: function($el, val, originalVal) {
 					equal(val, 'evian');
 					equal(originalVal, 'fountain');
 				}
 			},
 			'#test15-7': {
-				modelAttr: 'water',
+				observe: 'water',
 				selectOptions: {
 					collection: function() { return [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]; },
 					labelPath: 'name',
@@ -394,7 +394,7 @@ $(document).ready(function() {
 		view.templateId = 'jst8';
 		view.bindings = {
 			'#test8': {
-				modelAttr: 'water',
+				observe: 'water',
 				selectOptions: {
 					collection: function() { return [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]; },
 					labelPath: 'name',
@@ -424,7 +424,7 @@ $(document).ready(function() {
 		view.templateId = 'jst8';
 		view.bindings = {
 			'#test8': {
-				modelAttr: 'water',
+				observe: 'water',
 				selectOptions: {
 					collection: 'test.collection',
 					labelPath: 'name'
@@ -452,7 +452,7 @@ $(document).ready(function() {
 		view.templateId = 'jst8';
 		view.bindings = {
 			'#test8': {
-				modelAttr: 'water',
+				observe: 'water',
 				selectOptions: {
 					collection: 'test.collection',
 					labelPath: 'name'
@@ -480,7 +480,7 @@ $(document).ready(function() {
 		view.templateId = 'jst16';
 		view.bindings = {
 			'#test16': {
-				modelAttr: 'water',
+				observe: 'water',
 				selectOptions: {
 					collection: function() { return collection; },
 					labelPath: 'name'
@@ -514,7 +514,7 @@ $(document).ready(function() {
 		view.templateId = 'jst16';
 		view.bindings = {
 			'#test16': {
-				modelAttr: 'water',
+				observe: 'water',
 				selectOptions: {
 					collection: function() { return collection; },
 					labelPath: 'name',
@@ -549,7 +549,7 @@ $(document).ready(function() {
 		view.templateId = 'jst16';
 		view.bindings = {
 			'#test16': {
-				modelAttr: 'water',
+				observe: 'water',
 				onGet: function(val, attr) {
 					return _.map(val.split('-'), function(id) {return Number(id);});
 				},
@@ -588,7 +588,7 @@ $(document).ready(function() {
 		view.templateId = 'jst8';
 		view.bindings = {
 			'#test8': {
-				modelAttr: 'character',
+				observe: 'character',
 				selectOptions: {
 					collection: function() {
 						return {
@@ -623,7 +623,7 @@ $(document).ready(function() {
 		view.templateId = 'jst5';
 		view.bindings = {
 			'#test5': {
-				modelAttr: 'water',
+				observe: 'water',
 				attributes: [{
 					name: 'data-name'
 
@@ -646,7 +646,7 @@ $(document).ready(function() {
 		view.templateId = 'jst9';
 		view.bindings = {
 			'#test9': {
-				modelAttr: 'water',
+				observe: 'water',
 				attributes: [{
 					name: 'class'
 				}]
@@ -670,7 +670,7 @@ $(document).ready(function() {
 		view.templateId = 'jst5';
 		view.bindings = {
 			'#test5': {
-				modelAttr: 'water',
+				observe: 'water',
 				attributes: [{
 					name: 'data-name',
 					format: function(val, modelAttr) { return '_' + val + '_' + modelAttr; }
@@ -693,7 +693,7 @@ $(document).ready(function() {
 		view.templateId = 'jst5';
 		view.bindings = {
 			'#test5': {
-				modelAttr: 'water',
+				observe: 'water',
 				attributes: [{
 					name: 'data-name',
 					onGet: function(val, modelAttr) { return '_' + val + '_' + modelAttr; }
@@ -793,7 +793,7 @@ $(document).ready(function() {
 		view.templateId = 'jst11';
 		view.bindings = {
 			'#test11': {
-				modelAttr: 'code'
+				observe: 'code'
 			}
 		};
 		$('#qunit-fixture').html(view.render().el);
@@ -811,11 +811,11 @@ $(document).ready(function() {
 		view.templateId = 'jst14';
 		view.bindings = {
 			'#test14-1': {
-				modelAttr: 'water',
+				observe: 'water',
 				visible: true
 			},
 			'#test14-2': {
-				modelAttr: 'candy',
+				observe: 'candy',
 				visible: function(val, attrName) {
 					equal(val, this.model.get('candy'));
 					equal(attrName, 'candy');
@@ -823,7 +823,7 @@ $(document).ready(function() {
 				}
 			},
 			'#test14-3': {
-				modelAttr: 'costume',
+				observe: 'costume',
 				visible: true,
 				visibleFn: function($el, val, attrName) {
 					equal($el.attr('id'), 'test14-3');
@@ -847,14 +847,14 @@ $(document).ready(function() {
 		equal(view.$('#test14-3').css('display') == 'block' , true);
 	});
 
-	test('modelAttr (multiple; array)', 12, function() {
+	test('observe (multiple; array)', 12, function() {
 		
 		model.set({'water':'fountain', 'candy':'twix'});
 		view.model = model;
 		view.templateId = 'jst5';
 		view.bindings = {
 			'#test5': {
-				modelAttr: ['water', 'candy'],
+				observe: ['water', 'candy'],
 				onGet: function(val, modelAttr) {
 					_.each(modelAttr, _.bind(function(attr, i) {
 						equal(val[i], this.model.get(attr));
@@ -882,7 +882,7 @@ $(document).ready(function() {
 		view.templateId = 'jst1';
 		view.bindings = {
 			'#test1': {
-				modelAttr: 'water',
+				observe: 'water',
 				updateView: function(val) {
 					equal(val, model.get('water'));
 					return val == 'evian';
@@ -907,7 +907,7 @@ $(document).ready(function() {
 		view.templateId = 'jst1';
 		view.bindings = {
 			'#test1': {
-				modelAttr: 'water',
+				observe: 'water',
 				updateModel: function(val, attrName) {
 					equal(val, view.$('#test1').val());
 					equal(attrName, 'water');
@@ -931,7 +931,7 @@ $(document).ready(function() {
 		view.templateId = 'jst1';
 		view.bindings = {
 			'#test1': {
-				modelAttr: 'water',
+				observe: 'water',
 				eventsOverride: ['blur', 'keydown']
 			}
 		};
@@ -948,6 +948,27 @@ $(document).ready(function() {
 
 		view.$('#test1').val('evian').keydown();
 		equal(model.get('water'), 'evian');
+	});
+
+	test('bindings:modelAttr (deprecated)', function() {
+		
+		model.set({'water':'fountain'});
+		view.model = model;
+		view.templateId = 'jst1';
+		view.bindings = {
+			'#test1': {
+				modelAttr: 'water'
+			}
+		};
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test1').val(), 'fountain');
+
+		model.set('water', 'evian');
+		equal(view.$('#test1').val(), 'evian');
+		
+		view.$('#test1').val('dasina').keyup();
+		equal(model.get('water'), 'dasina');
 	});
 
 });
