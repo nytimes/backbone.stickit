@@ -33,9 +33,12 @@
 				};
 			
 			domLoaded(function() {
-				// Remove the "Documentation" paragraph, since we are already here...
-				var p = document.getElementsByTagName('p')[0];
-				p.parentNode.removeChild(p);
+				// Remove the "Documentation" paragraphs, since we are already here...
+				var paragraphs = document.getElementsByTagName('p');
+				var p1 = paragraphs[0];
+				var p2 = paragraphs[1];
+				p1.parentNode.removeChild(p1);
+				p2.parentNode.removeChild(p2);
 			});
 		}
       });
