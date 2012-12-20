@@ -71,11 +71,11 @@
 				// property `name`, to an `observe`d model attribute, using an optional
 				// `onGet` formatter.
 				//
-				//   [{
-				//     name: 'attributeOrPropertyName',
-				//     observe: 'modelAttrName'
-				//     onGet: function(modelAttrVal, modelAttrName) { ... }
-				//   }, ...]
+				//     [{
+				//       name: 'attributeOrPropertyName',
+				//       observe: 'modelAttrName'
+				//       onGet: function(modelAttrVal, modelAttrName) { ... }
+				//     }, ...]
 				//
 				_.each(config.attributes || [], function(attrConfig) {
 					var lastClass = '',
@@ -295,11 +295,13 @@
 			} else {
 				// If the optList is an object, then it should be used to define an optgroup. An
 				// optgroup object configuration looks like the following:
-				//   {
-				//      'opt_labels': ['Looney Tunes', 'Three Stooges'],
-				//      'Looney Tunes': [{id: 1, name: 'Bugs Bunny'}, {id: 2, name: 'Donald Duck'}],
-				//      'Three Stooges': [{id: 3, name : 'moe'}, {id: 4, name : 'larry'}, {id: 5, name : 'curly'}]
-				//   }
+				//
+				//     {
+				//       'opt_labels': ['Looney Tunes', 'Three Stooges'],
+				//       'Looney Tunes': [{id: 1, name: 'Bugs Bunny'}, {id: 2, name: 'Donald Duck'}],
+				//       'Three Stooges': [{id: 3, name : 'moe'}, {id: 4, name : 'larry'}, {id: 5, name : 'curly'}]
+				//     }
+				//
 				_.each(optList.opt_labels, function(label) {
 					var $group = $('<optgroup/>').attr('label', label);
 					addSelectOptions(optList[label], $group, selectConfig, val, isMultiple);
