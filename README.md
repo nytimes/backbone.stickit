@@ -1,6 +1,6 @@
-[DOCUMENTATION for current/stable release: 0.6.0](http://nytimes.github.com/backbone.stickit/)
+[**Documentation for current/stable release: 0.6.0**](http://nytimes.github.com/backbone.stickit/)
 
-The following is documentation for the code in master/edge version...
+**The following is documentation for the code in master/edge version...**
 
 ## Introduction
 
