@@ -12,6 +12,8 @@ Stickit differs, however, in that it is a more natural fit with Backbone's style
 
 [download v0.6.1](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.6.1.zip)
 
+[download master/edge](https://raw.github.com/NYTimes/backbone.stickit/master/backbone.stickit.js)
+
 [view annotated source](http://nytimes.github.com/backbone.stickit/docs/annotated/)
 
 ## Usage
@@ -165,7 +167,7 @@ bindings: {
     updateView: false
   }
 }
-
+```
 
 ### afterUpdate
 
@@ -181,7 +183,7 @@ A string function reference or function which is called after a value is updated
   highlight: function($el, val) {
     $el.fadeOut(500, function() { $(this).fadeIn(500); });
   }
- ```
+```
 
 ### updateMethod
 
@@ -195,7 +197,7 @@ Method used to update the inner value of the view element. Defaults to 'text', b
       onGet: function(val) { return '<div id="headerVal">' + val + '</div>'; }
     }
   }
- ```
+```
 
 ### escape
 
@@ -209,7 +211,7 @@ A boolean which when true escapes the model before setting it in the view - inte
       escape: true
     }
   }
- ```
+```
 
 ### visible and visibleFn
 
@@ -336,17 +338,19 @@ Optgroups are supported, where the collection is formatted into an object with a
 
 ```javascript
   bindings: {
-    modelAttr: 'character',
     'select#tv-characters': {
-      collection: function() {
-        return {
-          'opt_labels': ['Looney Tunes', 'Three Stooges'],
-          'Looney Tunes': [{id: 1, name: 'Bugs Bunny'}, {id: 2, name: 'Donald Duck'}],
-          'Three Stooges': [{id: 3, name: 'moe'}, {id: 4, name: 'larry'}, {id: 5, name: 'curly'}]
-        }
-      },
-      labelPath: 'name',
-      valuePath: 'id'
+      observe: 'character',
+      selectOptions: {
+        collection: function() {
+          return {
+            'opt_labels': ['Looney Tunes', 'Three Stooges'],
+            'Looney Tunes': [{id: 1, name: 'Bugs Bunny'}, {id: 2, name: 'Donald Duck'}],
+            'Three Stooges': [{id: 3, name: 'moe'}, {id: 4, name: 'larry'}, {id: 5, name: 'curly'}]
+          };
+        },
+        labelPath: 'name',
+        valuePath: 'id'
+      }
     }
   }
 ```
@@ -357,8 +361,9 @@ Finally, multiselects are supported if the select element contains the [multiple
 //
 // model.get('books') returns a dash-delimited list of book ids: "1-2-4"
 
-'#books': {
-  observe: 'books',
+bindings: {
+  '#books': {
+    observe: 'books',
     onGet: function(val, attr) {
       // Return an array of the ids so that stickit can match them to select options.
       return _.map(val.split('-'), Number);
@@ -371,6 +376,7 @@ Finally, multiselects are supported if the select element contains the [multiple
       collection: 'app.books',
       labelPath: 'name',
       valuePath: 'id'
+    }
   }
 }
 ```
