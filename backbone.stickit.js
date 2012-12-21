@@ -273,7 +273,7 @@
 		// Don't update the view if `updateView` returns false.
 		if (!evaluateBoolean(view, config.updateView, val)) return;
 
-		if (isRadio($el)) $el.filter('[value='+val+']').prop('checked', true);
+		if (isRadio($el)) $el.filter('[value="'+val+'"]').prop('checked', true);
 		else if (isCheckbox($el)) $el.prop('checked', !!val);
 		else if (isInput($el) || isTextarea($el)) $el.val(val);
 		else if (isContenteditable($el)) $el.html(val);
