@@ -154,7 +154,7 @@
 	// Evaluates the given `path` (in object/dot-notation) relative to the given `obj`.
 	var evaluatePath = function(obj, path) {
 		var pathParts = (path || '').split('.');
-		return _.reduce(pathParts, function(memo, i) { return memo[i]; }, obj) || obj;
+		return _.reduce(pathParts, function(memo, i) { return memo[i]; }, obj);
 	};
 
 	// If the given `fn` is a string, then view[fn] is called, otherwise it is a function
