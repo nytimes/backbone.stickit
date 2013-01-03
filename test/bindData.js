@@ -471,6 +471,33 @@ $(document).ready(function() {
 		equal(model.get('water'), null);
 	});
 
+	test('bindings:selectOptions (empty string label)', function() {
+	
+		model.set({'water':'session'});
+		view.model = model;
+		view.templateId = 'jst8';
+		view.bindings = {
+			'#test8': {
+				observe: 'water',
+				selectOptions: {
+					collection: function() {
+						return [{label:'c',value:''}, {label:'s',value:'session'}];
+					},
+					labelPath: "label",
+					valuePath: "value"
+				}
+			}
+		};
+
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test8 option:selected').data('stickit_bind_val'), 'session');
+		equal(view.$('#test8 option:eq(0)').data('stickit_bind_val'), '');
+
+		model.set('water', '');
+		equal(view.$('#test8 option:selected').data('stickit_bind_val'), '');
+	});
+
 	test('bindings:selectOptions (multi-select without valuePath)', function() {
 
 		var collection = [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}, {id:4,name:'aquafina'}];

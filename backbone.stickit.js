@@ -152,9 +152,11 @@
 	// -------
 
 	// Evaluates the given `path` (in object/dot-notation) relative to the given `obj`.
+	// If the path is null/undefined, then the given `obj` is returned.
 	var evaluatePath = function(obj, path) {
-		var pathParts = (path || '').split('.');
-		return _.reduce(pathParts, function(memo, i) { return memo[i]; }, obj);
+		var parts = (path || '').split('.');
+		var result = _.reduce(parts, function(memo, i) { return memo[i]; }, obj);
+		return result == null ? obj : result;
 	};
 
 	// If the given `fn` is a string, then view[fn] is called, otherwise it is a function
