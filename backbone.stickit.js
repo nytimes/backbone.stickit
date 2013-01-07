@@ -325,8 +325,8 @@
 			// If the list contains a null/undefined value, then an empty option should
 			// be appended in the list; otherwise, fill the option with text and value.
 			if (obj != null) {
-				option.text(evaluatePath(obj, selectConfig.labelPath));
-				optionVal = evaluatePath(obj, selectConfig.valuePath);
+				option.text(evaluatePath(obj, selectConfig.labelPath || "label"));
+				optionVal = evaluatePath(obj, selectConfig.valuePath || "value");
 			} else if ($el.find('option').length && $el.find('option:eq(0)').data('stickit_bind_val') == null) return false;
 
 			// Save the option value so that we can reference it later.
