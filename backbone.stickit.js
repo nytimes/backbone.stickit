@@ -29,10 +29,10 @@
 				bindings = optionalBindingsConfig || this.bindings || {},
 				props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'];
 
-			this._modelBindings || (this._modelBindings = []);
+			this._modelBindings = this._modelBindings || [];
 			this.unstickModel(model);
 
-			this.events || (this.events = {});
+			this.events = this.events || {};
 
 			// Iterate through the selectors in the bindings configuration and configure
 			// the various options for each field.
@@ -50,7 +50,7 @@
 
 				// Fail fast if the selector didn't match an element.
 				if (!$el.length) return false;
-		
+
 				// Allow shorthand setting of model attributes - `'selector':'modelAttr'`.
 				if (_.isString(config)) config = {modelAttr:config};
 
@@ -133,10 +133,10 @@
 						});
 					});
 
-					updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self), model, true);
+					updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self, $el), model, true);
 				}
 			});
-			
+
 			// We added to `this.events` so we need to re-delegate.
 			this.delegateEvents();
 
@@ -209,7 +209,7 @@
 	// If `field` is an array, then an array of respective values will be returned.
 	var getVal = function(model, field, config, context) {
 		var val, retrieveVal = function(attr) {
-			var retrieved = config.escape ? model.escape(attr) : model.get(attr);
+			var retrieved = modelGet.call(context, config, model, attr, el);
 			return _.isUndefined(retrieved) ? '' : retrieved;
 		};
 		val = _.isArray(field) ? _.map(field, retrieveVal) : retrieveVal(field);
@@ -262,6 +262,43 @@
 			if (isVisible) $el.show();
 			else $el.hide();
 		}
+	};
+
+	// Sets model value
+	modelSet = function(config, model, attr, value, options, el){
+		//grab setter from view
+		var setter;
+
+		if(config.setter){
+			if(typeof config.setter == "string") setter = this[config.setter];
+			else setter = config.setter;
+		}
+		//use defined setter
+		if(setter){
+			value = setter.call(this, value, attr, model, el);
+		}
+
+		model.set(attr, value, options);
+	};
+
+	modelGet = function(config, model, attr, el){
+		var val = config.escape ? model.escape(attr) : model.get(attr);
+
+		var getter;
+		if(config.getter){
+			if(typeof config.getter == "string"){
+				getter = this[config.getter];
+			} else {
+				getter = config.getter;
+			}
+		}
+
+		//use defined getter
+		if(getter){
+			val = getter.call(this, val, attr, model, el);
+		}
+
+		return val;
 	};
 
 	// Update the value of `$el` in `view` using the given configuration.
@@ -325,8 +362,8 @@
 			// If the list contains a null/undefined value, then an empty option should
 			// be appended in the list; otherwise, fill the option with text and value.
 			if (obj != null) {
-				option.text(evaluatePath(obj, selectConfig.labelPath));
-				optionVal = evaluatePath(obj, selectConfig.valuePath);
+				option.text(evaluatePath(obj, selectConfig.labelPath || "label"));
+				optionVal = evaluatePath(obj, selectConfig.valuePath || "value");
 			} else if ($el.find('option').length && $el.find('option:eq(0)').data('stickit_bind_val') == null) return false;
 
 			// Save the option value so that we can reference it later.
