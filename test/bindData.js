@@ -498,6 +498,30 @@ $(document).ready(function() {
 		equal(view.$('#test8 option:selected').data('stickit_bind_val'), '');
 	});
 
+	test('bindings:selectOptions (default labelPath/valuePath)', function() {
+	
+		model.set({'water':'evian'});
+		view.model = model;
+		view.templateId = 'jst8';
+		view.bindings = {
+			'#test8': {
+				observe: 'water',
+				selectOptions: {
+					collection: function() {
+						return [{label:'c',value:'fountain'}, {label:'s',value:'evian'}];
+					}
+				}
+			}
+		};
+
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('#test8 option:selected').data('stickit_bind_val'), 'evian');
+
+		model.set('water', 'fountain');
+		equal(view.$('#test8 option:selected').data('stickit_bind_val'), 'fountain');
+	});
+
 	test('bindings:selectOptions (multi-select without valuePath)', function() {
 
 		var collection = [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}, {id:4,name:'aquafina'}];
