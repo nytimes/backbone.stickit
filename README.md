@@ -292,8 +292,8 @@ Specify a list of events which will override stickit's default events for a form
 Binds an object collection, html select box, and a model attribute value. The following are configuration options for binding:
 
  - `collection`: an object path of a collection relative to `window` or a string function reference which returns a collection.
- - `labelPath`: the path to the label value for select options within the collection of objects.
- - `valuePath`: the path to the values for select options within the collection of objects. When an options is selected, the value that is defined for the given option is set in the model. Leave this undefined if the whole object is the value.
+ - `labelPath`: the path to the label value for select options within the collection of objects. Default value when undefined is `label`.
+ - `valuePath`: the path to the values for select options within the collection of objects. When an options is selected, the value that is defined for the given option is set in the model. Leave this undefined if the whole object is the value or to use the default `value`.
 
 When bindings are initialized, Stickit will build the `select` element with the options and bindings configured. 
 
