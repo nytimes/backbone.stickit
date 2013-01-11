@@ -262,7 +262,7 @@ The following is a list of the supported form elements, their binding details, a
    - input[type=number] will update the model with a Number value 
    - `keyup`, `change`, `cut`, and `paste` events are used for handling
  - input[type=checkbox]
-   - `checked` property determined by the truthiness of the model attribute or the result of `onGet`
+   - `checked` property determined by the truthiness of the model attribute or if the checkbox "value" attribute is defined, then its value is used to match against the model. If a binding selector matches multiple checkboxes then it is expected that the observed model attribute will be an array of values to match against the checkbox value attributes.
    - `change` event is used for handling
  - input[type=radio]
    - model attribute value matched to a radio group `value` attribute

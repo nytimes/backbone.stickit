@@ -1022,4 +1022,48 @@ $(document).ready(function() {
 		equal(model.get('water'), 'dasina');
 	});
 
+	test('checkbox multiple', function() {
+		
+		model.set({'water':['fountain', 'dasina']});
+		view.model = model;
+		view.templateId = 'jst18';
+		view.bindings = {
+			'.boxes': 'water'
+		};
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('.boxes[value="fountain"]').prop('checked'), true);
+		equal(view.$('.boxes[value="evian"]').prop('checked'), false);
+		equal(view.$('.boxes[value="dasina"]').prop('checked'), true);
+
+		model.set('water', ['evian']);
+		equal(view.$('.boxes[value="fountain"]').prop('checked'), false);
+		equal(view.$('.boxes[value="evian"]').prop('checked'), true);
+		equal(view.$('.boxes[value="dasina"]').prop('checked'), false);
+		
+		view.$('.boxes[value="dasina"]').prop('checked', true).change();
+		equal(model.get('water').length, 2);
+		equal(_.indexOf(model.get('water'), 'evian') > -1, true);
+		equal(_.indexOf(model.get('water'), 'dasina') > -1, true);
+	});
+
+	test('checkbox (single with value defined)', function() {
+		
+		model.set({'water':null});
+		view.model = model;
+		view.templateId = 'jst19';
+		view.bindings = {
+			'.box': 'water'
+		};
+		$('#qunit-fixture').html(view.render().el);
+
+		equal(view.$('.box').prop('checked'), false);
+		
+		model.set('water', 'fountain');
+		equal(view.$('.box').prop('checked'), true);
+		
+		view.$('.box').prop('checked', false).change();
+		equal(model.get('water'), null);
+	});
+
 });

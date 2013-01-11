@@ -229,10 +229,25 @@
 	var getElVal = function($el, isHTML) {
 		var val;
 		if (isFormEl($el)) {
-			if (isCheckbox($el)) val = $el.prop('checked');
-			else if (isNumber($el)) val = Number($el.val());
+			if (isNumber($el)) val = Number($el.val());
 			else if (isRadio($el)) val = $el.filter(':checked').val();
-			else if (isSelect($el)) {
+			else if (isCheckbox($el)) {
+				if ($el.length > 1) {
+					val = _.reduce($el, function(memo, el) {
+						if ($(el).prop('checked')) memo.push($(el).val());
+						return memo;
+					}, []);
+				} else {
+					val = $el.prop('checked');
+					// If the checkbox has a value attribute defined, then
+					// use that value. Most browsers use "on" as a default.
+					var boxval = $el.val();
+					if (boxval != 'on' && boxval != null) {
+						if (val) val = $el.val();
+						else val = null;
+					}
+				}
+			} else if (isSelect($el)) {
 				if ($el.prop('multiple')) {
 					val = $el.find('option:selected').map(function() {
 						return $(this).data('stickit_bind_val');
@@ -276,8 +291,20 @@
 		if (!evaluateBoolean(view, config.updateView, val)) return;
 
 		if (isRadio($el)) $el.filter('[value="'+val+'"]').prop('checked', true);
-		else if (isCheckbox($el)) $el.prop('checked', !!val);
-		else if (isInput($el) || isTextarea($el)) $el.val(val);
+		else if (isCheckbox($el)) {
+			if ($el.length > 1) {
+				// There are multiple checkboxes so we need to go through them and check
+				// any that have value attributes that match what's in the array of `val`s.
+				val || (val = []);
+				_.each($el, function(el) {
+					if (_.indexOf(val, $(el).val()) > -1) $(el).prop('checked', true);
+					else $(el).prop('checked', false);
+				});
+			} else {
+				if (_.isBoolean(val)) $el.prop('checked', val);
+				else $el.prop('checked', val == $el.val());
+			}
+		} else if (isInput($el) || isTextarea($el)) $el.val(val);
 		else if (isContenteditable($el)) $el.html(val);
 		else if (isSelect($el)) {
 			var optList, list = selectConfig.collection, isMultiple = $el.prop('multiple');
