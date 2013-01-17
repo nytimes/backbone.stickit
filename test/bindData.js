@@ -220,6 +220,118 @@ $(document).ready(function() {
 		equal(model2.get('candy'), 'butterfinger');
 	});
 
+	test('stickit (existing events property as hash with multiple models and bindings)', function() {
+
+		var model1, testView;
+
+		model1 = new (Backbone.Model)({id:1, candy:'twix' });
+		model2 = new (Backbone.Model)({id:2, candy:'snickers'});
+
+		testView = new (Backbone.View.extend({
+
+			initialize: function() {
+				this.model = model1;
+				this.otherModel = model2;
+			},
+
+			events: {
+				click: 'handleClick'
+			},
+
+			bindings: {
+				'#test0-textarea': 'candy'
+			},
+
+			otherBindings: {
+				'#test0-input': 'candy'
+			},
+
+			render: function() {
+				var html = document.getElementById('jst0').innerHTML;
+				this.$el.html(_.template(html)());
+				this.stickit();
+				this.stickit(this.otherModel, this.otherBindings);
+				return this;
+			},
+
+			handleClick: function() {
+				this.clickHandled = true;
+			}
+
+		}))();
+
+		$('#qunit-fixture').html(testView.render().el);
+
+		testView.$('#test0-textarea').val('kit kat').keyup();
+		testView.$('#test0-input').val('butterfinger').keyup();
+
+		equal(model1.get('candy'), 'kit kat');
+		equal(model2.get('candy'), 'butterfinger');
+
+		testView.$el.click();
+
+		equal(testView.clickHandled, true);
+
+	});
+
+	test('stickit (existing events property as function with multiple models and bindings)', function() {
+
+		var model1, testView;
+
+		model1 = new (Backbone.Model)({id:1, candy:'twix' });
+		model2 = new (Backbone.Model)({id:2, candy:'snickers'});
+
+		testView = new (Backbone.View.extend({
+
+			initialize: function() {
+				this.model = model1;
+				this.otherModel = model2;
+			},
+
+			events: function() {
+
+				var self = this;
+
+				return {
+					click: function() {
+						self.clickHandled = true;
+					}
+				};
+
+			},
+
+			bindings: {
+				'#test0-textarea': 'candy'
+			},
+
+			otherBindings: {
+				'#test0-input': 'candy'
+			},
+
+			render: function() {
+				var html = document.getElementById('jst0').innerHTML;
+				this.$el.html(_.template(html)());
+				this.stickit();
+				this.stickit(this.otherModel, this.otherBindings);
+				return this;
+			}
+
+		}))();
+
+		$('#qunit-fixture').html(testView.render().el);
+
+		testView.$('#test0-textarea').val('kit kat').keyup();
+		testView.$('#test0-input').val('butterfinger').keyup();
+
+		equal(model1.get('candy'), 'kit kat');
+		equal(model2.get('candy'), 'butterfinger');
+
+		testView.$el.click();
+
+		equal(testView.clickHandled, true);
+
+	});
+
 	test('bindings:setOptions', function() {
 		
 		model.set({'water':'fountain'});

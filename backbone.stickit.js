@@ -33,7 +33,13 @@
 
 			this.unstickModel(model);
 
-			this.events || (this.events = {});
+			// this.events may be a function, but we want to add new event bindings
+			// to it. Creating our own stickitEvents property allows us to add
+			// bindings while allowing this.events to remain a function. This also
+			// supports multiple calls to stickit() in a single Backbone View.
+			this.stickitEvents = _(_.result(this, 'events') || {}).extend(
+				this.stickitEvents
+			);
 
 			// Iterate through the selectors in the bindings configuration and configure
 			// the various options for each field.
@@ -116,7 +122,7 @@
 					if (isFormEl($el) || isContenteditable($el)) {
 						// Bind events to the element which will update the model with changes.
 						_.each(config.eventsOverride || getModelEvents($el), function(type) {
-							self.events[type+'.stickit '+selector] = function() {
+							self.stickitEvents[type+'.stickit '+selector] = function() {
 								var val = getElVal($el, isContenteditable($el));
 								// Don't update the model if false is returned from the `updateModel` configuration.
 								if (evaluateBoolean(self, config.updateModel, val, modelAttr))
@@ -137,9 +143,9 @@
 					updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self), model, true);
 				}
 			});
-			
-			// We added to `this.events` so we need to re-delegate.
-			this.delegateEvents();
+
+			// We added to `this.stickitEvents` so we need to re-delegate.
+			this.delegateEvents(this.stickitEvents);
 
 			// Wrap remove so that we can remove model events when this view is removed.
 			this.remove = _.wrap(this.remove, function(oldRemove) {
