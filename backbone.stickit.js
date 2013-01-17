@@ -30,6 +30,7 @@
 				props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'];
 
 			this._modelBindings || (this._modelBindings = []);
+
 			this.unstickModel(model);
 
 			this.events || (this.events = {});
@@ -115,7 +116,7 @@
 					if (isFormEl($el) || isContenteditable($el)) {
 						// Bind events to the element which will update the model with changes.
 						_.each(config.eventsOverride || getModelEvents($el), function(type) {
-							self.events[type+' '+selector] = function() {
+							self.events[type+'.stickit '+selector] = function() {
 								var val = getElVal($el, isContenteditable($el));
 								// Don't update the model if false is returned from the `updateModel` configuration.
 								if (evaluateBoolean(self, config.updateModel, val, modelAttr))
