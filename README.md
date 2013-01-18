@@ -22,12 +22,8 @@ Similar to `view.events`, you can define `view.bindings` to map selectors to bin
 
 ```javascript
   bindings: {
-    '#title': {
-      observe: 'title'
-    },
-    '#author': {
-      observe: 'authorName'
-    }
+    '#title': 'title',
+    '#author': 'authorName'
   }
 ```
 
