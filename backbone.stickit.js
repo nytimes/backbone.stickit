@@ -1,5 +1,127 @@
 (function($) {
 
+	var isFormEl = function($el) {
+		return _.indexOf(['CHECKBOX', 'INPUT', 'SELECT', 'TEXTAREA'], $el[0].nodeName, true) > -1;
+	};
+
+	var isCheckbox = function($el) { return $el.is('input[type=checkbox]'); };
+
+	var isRadio = function($el) { return $el.is('input[type="radio"]'); };
+
+	var isNumber = function($el) { return $el.is('input[type=number]'); };
+
+	var isSelect = function($el) { return $el.is('select'); };
+
+	var isTextarea = function($el) { return $el.is('textarea'); };
+
+	var isInput = function($el) { return $el.is('input'); };
+
+	var isContenteditable = function($el) { return $el.is('[contenteditable="true"]'); };
+
+	var Stickit = Backbone.Stickit = {
+
+		isObservable: function($el) {
+			return isFormEl($el) || isContenteditable($el);
+		},
+
+		updateEl: function($el, val, config) {
+
+			var selectConfig = config.selectOptions,
+					updateMethod = config.updateMethod || 'text';
+
+			if (isRadio($el)) $el.filter('[value="'+val+'"]').prop('checked', true);
+			else if (isCheckbox($el)) {
+				if ($el.length > 1) {
+					// There are multiple checkboxes so we need to go through them and check
+					// any that have value attributes that match what's in the array of `val`s.
+					val || (val = []);
+					_.each($el, function(el) {
+						if (_.indexOf(val, $(el).val()) > -1) $(el).prop('checked', true);
+						else $(el).prop('checked', false);
+					});
+				} else {
+					if (_.isBoolean(val)) $el.prop('checked', val);
+					else $el.prop('checked', val == $el.val());
+				}
+			} else if (isInput($el) || isTextarea($el)) $el.val(val);
+			else if (isContenteditable($el)) $el.html(val);
+			else if (isSelect($el)) {
+				var optList, list = selectConfig.collection, isMultiple = $el.prop('multiple');
+
+				$el.html('');
+
+				// The `list` configuration is a function that returns the options list or a string
+				// which represents the path to the list relative to `window`.
+				optList = _.isFunction(list) ? applyViewFn(view, list) : evaluatePath(window, list);
+
+				// Add an empty default option if the current model attribute isn't defined.
+				if (val == null)
+					$el.append('<option/>').find('option').prop('selected', true).data('stickit_bind_val', val);
+
+				if (_.isArray(optList)) {
+					addSelectOptions(optList, $el, selectConfig, val, isMultiple);
+				} else {
+					// If the optList is an object, then it should be used to define an optgroup. An
+					// optgroup object configuration looks like the following:
+					//
+					//     {
+					//       'opt_labels': ['Looney Tunes', 'Three Stooges'],
+					//       'Looney Tunes': [{id: 1, name: 'Bugs Bunny'}, {id: 2, name: 'Donald Duck'}],
+					//       'Three Stooges': [{id: 3, name : 'moe'}, {id: 4, name : 'larry'}, {id: 5, name : 'curly'}]
+					//     }
+					//
+					_.each(optList.opt_labels, function(label) {
+						var $group = $('<optgroup/>').attr('label', label);
+						addSelectOptions(optList[label], $group, selectConfig, val, isMultiple);
+						$el.append($group);
+					});
+				}
+			} else {
+				$el[updateMethod](val);
+			}
+		},
+
+		// Gets the value from the given element, with the optional hint that the value is html.
+		getElVal: function($el, isHTML) {
+			var val;
+			if (isFormEl($el)) {
+				if (isNumber($el)) val = Number($el.val());
+				else if (isRadio($el)) val = $el.filter(':checked').val();
+				else if (isCheckbox($el)) {
+					if ($el.length > 1) {
+						val = _.reduce($el, function(memo, el) {
+							if ($(el).prop('checked')) memo.push($(el).val());
+							return memo;
+						}, []);
+					} else {
+						val = $el.prop('checked');
+						// If the checkbox has a value attribute defined, then
+						// use that value. Most browsers use "on" as a default.
+						var boxval = $el.val();
+						if (boxval != 'on' && boxval != null) {
+							if (val) val = $el.val();
+							else val = null;
+						}
+					}
+				} else if (isSelect($el)) {
+					if ($el.prop('multiple')) {
+						val = $el.find('option:selected').map(function() {
+							return $(this).data('stickit_bind_val');
+						}).get();
+					} else {
+						val = $el.find('option:selected').data('stickit_bind_val');
+					}
+				}
+				else val = $el.val();
+			} else {
+				if (isHTML) val = $el.html();
+				else val = $el.text();
+			}
+			return val;
+		}
+
+	};
+
 	// Backbone.View Mixins
 	// --------------------
 
@@ -115,11 +237,11 @@
 				}
 
 				if (modelAttr) {
-					if (isFormEl($el) || isContenteditable($el)) {
+					if (Stickit.isObservable($el)) {
 						// Bind events to the element which will update the model with changes.
 						_.each(config.eventsOverride || getModelEvents($el), function(type) {
 							self._stickitEvents[type+'.stickit '+selector] = function() {
-								var val = getElVal($el, isContenteditable($el));
+								var val = Stickit.getElVal($el, isContenteditable($el));
 								// Don't update the model if false is returned from the `updateModel` configuration.
 								if (evaluateBoolean(self, config.updateModel, val, modelAttr))
 								setVal(model, modelAttr, val, options, config.onSet, self);
@@ -168,24 +290,6 @@
 		if (fn) return (_.isString(fn) ? view[fn] : fn).apply(view, _.toArray(arguments).slice(2));
 	};
 
-	var isFormEl = function($el) {
-		return _.indexOf(['CHECKBOX', 'INPUT', 'SELECT', 'TEXTAREA'], $el[0].nodeName, true) > -1;
-	};
-
-	var isCheckbox = function($el) { return $el.is('input[type=checkbox]'); };
-
-	var isRadio = function($el) { return $el.is('input[type="radio"]'); };
-
-	var isNumber = function($el) { return $el.is('input[type=number]'); };
-
-	var isSelect = function($el) { return $el.is('select'); };
-
-	var isTextarea = function($el) { return $el.is('textarea'); };
-
-	var isInput = function($el) { return $el.is('input'); };
-
-	var isContenteditable = function($el) { return $el.is('[contenteditable="true"]'); };
-
 	// Given a function, string (view function reference), or a boolean
 	// value, returns the truthy result. Any other types evaluate as false.
 	var evaluateBoolean = function(view, reference) {
@@ -228,45 +332,6 @@
 		else return ['change'];
 	};
 
-	// Gets the value from the given element, with the optional hint that the value is html.
-	var getElVal = function($el, isHTML) {
-		var val;
-		if (isFormEl($el)) {
-			if (isNumber($el)) val = Number($el.val());
-			else if (isRadio($el)) val = $el.filter(':checked').val();
-			else if (isCheckbox($el)) {
-				if ($el.length > 1) {
-					val = _.reduce($el, function(memo, el) {
-						if ($(el).prop('checked')) memo.push($(el).val());
-						return memo;
-					}, []);
-				} else {
-					val = $el.prop('checked');
-					// If the checkbox has a value attribute defined, then
-					// use that value. Most browsers use "on" as a default.
-					var boxval = $el.val();
-					if (boxval != 'on' && boxval != null) {
-						if (val) val = $el.val();
-						else val = null;
-					}
-				}
-			} else if (isSelect($el)) {
-				if ($el.prop('multiple')) {
-					val = $el.find('option:selected').map(function() {
-						return $(this).data('stickit_bind_val');
-					}).get();
-				} else {
-					val = $el.find('option:selected').data('stickit_bind_val');
-				}
-			}
-			else val = $el.val();
-		} else {
-			if (isHTML) val = $el.html();
-			else val = $el.text();
-		}
-		return val;
-	};
-
 	// Updates the given element according to the rules for the `visible` api key.
 	var updateVisibleBindEl = function($el, val, attrName, config, context) {
 		var visible = config.visible, visibleFn = config.visibleFn, isVisible = !!val;
@@ -286,63 +351,12 @@
 	var updateViewBindEl = function(view, $el, config, val, model, isInitializing) {
 		var modelAttr = config.observe || config.modelAttr,
 			afterUpdate = config.afterUpdate,
-			selectConfig = config.selectOptions,
-			updateMethod = config.updateMethod || 'text',
-			originalVal = getElVal($el, (config.updateMethod == 'html' || isContenteditable($el)));
+			originalVal = Stickit.getElVal($el, (config.updateMethod == 'html' || isContenteditable($el)));
 
 		// Don't update the view if `updateView` returns false.
 		if (!evaluateBoolean(view, config.updateView, val)) return;
 
-		if (isRadio($el)) $el.filter('[value="'+val+'"]').prop('checked', true);
-		else if (isCheckbox($el)) {
-			if ($el.length > 1) {
-				// There are multiple checkboxes so we need to go through them and check
-				// any that have value attributes that match what's in the array of `val`s.
-				val || (val = []);
-				_.each($el, function(el) {
-					if (_.indexOf(val, $(el).val()) > -1) $(el).prop('checked', true);
-					else $(el).prop('checked', false);
-				});
-			} else {
-				if (_.isBoolean(val)) $el.prop('checked', val);
-				else $el.prop('checked', val == $el.val());
-			}
-		} else if (isInput($el) || isTextarea($el)) $el.val(val);
-		else if (isContenteditable($el)) $el.html(val);
-		else if (isSelect($el)) {
-			var optList, list = selectConfig.collection, isMultiple = $el.prop('multiple');
-
-			$el.html('');
-
-			// The `list` configuration is a function that returns the options list or a string
-			// which represents the path to the list relative to `window`.
-			optList = _.isFunction(list) ? applyViewFn(view, list) : evaluatePath(window, list);
-
-			// Add an empty default option if the current model attribute isn't defined.
-			if (val == null)
-				$el.append('<option/>').find('option').prop('selected', true).data('stickit_bind_val', val);
-
-			if (_.isArray(optList)) {
-				addSelectOptions(optList, $el, selectConfig, val, isMultiple);
-			} else {
-				// If the optList is an object, then it should be used to define an optgroup. An
-				// optgroup object configuration looks like the following:
-				//
-				//     {
-				//       'opt_labels': ['Looney Tunes', 'Three Stooges'],
-				//       'Looney Tunes': [{id: 1, name: 'Bugs Bunny'}, {id: 2, name: 'Donald Duck'}],
-				//       'Three Stooges': [{id: 3, name : 'moe'}, {id: 4, name : 'larry'}, {id: 5, name : 'curly'}]
-				//     }
-				//
-				_.each(optList.opt_labels, function(label) {
-					var $group = $('<optgroup/>').attr('label', label);
-					addSelectOptions(optList[label], $group, selectConfig, val, isMultiple);
-					$el.append($group);
-				});
-			}
-		} else {
-			$el[updateMethod](val);
-		}
+		Stickit.updateEl($el, val, config);
 
 		// Execute the `afterUpdate` callback from the `bindings` config.
 		if (!isInitializing) applyViewFn(view, afterUpdate, $el, val, originalVal);
