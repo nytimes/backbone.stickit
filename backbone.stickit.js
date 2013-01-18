@@ -54,8 +54,8 @@
 				// Fail fast if the selector didn't match an element.
 				if (!$el.length) return false;
 		
-				// Allow shorthand setting of model attributes - `'selector':'modelAttr'`.
-				if (_.isString(config)) config = {modelAttr:config};
+				// Allow shorthand setting of model attributes - `'selector':'observe'`.
+				if (_.isString(config)) config = {observe:config};
 
 				// Keep backward-compatibility for `modelAttr` which was renamed `observe`.
 				modelAttr = config.observe || config.modelAttr;
