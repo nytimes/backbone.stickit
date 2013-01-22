@@ -252,11 +252,11 @@
 				}
 			} else if (isSelect($el)) {
 				if ($el.prop('multiple')) {
-					val = $el.find('option:selected').map(function() {
+					val = $el.find('option').not(function(){ return !this.selected }).map(function() {
 						return $(this).data('stickit_bind_val');
 					}).get();
 				} else {
-					val = $el.find('option:selected').data('stickit_bind_val');
+					val = $el.find('option').not(function(){ return !this.selected }).data('stickit_bind_val');
 				}
 			}
 			else val = $el.val();
