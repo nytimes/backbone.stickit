@@ -291,7 +291,9 @@ Binds an object collection, html select box, and a model attribute value. The fo
  - `labelPath`: the path to the label value for select options within the collection of objects. Default value when undefined is `label`.
  - `valuePath`: the path to the values for select options within the collection of objects. When an options is selected, the value that is defined for the given option is set in the model. Leave this undefined if the whole object is the value or to use the default `value`.
 
-When bindings are initialized, Stickit will build the `select` element with the options and bindings configured. 
+When bindings are initialized, Stickit will build the `select` element with the options and bindings configured.
+
+**Note:** if you are using Zepto and referencing object values for your select options, like in the second example, then you will need to also include the Zepto data module.
 
 The following example references a collection of stooges at `window.app.stooges` and uses the `age` attribute for labels and the `name` attribute for option values:  
 
@@ -428,7 +430,7 @@ If you are writing a custom frontend, then you're going to need to write custom 
 
 ### Dependencies
 
- Backbone 0.9, underscore.js, and jQuery or Zepto
+ Backbone 0.9, underscore.js, and jQuery or Zepto (with data module; see `selectOptions`)
 
 ### License
 
