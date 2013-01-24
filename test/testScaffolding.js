@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-	QUnit.testStart =function() {
+	QUnit.testStart = function() {
 		
 		window.view = new (Backbone.View.extend({
 			model: null,
@@ -21,6 +21,11 @@ $(document).ready(function() {
 		delete window.model;
 		view.remove();
 		delete window.view;
+	};
+
+	// Zepto does not have psuedo-selector support, so...
+	window.getSelectedOption = function($el) {
+		return $el.find('option').not(function(){ return !this.selected; });
 	};
 
 });

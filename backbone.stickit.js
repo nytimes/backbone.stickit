@@ -186,6 +186,8 @@
 
 	var isContenteditable = function($el) { return $el.is('[contenteditable="true"]'); };
 
+	var getSelectedOption = function($select) { return $select.find('option').not(function(){ return !this.selected; }); };
+
 	// Given a function, string (view function reference), or a boolean
 	// value, returns the truthy result. Any other types evaluate as false.
 	var evaluateBoolean = function(view, reference) {
@@ -252,11 +254,11 @@
 				}
 			} else if (isSelect($el)) {
 				if ($el.prop('multiple')) {
-					val = $el.find('option').not(function(){ return !this.selected }).map(function() {
+					val = $(getSelectedOption($el).map(function() {
 						return $(this).data('stickit_bind_val');
-					}).get();
+					})).get();
 				} else {
-					val = $el.find('option').not(function(){ return !this.selected }).data('stickit_bind_val');
+					val = getSelectedOption($el).data('stickit_bind_val');
 				}
 			}
 			else val = $el.val();
@@ -357,7 +359,7 @@
 			if (obj != null) {
 				option.text(evaluatePath(obj, selectConfig.labelPath || "label"));
 				optionVal = evaluatePath(obj, selectConfig.valuePath || "value");
-			} else if ($el.find('option').length && $el.find('option:eq(0)').data('stickit_bind_val') == null) return false;
+			} else if ($el.find('option').length && $el.find('option').eq(0).data('stickit_bind_val') == null) return false;
 
 			// Save the option value so that we can reference it later.
 			option.data('stickit_bind_val', optionVal);
