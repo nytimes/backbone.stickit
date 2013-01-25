@@ -81,7 +81,7 @@ Note, binding to multiple model attributes using an array configuration only app
     // Bind to multiple model attributes
     '#header': {
       observe: ['title', 'author'],
-      onGet: function(values, attrNames) {
+      onGet: function(values) {
         // onGet called after title *or* author model attributes change.
         return values[0] + ', by ' + values[1];
       }
@@ -97,7 +97,8 @@ A special selector value that binds to the view delegate (view.$el).
   tagName: 'form',
   bindings: {
     ':el': {
-      submit: function($el, event) { /* ... */ }
+      observe: 'title'
+      onGet: function(value) { /* ... */ }
     }
   }
 ```
@@ -113,8 +114,8 @@ A callback which returns a formatted version of the model attribute value that i
       onGet: 'formatHeader'
     }
   },
-  formatHeader: function(val, attrName) {
-    return attrName + ': ' + val;
+  formatHeader: function(value, options) {
+    return options.observe + ': ' + val;
   }
  ```
 
@@ -129,7 +130,7 @@ A callback which prepares a formatted version of the view value before setting i
       onSet: 'addByline'
     }
   },
-  addByline: function(val, attrName) {
+  addByline: function(val, options) {
     return 'by ' + val;
   }
 ```
@@ -145,7 +146,7 @@ A boolean value or a function that returns a boolean value which controls whethe
       updateModel: 'confirmFormat'
     }
   },
-  confirmFormat: function(val, attrName) {
+  confirmFormat: function(val, options) {
     // Only update the title attribute if the value starts with "by".
     return val.startsWith('by ');
   }
@@ -176,7 +177,7 @@ A string function reference or function which is called after a value is updated
       afterUpdate: 'highlight'
     }
   },
-  highlight: function($el, val) {
+  highlight: function($el, val, originalVal, options) {
     $el.fadeOut(500, function() { $(this).fadeIn(500); });
   }
 ```
@@ -228,7 +229,7 @@ If more than the standard jQuery show/hide is required, then you can manually ta
   bindings: {
     '#title': {
       observe: 'title',
-      visible: function(val, attrName) { return val == 'Mille Plateaux'; }
+      visible: function(val, options) { return val == 'Mille Plateaux'; }
     }
   }
 ```
@@ -241,7 +242,7 @@ If more than the standard jQuery show/hide is required, then you can manually ta
       visibleFn: 'slideFast'
     }
   },
-  slideFast: function($el, isVisible, attrName) {
+  slideFast: function($el, isVisible, options) {
     if (isVisible) $el.slideDown('fast');
     else $el.slideUp('fast');
   }
@@ -362,11 +363,11 @@ Finally, multiselects are supported if the select element contains the [multiple
 bindings: {
   '#books': {
     observe: 'books',
-    onGet: function(val, attr) {
+    onGet: function(val) {
       // Return an array of the ids so that stickit can match them to select options.
       return _.map(val.split('-'), Number);
     },
-    onSet: function(vals, attr) {
+    onSet: function(vals) {
       // Format the array of ids into a dash-delimited String before setting.
       return vals.join('-');
     },
@@ -415,7 +416,7 @@ Binds element attributes and properties with observed model attributes, using th
       }]
     }
   },
-  formatWings: function(val, attrName) {
+  formatWings: function(val) {
     return val ? 'has-wings' : 'no-wings';
   }
  ```

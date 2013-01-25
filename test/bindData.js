@@ -396,10 +396,10 @@ $(document).ready(function() {
 		view.bindings = {
 			'#test5': {
 				observe: 'water',
-				format: function(val, modelAttr) {
+				format: function(val, options) {
 					equal(val, this.model.get('water'));
-					equal(modelAttr, 'water');
-					return '_' + val + '_' + modelAttr;
+					equal(options.observe, 'water');
+					return '_' + val + '_' + options.observe;
 				}
 			}
 		};
@@ -417,14 +417,14 @@ $(document).ready(function() {
 		view.bindings = {
 			'#test1': {
 				observe: 'water',
-				onGet: function(val, modelAttr) {
+				onGet: function(val, options) {
 					equal(val, this.model.get('water'));
-					equal(modelAttr, 'water');
+					equal(options.observe, 'water');
 					return val.substring(1);
 				},
-				onSet: function(val, modelAttr) {
+				onSet: function(val, options) {
 					equal(val, view.$('#test1').val());
-					equal(modelAttr, 'water');
+					equal(options.observe, 'water');
 					return '_' + val;
 				}
 			}
@@ -437,7 +437,7 @@ $(document).ready(function() {
 		equal(model.get('water'), '_evian');
 	});
 
-	test('bindings:afterUpdate', function() {
+	test('bindings:afterUpdate', 20, function() {
 		
 		model.set({'water':'fountain', 'candy':true});
 		view.model = model;
@@ -445,39 +445,44 @@ $(document).ready(function() {
 		view.bindings = {
 			'#test15-1': {
 				observe: 'water',
-				afterUpdate: function($el, val, originalVal) {
+				afterUpdate: function($el, val, originalVal, options) {
 					equal($el.text(), model.get('water'));
 					equal(val, 'evian');
 					equal(originalVal, 'fountain');
+					equal(options.observe, 'water');
 				}
 			},
 			'#test15-2': {
 				observe: 'water',
-				afterUpdate: function($el, val, originalVal) {
+				afterUpdate: function($el, val, originalVal, options) {
 					equal($el.val(), model.get('water'));
 					equal(val, 'evian');
 					equal(originalVal, 'fountain');
+					equal(options.observe, 'water');
 				}
 			},
 			'#test15-3': {
 				observe: 'candy',
-				afterUpdate: function($el, val, originalVal) {
+				afterUpdate: function($el, val, originalVal, options) {
 					equal(val, false);
 					equal(originalVal, true);
+					equal(options.observe, 'candy');
 				}
 			},
 			'.test15-4': {
 				observe: 'water',
-				afterUpdate: function($el, val, originalVal) {
+				afterUpdate: function($el, val, originalVal, options) {
 					equal(val, 'evian');
 					equal(originalVal, 'fountain');
+					equal(options.observe, 'water');
 				}
 			},
 			'#test15-6': {
 				observe: 'water',
-				afterUpdate: function($el, val, originalVal) {
+				afterUpdate: function($el, val, originalVal, options) {
 					equal(val, 'evian');
 					equal(originalVal, 'fountain');
+					equal(options.observe, 'water');
 				}
 			},
 			'#test15-7': {
@@ -487,9 +492,10 @@ $(document).ready(function() {
 					labelPath: 'name',
 					valuePath: 'name'
 				},
-				afterUpdate: function($el, val, originalVal) {
+				afterUpdate: function($el, val, originalVal, options) {
 					equal(val, 'evian');
 					equal(originalVal, 'fountain');
+					equal(options.observe, 'water');
 				}
 			}
 		};
@@ -713,10 +719,10 @@ $(document).ready(function() {
 		view.bindings = {
 			'#test16': {
 				observe: 'water',
-				onGet: function(val, attr) {
+				onGet: function(val) {
 					return _.map(val.split('-'), function(id) {return Number(id);});
 				},
-				onSet: function(vals, attr) {
+				onSet: function(vals) {
 					return vals.join('-');
 				},
 				selectOptions: {
@@ -836,7 +842,7 @@ $(document).ready(function() {
 				observe: 'water',
 				attributes: [{
 					name: 'data-name',
-					format: function(val, modelAttr) { return '_' + val + '_' + modelAttr; }
+					format: function(val, options) { return '_' + val + '_' + options.observe; }
 				}]
 			}
 		};
@@ -859,7 +865,7 @@ $(document).ready(function() {
 				observe: 'water',
 				attributes: [{
 					name: 'data-name',
-					onGet: function(val, modelAttr) { return '_' + val + '_' + modelAttr; }
+					onGet: function(val, options) { return '_' + val + '_' + options.observe; }
 				}]
 			}
 		};
@@ -908,11 +914,11 @@ $(document).ready(function() {
 				attributes: [{
 					name: 'data-name',
 					observe: ['water', 'candy'],
-					onGet: function(val, modelAttr) {
-						_.each(modelAttr, _.bind(function(attr, i) {
+					onGet: function(val, options) {
+						_.each(options.observe, _.bind(function(attr, i) {
 							equal(val[i], this.model.get(attr));
 						}, this));
-						equal(modelAttr.toString(), 'water,candy');
+						equal(options.observe.toString(), 'water,candy');
 						return model.get('water') + '-' + model.get('candy');
 					}
 				}]
@@ -979,19 +985,19 @@ $(document).ready(function() {
 			},
 			'#test14-2': {
 				observe: 'candy',
-				visible: function(val, attrName) {
+				visible: function(val, options) {
 					equal(val, this.model.get('candy'));
-					equal(attrName, 'candy');
+					equal(options.observe, 'candy');
 					return this.model.get('candy') == 'twix';
 				}
 			},
 			'#test14-3': {
 				observe: 'costume',
 				visible: true,
-				visibleFn: function($el, val, attrName) {
+				visibleFn: function($el, val, options) {
 					equal($el.attr('id'), 'test14-3');
 					equal(val, this.model.get('costume'));
-					equal(attrName, 'costume');
+					equal(options.observe, 'costume');
 				}
 			}
 		};
@@ -1018,11 +1024,11 @@ $(document).ready(function() {
 		view.bindings = {
 			'#test5': {
 				observe: ['water', 'candy'],
-				onGet: function(val, modelAttr) {
-					_.each(modelAttr, _.bind(function(attr, i) {
+				onGet: function(val, options) {
+					_.each(options.observe, _.bind(function(attr, i) {
 						equal(val[i], this.model.get(attr));
 					}, this));
-					equal(modelAttr.toString(), 'water,candy');
+					equal(options.observe.toString(), 'water,candy');
 					return model.get('water') + ' ' + model.get('candy');
 				}
 			}
@@ -1038,7 +1044,7 @@ $(document).ready(function() {
 		equal(view.$('#test5').text(), 'evian snickers');
 	});
 
-	test('bindings:updateView', 6, function() {
+	test('bindings:updateView', 9, function() {
 		
 		model.set({'water':'fountain'});
 		view.model = model;
@@ -1046,7 +1052,8 @@ $(document).ready(function() {
 		view.bindings = {
 			'#test1': {
 				observe: 'water',
-				updateView: function(val) {
+				updateView: function(val, options) {
+					equal(options.observe, 'water');
 					equal(val, model.get('water'));
 					return val == 'evian';
 				}
@@ -1071,9 +1078,9 @@ $(document).ready(function() {
 		view.bindings = {
 			'#test1': {
 				observe: 'water',
-				updateModel: function(val, attrName) {
+				updateModel: function(val, options) {
 					equal(val, view.$('#test1').val());
-					equal(attrName, 'water');
+					equal(options.observe, 'water');
 					return val == 'evian';
 				}
 			}

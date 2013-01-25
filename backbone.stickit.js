@@ -82,7 +82,7 @@
 				//
 				_.each(config.attributes || [], function(attrConfig) {
 					var lastClass = '',
-						observed = attrConfig.observe || modelAttr,
+						observed = attrConfig.observe || (attrConfig.observe = modelAttr),
 						updateAttr = function() {
 							var updateType = _.indexOf(props, attrConfig.name, true) > -1 ? 'prop' : 'attr',
 								val = getVal(model, observed, attrConfig, self);
@@ -107,7 +107,7 @@
 				// will be executed to manually handle showing/hiding the view element.
 				if (config.visible != null) {
 					visibleCb = function() {
-						updateVisibleBindEl($el, getVal(model, modelAttr, config, self), modelAttr, config, self);
+						updateVisibleBindEl($el, getVal(model, modelAttr, config, self), config, self);
 					};
 					observeModelEvent(model, self, 'change:' + modelAttr, visibleCb);
 					visibleCb();
@@ -121,8 +121,8 @@
 							self._stickitEvents[type+'.stickit '+selector] = function() {
 								var val = getElVal($el, isContenteditable($el));
 								// Don't update the model if false is returned from the `updateModel` configuration.
-								if (evaluateBoolean(self, config.updateModel, val, modelAttr))
-								setVal(model, modelAttr, val, options, config.onSet, self);
+								if (evaluateBoolean(self, config.updateModel, val, config))
+								setVal(model, modelAttr, val, options, config.onSet, self, config);
 							};
 						});
 					}
@@ -205,8 +205,8 @@
 	};
 
 	// Prepares the given value and sets it into the model.
-	var setVal = function(model, attr, val, options, onSet, context) {
-		if (onSet) val = applyViewFn(context, onSet, val, attr);
+	var setVal = function(model, attr, val, options, onSet, context, config) {
+		if (onSet) val = applyViewFn(context, onSet, val, config);
 		model.set(attr, val, options);
 	};
 
@@ -218,7 +218,7 @@
 			return _.isUndefined(retrieved) ? '' : retrieved;
 		};
 		val = _.isArray(field) ? _.map(field, retrieveVal) : retrieveVal(field);
-		return config.onGet ? applyViewFn(context, config.onGet, val, field) : val;
+		return config.onGet ? applyViewFn(context, config.onGet, val, config) : val;
 	};
 
 	// Returns the list of events needed to bind to the given form element.
@@ -270,14 +270,14 @@
 	};
 
 	// Updates the given element according to the rules for the `visible` api key.
-	var updateVisibleBindEl = function($el, val, attrName, config, context) {
+	var updateVisibleBindEl = function($el, val, config, context) {
 		var visible = config.visible, visibleFn = config.visibleFn, isVisible = !!val;
 
 		// If `visible` is a function then it should return a boolean result to show/hide.
-		if (_.isFunction(visible) || _.isString(visible)) isVisible = applyViewFn(context, visible, val, attrName);
+		if (_.isFunction(visible) || _.isString(visible)) isVisible = applyViewFn(context, visible, val, config);
 		
 		// Either use the custom `visibleFn`, if provided, or execute a standard jQuery show/hide.
-		if (visibleFn) applyViewFn(context, visibleFn, $el, isVisible, attrName);
+		if (visibleFn) applyViewFn(context, visibleFn, $el, isVisible, config);
 		else {
 			if (isVisible) $el.show();
 			else $el.hide();
@@ -293,7 +293,7 @@
 			originalVal = getElVal($el, (config.updateMethod == 'html' || isContenteditable($el)));
 
 		// Don't update the view if `updateView` returns false.
-		if (!evaluateBoolean(view, config.updateView, val)) return;
+		if (!evaluateBoolean(view, config.updateView, val, config)) return;
 
 		if (isRadio($el)) $el.filter('[value="'+val+'"]').prop('checked', true);
 		else if (isCheckbox($el)) {
@@ -347,7 +347,7 @@
 		}
 
 		// Execute the `afterUpdate` callback from the `bindings` config.
-		if (!isInitializing) applyViewFn(view, afterUpdate, $el, val, originalVal);
+		if (!isInitializing) applyViewFn(view, afterUpdate, $el, val, originalVal, config);
 	};
 
 	var addSelectOptions = function(optList, $el, selectConfig, fieldVal, isMultiple) {
