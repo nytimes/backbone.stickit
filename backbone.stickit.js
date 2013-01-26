@@ -107,36 +107,33 @@
 					};
 					observeModelEvent(model, self, 'change:' + modelAttr, visibleCb);
 					visibleCb();
-					return false;
 				}
 
-				if (modelAttr) {
-					if (isFormEl($el) || isContenteditable($el)) {
-						// Bind events to the element which will update the model with changes.
-						_.each(config.eventsOverride || getModelEvents($el), function(type) {
-							var event = type + namespace;
-							var method = function() {
-								var val = getElVal($el, isContenteditable($el));
-								// Don't update the model if false is returned from the `updateModel` configuration.
-								if (evaluateBoolean(self, config.updateModel, val, config))
-									setVal(model, modelAttr, val, options, config.onSet, self, config);
-							};
-							if (selector === '') self.$el.on(event, method);
-							else self.$el.on(event, selector, method);
-						});
-					}
-
-					// Setup a `change:modelAttr` observer to keep the view element in sync.
-					// `modelAttr` may be an array of attributes or a single string value.
-					_.each(_.flatten([modelAttr]), function(attr) {
-						observeModelEvent(model, self, 'change:'+attr, function(model, val, options) {
-							if (options == null || options.bindKey != bindKey)
-								updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self), model);
-						});
+				// Setup one-way, form element to model, bindings.
+				if (isFormEl($el) || isContenteditable($el)) {
+					_.each(config.eventsOverride || getModelEvents($el), function(type) {
+						var event = type + namespace;
+						var method = function() {
+							var val = getElVal($el, isContenteditable($el));
+							// Don't update the model if false is returned from the `updateModel` configuration.
+							if (evaluateBoolean(self, config.updateModel, val, config))
+								setVal(model, modelAttr, val, options, config.onSet, self, config);
+						};
+						if (selector === '') self.$el.on(event, method);
+						else self.$el.on(event, selector, method);
 					});
-
-					updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self), model, true);
 				}
+
+				// Setup a `change:modelAttr` observer to keep the view element in sync.
+				// `modelAttr` may be an array of attributes or a single string value.
+				_.each(_.flatten([modelAttr]), function(attr) {
+					observeModelEvent(model, self, 'change:'+attr, function(model, val, options) {
+						if (options == null || options.bindKey != bindKey)
+							updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self), model);
+					});
+				});
+
+				updateViewBindEl(self, $el, config, getVal(model, modelAttr, config, self), model, true);
 			});
 
 			// Wrap `view.remove` to unbind stickit model and dom events.
