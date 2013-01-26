@@ -272,6 +272,14 @@ $(document).ready(function() {
 
 		equal(testView.clickHandled, true);
 
+		// Remove the view which should unbind the event handlers.
+		testView.remove();
+
+		testView.$('#test0-textarea').val('mounds').trigger('keyup');
+		testView.$('#test0-input').val('skittles').trigger('keyup');
+
+		equal(model1.get('candy'), 'kit kat');
+		equal(model2.get('candy'), 'butterfinger');
 	});
 
 	test('stickit (existing events property as function with multiple models and bindings)', function() {

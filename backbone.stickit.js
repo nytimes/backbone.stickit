@@ -25,17 +25,13 @@
 		// or the `optionalModel` to elements in the view.
 		stickit: function(optionalModel, optionalBindingsConfig) {
 			var self = this,
+				namespace = '.stickit' + this.cid,
 				model = optionalModel || this.model,
 				bindings = optionalBindingsConfig || this.bindings || {},
 				props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'];
 
 			this._modelBindings || (this._modelBindings = []);
 			this.unstickModel(model);
-
-			// Since `this.events` may be a function or hash, we'll create a stickitEvents
-			// property where we can mix in our own set of events. We also need to support
-			// multiple calls to `stickit()` in a single Backbone View.
-			this._stickitEvents = _(_.result(this, 'events') || {}).extend(this._stickitEvents);
 
 			// Iterate through the selectors in the bindings configuration and configure
 			// the various options for each field.
@@ -118,12 +114,15 @@
 					if (isFormEl($el) || isContenteditable($el)) {
 						// Bind events to the element which will update the model with changes.
 						_.each(config.eventsOverride || getModelEvents($el), function(type) {
-							self._stickitEvents[type+'.stickit '+selector] = function() {
+							var event = type + namespace;
+							var method = function() {
 								var val = getElVal($el, isContenteditable($el));
 								// Don't update the model if false is returned from the `updateModel` configuration.
 								if (evaluateBoolean(self, config.updateModel, val, config))
-								setVal(model, modelAttr, val, options, config.onSet, self, config);
+									setVal(model, modelAttr, val, options, config.onSet, self, config);
 							};
+							if (selector === '') self.$el.on(event, method);
+							else self.$el.on(event, selector, method);
 						});
 					}
 
@@ -140,12 +139,10 @@
 				}
 			});
 
-			// Have Backbone delegate any newly added events in `_stickitEvents`.
-			this.delegateEvents(this._stickitEvents);
-
-			// Wrap remove so that we can remove model events when this view is removed.
+			// Wrap `view.remove` to unbind stickit model and dom events.
 			this.remove = _.wrap(this.remove, function(oldRemove) {
 				self.unstickModel();
+				self.$el.off(namespace);
 				if (oldRemove) oldRemove.call(self);
 			});
 		}
