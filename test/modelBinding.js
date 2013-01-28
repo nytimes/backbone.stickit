@@ -1,3 +1,17 @@
+var eventsPresent = function(model, present) {
+
+	var key, events = model._events;
+
+	for (key in events) {
+		if (present) {
+			ok(events[key].length);
+		} else {
+			ok(! events[key].length);
+		}
+	}
+
+};
+
 $(document).ready(function() {
 
 	module("view.unstickModel");
@@ -21,11 +35,12 @@ $(document).ready(function() {
 		};
 		$('#qunit-fixture').html(view.render().el);
 
-		equal(_.keys(view.model._callbacks).length, 3);
+		equal(_.keys(view.model._events).length, 3);
 
 		view.unstickModel();
 
-		equal(_.keys(view.model._callbacks).length, 0);
+		eventsPresent(view.model, false);
+
 	});
 
 	test('unstickModel (multiple models across multiple views)', function() {
@@ -71,22 +86,23 @@ $(document).ready(function() {
 		}))().render();
 
 
-		equal(_.keys(model1._callbacks).length, 2);
-		equal(_.keys(model2._callbacks).length, 2);
-		equal(_.keys(model3._callbacks).length, 2);
+		equal(_.keys(model1._events).length, 2);
+		equal(_.keys(model2._events).length, 2);
+		equal(_.keys(model3._events).length, 2);
 		equal(view._modelBindings.length, 4);
 		equal(view2._modelBindings.length, 2);
 
 		view.unstickModel();
 
-		equal(_.keys(model1._callbacks).length, 0);
-		equal(_.keys(model2._callbacks).length, 0);
+		eventsPresent(model1, false);
+		eventsPresent(model2, false);
+		eventsPresent(model3, true);
+
 		equal(view._modelBindings.length, 0);
-		equal(_.keys(model3._callbacks).length, 2);
 
 		view2.unstickModel();
 
-		equal(_.keys(model3._callbacks).length, 0);
+		eventsPresent(model3, false);
 		equal(view2._modelBindings.length, 0);
 	});
 
