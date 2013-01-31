@@ -1,4 +1,4 @@
-[-> **Documentation for current/stable release: 0.6.1**](http://nytimes.github.com/backbone.stickit/)
+[-> **Documentation for current/stable release: 0.6.2**](http://nytimes.github.com/backbone.stickit/)
 
 **The following is documentation for the code in master/edge version...**
 
@@ -10,7 +10,7 @@ Stickit differs, however, in that it is a more natural fit with Backbone's style
 
 ## Download + Source
 
-[download v0.6.1](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.6.1.zip)
+[download v0.6.2](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.6.2.zip)
 
 [download master/edge](https://raw.github.com/NYTimes/backbone.stickit/master/backbone.stickit.js)
 
@@ -438,6 +438,24 @@ If you are writing a custom frontend, then you're going to need to write custom 
 MIT
 
 ## Change Log
+
+#### 0.6.2
+
+- **Breaking Change**: Changed the last parameter from the model attribute name to the bindings hash in most of the binding callbacks. Note the model attribute name can still be gleaned from the bindings hash - `options.observe`. The following are the callbacks that were affected and their parameters (`options` are the bindings hash):  
+    `onGet(value, options)`  
+    `onSet(value, options)`  
+    `updateModel(value, options)`  
+    `updateView(value, options)`  
+    `afterUpdate($el, value, originalVal, options)`  
+    `visible(value, options)`  
+    `visibleFn($el, isVisible, options)`  
+- Added support for handling multiple checkboxes with one binding/selector and using the `value` attribute, if present, for checkboxes.
+- Added default values for `labelPath` and `valuePath` in selectOptions: `label` and `value` respectively.
+- Refactored event registration to use `$.on` and `$.off` instead of delegating through Backbone which fixed the following bugs:
+    - `view.events` selectors and binding selectors that are equal were overriding [#49](https://github.com/NYTimes/backbone.stickit/issues/49)
+    - `view.events` declared as a function was not supported [#51](https://github.com/NYTimes/backbone.stickit/pull/51)
+- Fixed some bugs and added support requirements for zepto.js; [#58](https://github.com/NYTimes/backbone.stickit/pull/58).
+- Bug Fixes: [#38](https://github.com/NYTimes/backbone.stickit/pull/38), [#42](https://github.com/NYTimes/backbone.stickit/pull/42), 
 
 #### 0.6.1
 
