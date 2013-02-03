@@ -1102,7 +1102,7 @@ $(document).ready(function() {
 		equal(model.get('water'), 'evian');
 	});
 
-	test('bindings:eventsOverride', function() {
+	test('bindings:events', function() {
 		
 		model.set({'water':'fountain'});
 		view.model = model;
@@ -1110,7 +1110,7 @@ $(document).ready(function() {
 		view.bindings = {
 			'#test1': {
 				observe: 'water',
-				eventsOverride: ['blur', 'keydown']
+				events: ['blur', 'keydown']
 			}
 		};
 		$('#qunit-fixture').html(view.render().el);
