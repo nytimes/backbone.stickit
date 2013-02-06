@@ -181,13 +181,20 @@
   // `$el` and generate a configuration by mixing them in the order that they
   // were found with the with the givne `binding`.
   var getConfiguration = function($el, binding) {
-    var handlers = [{}];
+    var handlers = [{
+      updateModel: false,
+      updateView: true,
+      updateMethod: 'text',
+      update: function($el, val, m, opts) { $el[opts.updateMethod](val); },
+      getVal: function($el, opts) { return $el[opts.updateMethod](); }
+    }];
     _.each(Backbone.Stickit._handlers, function(handler) {
-      if (handler.selector && $el.is(handler.selector))
-        handlers.push(handler);
+      if ($el.is(handler.selector)) handlers.push(handler);
     });
     handlers.push(binding);
-    return _.extend.apply(_, handlers);
+    var config = _.extend.apply(_, handlers);
+    delete config.selector;
+    return config;
   };
 
   // Setup the attributes configuration - a list that maps an attribute or
@@ -272,17 +279,6 @@
   // ----------------
 
   Backbone.Stickit.addHandler([{
-    selector: '*',
-    updateModel: false,
-    update: function($el, val, model, options) {
-      if (this.updateMethod == 'text') $el.text(val);
-      else $el.html(val);
-    },
-    getVal: function($el) {
-      if (this.updateMethod == 'text') return $el.text();
-      return $el.html();
-    }
-  }, {
     selector: '[contenteditable="true"]',
     updateMethod: 'html',
     events: ['keyup', 'change', 'paste', 'cut']
@@ -290,12 +286,10 @@
     selector: 'input',
     events: ['keyup', 'change', 'paste', 'cut'],
     update: function($el, val) { $el.val(val); },
-    getVal: function($el) { return $el.val(); }
-  }, {
-    selector: 'input[type="number"]',
     getVal: function($el) {
       var val = $el.val();
-      return val == null ? val : Number(val);
+      if ($el.is('[type="number"]')) return val == null ? val : Number(val);
+      else return val;
     }
   }, {
     selector: 'textarea',
