@@ -4,9 +4,9 @@
 
 ## Introduction
 
-Backbone.stickit is yet another model-view binding plugin for Backbone. Like the other plugins, Stickit will wire up bindings that will keep form elements, innerHTML, text, and attribute values bound with model attributes. 
+Backbone's philosophy is for a View, the display of a Model's state, to re-render after any changes have been made to the Model. This works beautifully for simple apps, but rich apps often need to render, respond, and synchronize changes with finer granularity.
 
-Stickit differs, however, in that it is a more natural fit with Backbone's style and functionality. Stickit has a simple and intuitive configuration, which, like Backbone, stays out of the view html; in fact, Stickit will clean up your templates, as you will need to interpolate fewer variables (if any at all) while rendering. Also, stickit internally leverages the `view.events` object so delegating, undelegating, and removing bindings will be seamless in the lifetime of a Backbone view. 
+Stickit is a Backbone data binding plugin that binds Model attributes to View elements with a myriad of options for fine-tuning a rich app experience. Unlike most model binding plugins, Stickit does not require any extra markup in your html; in fact, Stickit will clean up your templates, as you will need to interpolate fewer variables (if any at all) while rendering. In Backbone style, Stickit has a simple and flexible api which plugs in nicely to a View's lifecycle.
 
 ## Download + Source
 
@@ -168,7 +168,7 @@ bindings: {
 
 ### afterUpdate
 
-A string function reference or function which is called after a value is updated in the dom.
+Called after a value is updated in the dom.
 
 ```javascript  
   bindings: {
@@ -268,7 +268,7 @@ The following is a list of the supported form elements, their binding details, a
    - see the `selectOptions` configuration
    - `change` event is used for handling
 
-### eventsOverride
+### events
 
 Specify a list of events which will override stickit's default events for a form element. Bound events control when the model is updated with changes in the view element.
 
@@ -279,7 +279,7 @@ Specify a list of events which will override stickit's default events for a form
       // Normally, stickit would bind `keyup`, `change`, `cut`, and `paste` events
       // to an input:text element. The following will override these events and only 
       // update/set the model after the input#title element is blur'ed.
-      eventsOverride: ['blur']
+      events: ['blur']
     }
   }
 ```
@@ -421,13 +421,44 @@ Binds element attributes and properties with observed model attributes, using th
   }
  ```
 
+## Custom Handlers
+
+### addHandler
+`Backbone.Stickit.addHandler(handler_s)`
+
+Adds the given handler or array of handlers to Stickit. A handler is a binding configuration, with an additional `selector` key, that is used to customize or override any of Stickit's default binding handling. To derive a binding configuration, the `selector`s are used to match against a bound element, and any matching handlers  are mixed/extended in the order that they were added. 
+
+Internally, Stickit uses `addHandler` to add configuration for its default handling. For example, the following is the internal handler that matches against `textarea` elements:
+
+```javascript
+Backbone.Stickit.addHandler({
+  selector: 'textarea',
+  events: ['keyup', 'change', 'paste', 'cut'],
+  update: function($el, val) { $el.val(val); },
+  getVal: function($el) { return $el.val(); }
+})
+
+```
+Except for the `selector`, those keys should look familiar since they belong to the binding configuration api. If unspecified, the following keys are defaulted for handlers: `updateModel:true`, `updateView:true`, `updateMethod:'text'`.
+
+By adding your own `selector:'textarea'` handler, you can override any or all of Stickit's default `textarea` handling. Since binding configurations are derived from handlers with matching selectors, another customization trick would be to add a handler that matches textareas with a specific class name. For example:
+
+```javascript
+Backbone.Stickit.addHandler({
+  selector: 'textarea.trim',
+  getVal: function($el) { return $.trim($el.val()); }
+})
+
+```
+With this handler in place, anytime you bind to a `textarea`, if the `textarea` contains a `trim` class then this handler will be mixed into the default `textarea` handler and `getVal` will be overridden.
+
 ## F.A.Q.
 
 ### Why Stickit?
 
 JavaScript frameworks seem to be headed in the wrong direction - controller callbacks/directives, configuration, and special tags are being forced into the template/presentation layer. Who wants to program and debug templates? 
 
-If you are writing a custom frontend, then you're going to need to write custom JavaScript. Backbone helps you organize with a strong focus on the model/data, but stays the hell out of your presentation. Where most frameworks or other Backbone plugins muck up the presentation layer with obtrusive JavaScript, stickit defines configuration and callbacks in the place that they should be - in the view/controller/JavaScript.
+If you are writing a custom frontend, then you're going to need to write custom JavaScript. Backbone helps you organize with a strong focus on the model, but stays the hell out of your presentation. Configuration and callbacks should only be in one place - the View/JavaScript.
 
 ### Dependencies
 
@@ -438,6 +469,13 @@ If you are writing a custom frontend, then you're going to need to write custom 
 MIT
 
 ## Change Log
+
+#### Master
+
+- Added `Backbone.Stickit.addHandler()` which gives the ability to define a custom configuration for any bindings that match the `handler.selector`. 
+- **Breaking Change**: `eventsOverride` was changed to `events`.
+- Added `update` to the bindings api which is an override for handling how the View element gets updated with Model changes.
+- Added `getVal` to the bindings api which is an override for retrieving the value of the View element. 
 
 #### 0.6.2
 
