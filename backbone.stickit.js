@@ -29,39 +29,30 @@
     //   [{model,event,fn}, ...]
     _modelBindings: null,
 
-    // Unbind the model bindings that are referenced in `this._modelBindings`. If
-    // the optional `model` parameter is defined, then only delete bindings for
-    // the given `model`.
-    unstickModel: function(model) {
+    // Unbind the model and event bindings from `this._modelBindings` and
+    // `this.$el`. If the optional `model` parameter is defined, then only
+    // delete bindings for the given `model` and its corresponding view events.
+    unstickit: function(model) {
       _.each(this._modelBindings, _.bind(function(binding, i) {
         if (model && binding.model !== model) return false;
         binding.model.off(binding.event, binding.fn);
         delete this._modelBindings[i];
       }, this));
       this._modelBindings = _.compact(this._modelBindings);
-    },
 
-    // Unbind all DOM -> model bindings
-    unstickView: function() {
-      this.$el.off(namespaceForView(this));
-    },
-
-    // Unbind all model -> view and view -> model events created by stickit
-    unstickit: function() {
-      this.unstickModel();
-      this.unstickView();
+      this.$el.off('.stickit' + (model ? '.' + model.cid : ''));
     },
 
     // Using `this.bindings` configuration or the `optionalBindingsConfig`, binds `this.model`
     // or the `optionalModel` to elements in the view.
     stickit: function(optionalModel, optionalBindingsConfig) {
       var self = this,
-        namespace = '.stickit' + this.cid,
         model = optionalModel || this.model,
+        namespace = '.stickit.' + model.cid,
         bindings = optionalBindingsConfig || this.bindings || {};
 
       this._modelBindings || (this._modelBindings = []);
-      this.unstickit();
+      this.unstickit(model);
 
       // Iterate through the selectors in the bindings configuration and configure
       // the various options for each field.
@@ -136,11 +127,6 @@
 
   // Helpers
   // -------
-
-  // Return a namespace for dom event handlers for a view
-  var namespaceForView = function(view) {
-    return '.stickit' + view.cid;
-  };
 
   // Evaluates the given `path` (in object/dot-notation) relative to the given
   // `obj`. If the path is null/undefined, then the given `obj` is returned.
