@@ -41,6 +41,17 @@
       this._modelBindings = _.compact(this._modelBindings);
     },
 
+    // Unbind all DOM -> model bindings
+    unstickView: function() {
+      this.$el.off(namespaceForView(this));
+    },
+
+    // Unbind all model -> view and view -> model events created by stickit
+    unstickit: function() {
+      this.unstickModel();
+      this.unstickView();
+    },
+
     // Using `this.bindings` configuration or the `optionalBindingsConfig`, binds `this.model`
     // or the `optionalModel` to elements in the view.
     stickit: function(optionalModel, optionalBindingsConfig) {
@@ -50,7 +61,7 @@
         bindings = optionalBindingsConfig || this.bindings || {};
 
       this._modelBindings || (this._modelBindings = []);
-      this.unstickModel(model);
+      this.unstickit();
 
       // Iterate through the selectors in the bindings configuration and configure
       // the various options for each field.
@@ -117,8 +128,7 @@
 
       // Wrap `view.remove` to unbind stickit model and dom events.
       this.remove = _.wrap(this.remove, function(oldRemove) {
-        self.unstickModel();
-        self.$el.off(namespace);
+        self.unstickit();
         if (oldRemove) oldRemove.call(self);
       });
     }
@@ -126,6 +136,11 @@
 
   // Helpers
   // -------
+
+  // Return a namespace for dom event handlers for a view
+  var namespaceForView = function(view) {
+    return '.stickit' + view.cid;
+  };
 
   // Evaluates the given `path` (in object/dot-notation) relative to the given
   // `obj`. If the path is null/undefined, then the given `obj` is returned.
