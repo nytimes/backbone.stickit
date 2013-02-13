@@ -43,7 +43,7 @@ On the initial call, stickit will initialize the innerHTML of `view.$('#title')`
 ### stickit
 `view.stickit(optionalModel, optionalBindingsConfig)`
 
-Uses `view.bindings` or the given bindings, and `this.model` or the given model, to setup bindings. Stickit can be called more than once with different models and binding configurations. Note: multiple models can be bound to a view, but any subsequent attempts to bind a previously bound model will delete the previous bindings for (only) that model.
+Uses `view.bindings` and `view.model` to setup bindings. Optionally, you can pass in a model and bindings hash. Note: you can only bind to a model once, any subsequent attempts to bind a previously bound model will unbind all stickit events, then rebind it (this gives you flexibility to re-render).
 
 ```javascript  
   render: function() {
@@ -55,10 +55,10 @@ Uses `view.bindings` or the given bindings, and `this.model` or the given model,
   }
 ```
 
-### unstickModel
-`view.unstickModel(optionalModel)`
+### unstickit
+`view.unstickit(optionalModel)`
 
-Removes event bindings from all models, or (only) the given model, used by stickit in the view. Removing model events will be taken care of in `view.remove()`, but if you want to unbind a model early, use this.
+Removes event bindings from all models. Optionally, a model can be passed in which will remove events for the given model and its corresponding bindings configuration only. Unbinding will be taken care of automatically in `view.remove()`, but if you want to unbind early, use this.
 
 ## Bindings
 
@@ -472,8 +472,10 @@ MIT
 
 #### Master
 
-- Added `Backbone.Stickit.addHandler()` which gives the ability to define a custom configuration for any bindings that match the `handler.selector`. 
+- Added `Backbone.Stickit.addHandler()`, useful for defining a custom configuration for any bindings that match the `handler.selector`. 
 - **Breaking Change**: `eventsOverride` was changed to `events`.
+- **Breaking Change**: replaced `unstickModel` with `unstickit`.
+- Fixed a bug introduced in 0.6.2 where re-rendering/re-sticking wasn't unbinding view events [#66](https://github.com/NYTimes/backbone.stickit/issues/66).
 - Added `update` to the bindings api which is an override for handling how the View element gets updated with Model changes.
 - Added `getVal` to the bindings api which is an override for retrieving the value of the View element. 
 
