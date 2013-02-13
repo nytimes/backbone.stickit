@@ -29,28 +29,30 @@
     //   [{model,event,fn}, ...]
     _modelBindings: null,
 
-    // Unbind the model bindings that are referenced in `this._modelBindings`. If
-    // the optional `model` parameter is defined, then only delete bindings for
-    // the given `model`.
-    unstickModel: function(model) {
+    // Unbind the model and event bindings from `this._modelBindings` and
+    // `this.$el`. If the optional `model` parameter is defined, then only
+    // delete bindings for the given `model` and its corresponding view events.
+    unstickit: function(model) {
       _.each(this._modelBindings, _.bind(function(binding, i) {
         if (model && binding.model !== model) return false;
         binding.model.off(binding.event, binding.fn);
         delete this._modelBindings[i];
       }, this));
       this._modelBindings = _.compact(this._modelBindings);
+
+      this.$el.off('.stickit' + (model ? '.' + model.cid : ''));
     },
 
     // Using `this.bindings` configuration or the `optionalBindingsConfig`, binds `this.model`
     // or the `optionalModel` to elements in the view.
     stickit: function(optionalModel, optionalBindingsConfig) {
       var self = this,
-        namespace = '.stickit' + this.cid,
         model = optionalModel || this.model,
+        namespace = '.stickit.' + model.cid,
         bindings = optionalBindingsConfig || this.bindings || {};
 
       this._modelBindings || (this._modelBindings = []);
-      this.unstickModel(model);
+      this.unstickit(model);
 
       // Iterate through the selectors in the bindings configuration and configure
       // the various options for each field.
@@ -117,8 +119,7 @@
 
       // Wrap `view.remove` to unbind stickit model and dom events.
       this.remove = _.wrap(this.remove, function(oldRemove) {
-        self.unstickModel();
-        self.$el.off(namespace);
+        self.unstickit();
         if (oldRemove) oldRemove.call(self);
       });
     }

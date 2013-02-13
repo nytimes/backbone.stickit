@@ -1193,4 +1193,49 @@ $(document).ready(function() {
 		equal(model.get('water'), null);
 	});
 
+	test('getVal', 5, function() {
+		
+		model.set({'water':'fountain'});
+		view.model = model;
+		view.templateId = 'jst1';
+		view.bindings = {
+			'#test1': {
+				observe: 'water',
+				getVal: function($el, options) {
+					equal($el.attr('id'), 'test1');
+					equal(options.observe, 'water');
+					return 'test-' + $el.val();
+				}
+			}
+		};
+		$('#qunit-fixture').html(view.render().el);
+		
+		view.$('#test1').val('dasina').trigger('keyup');
+		equal(model.get('water'), 'test-dasina');
+	});
+
+	test('update', 8, function() {
+		
+		model.set({'water':'fountain'});
+		view.model = model;
+		view.templateId = 'jst1';
+		view.bindings = {
+			'#test1': {
+				observe: 'water',
+				update: function($el, val, model, options) {
+					equal($el.attr('id'), 'test1');
+					equal(val, model.get('water'));
+					equal(options.observe, 'water');
+					$el.val('test-' + val);
+				}
+			}
+		};
+		$('#qunit-fixture').html(view.render().el);
+		
+		equal(view.$('#test1').val(), 'test-fountain');
+
+		model.set('water', 'dasina');
+		equal(view.$('#test1').val(), 'test-dasina');
+	});
+
 });
