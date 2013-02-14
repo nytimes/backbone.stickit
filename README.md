@@ -135,6 +135,32 @@ A callback which prepares a formatted version of the view value before setting i
   }
 ```
 
+### getVal
+
+A callback which overrides stickit's default handling for retrieving the value from the bound view element. Use `onSet` to format values - this is better used in [handlers](#custom-handlers) or when extra/different dom operations need to be handled.
+
+```javascript  
+  bindings: {
+    '#author': {
+      observe: 'author',
+      getVal: function($el, event, options) { return $el.val(); }
+    }
+  }
+```
+
+### update
+
+A callback which overrides stickit's default handling for updating the value of a bound view element. Use `onGet` to format model values - this is better used in [handlers](#custom-handlers) or when extra/different dom operations need to be handled .
+
+```javascript  
+  bindings: {
+    '#author': {
+      observe: 'author',
+      update: function($el, val, model, options) { $el.val(val); }
+    }
+  }
+```
+
 ### updateModel
 
 A boolean value or a function that returns a boolean value which controls whether or not the model gets changes/updates from the view (model<-view). This is only relevant to form elements, as they have two-way bindings with changes that can be reflected into the model. Defaults to true.
@@ -177,7 +203,7 @@ Called after a value is updated in the dom.
       afterUpdate: 'highlight'
     }
   },
-  highlight: function($el, val, originalVal, options) {
+  highlight: function($el, val, options) {
     $el.fadeOut(500, function() { $(this).fadeIn(500); });
   }
 ```
@@ -474,6 +500,7 @@ MIT
 
 - Added `Backbone.Stickit.addHandler()`, useful for defining a custom configuration for any bindings that match the `handler.selector`. 
 - **Breaking Change**: `eventsOverride` was changed to `events`.
+- **Breaking Change**: removed the `originalVal` (third param) from the `afterUpdate` parameters.
 - **Breaking Change**: replaced `unstickModel` with `unstickit`.
 - Fixed a bug introduced in 0.6.2 where re-rendering/re-sticking wasn't unbinding view events [#66](https://github.com/NYTimes/backbone.stickit/issues/66).
 - Added `update` to the bindings api which is an override for handling how the View element gets updated with Model changes.

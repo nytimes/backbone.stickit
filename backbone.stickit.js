@@ -94,8 +94,8 @@
           // Setup one-way, form element to model, bindings.
           _.each(config.events || [], function(type) {
             var event = type + namespace;
-            var method = function() {
-              var val = config.getVal.call(self, $el, config);
+            var method = function(event) {
+              var val = config.getVal.call(self, $el, event, config);
               // Don't update the model if false is returned from the `updateModel` configuration.
               if (evaluateBoolean(self, config.updateModel, val, config))
                 setAttr(model, modelAttr, val, options, self, config);
@@ -187,7 +187,7 @@
       updateView: true,
       updateMethod: 'text',
       update: function($el, val, m, opts) { $el[opts.updateMethod](val); },
-      getVal: function($el, opts) { return $el[opts.updateMethod](); }
+      getVal: function($el, e, opts) { return $el[opts.updateMethod](); }
     }];
     _.each(Backbone.Stickit._handlers, function(handler) {
       if ($el.is(handler.selector)) handlers.push(handler);
@@ -267,13 +267,12 @@
   //
   //     update: function($el, val, model, options) {},  // handler for updating
   //     updateView: true, // defaults to true
-  //     afterUpdate: function($el, val, original, options) {} // optional callback
+  //     afterUpdate: function($el, val, options) {} // optional callback
   //
   var updateViewBindEl = function(view, $el, config, val, model, isInitializing) {
-    var originalVal = config.getVal.call(view, $el, config);
     if (!evaluateBoolean(view, config.updateView, val, config)) return;
     config.update.call(view, $el, val, model, config);
-    if (!isInitializing) applyViewFn(view, config.afterUpdate, $el, val, originalVal, config);
+    if (!isInitializing) applyViewFn(view, config.afterUpdate, $el, val, config);
   };
 
   // Default Handlers
