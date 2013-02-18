@@ -363,6 +363,7 @@
 
           // Save the option value so that we can reference it later.
           option.data('stickit_bind_val', optionVal);
+          if (!_.isArray(optionVal) && !_.isObject(optionVal)) option.val(optionVal);
 
           // Determine if this option is selected.
           if (!isMultiple && optionVal != null && fieldVal != null && optionVal == fieldVal || (_.isObject(fieldVal) && _.isEqual(optionVal, fieldVal)))
@@ -382,8 +383,14 @@
       $el.html('');
 
       // The `list` configuration is a function that returns the options list or a string
-      // which represents the path to the list relative to `window`.
-      optList = _.isFunction(list) ? applyViewFn(this, list) : evaluatePath(window, list);
+      // which represents the path to the list relative to `window` or the view/`this`.
+      var evaluate = function(view, list) {
+        var context = window;
+        if (list.indexOf('this.') === 0) context = view;
+        list = list.replace(/^[a-z]*\.(.+)$/, '$1');
+        return evaluatePath(context, list);
+      };
+      optList = _.isFunction(list) ? applyViewFn(this, list) : evaluate(this, list);
 
       // Add an empty default option if the current model attribute isn't defined.
       if (val == null)
@@ -391,6 +398,8 @@
 
       if (_.isArray(optList)) {
         addSelectOptions(optList, $el, selectConfig, val, isMultiple);
+      } else if (optList instanceof Backbone.Collection) {
+        addSelectOptions(optList.toJSON(), $el, selectConfig, val, isMultiple);
       } else {
         // If the optList is an object, then it should be used to define an optgroup. An
         // optgroup object configuration looks like the following:

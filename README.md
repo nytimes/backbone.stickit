@@ -314,7 +314,7 @@ Specify a list of events which will override stickit's default events for a form
 
 Binds an object collection, html select box, and a model attribute value. The following are configuration options for binding:
 
- - `collection`: an object path of a collection relative to `window` or a string function reference which returns a collection.
+ - `collection`: an object path of a collection relative to `window` or `view`/`this`, or a string function reference which returns a collection of objects. A collection should be either an  array of objects or Backbone.Collection.
  - `labelPath`: the path to the label value for select options within the collection of objects. Default value when undefined is `label`.
  - `valuePath`: the path to the values for select options within the collection of objects. When an options is selected, the value that is defined for the given option is set in the model. Leave this undefined if the whole object is the value or to use the default `value`.
 
@@ -333,16 +333,17 @@ The following example references a collection of stooges at `window.app.stooges`
     'select#stooges': {
       observe: 'stooge',
       selectOptions: {
-        collection: 'app.stooges',
+        // Alternatively, `this.` can be used to reference anything in the view's scope.
+        // For example: `collection:'this.stooges'`` would reference `view.stooges`.
+        collection: 'window.app.stooges',
         labelPath: 'age',
         valuePath: 'name'
     }
   }
 ```
-
 The following is an example where a collection is returned by callback and the collection objects are used as option values:
 
-```javascript  
+```javascript
   bindings: {
     'select#states': {
       observe: 'state',
@@ -500,11 +501,13 @@ MIT
 
 - Added `Backbone.Stickit.addHandler()`, useful for defining a custom configuration for any bindings that match the `handler.selector`. 
 - **Breaking Change**: `eventsOverride` was changed to `events`.
-- **Breaking Change**: removed the `originalVal` (third param) from the `afterUpdate` parameters.
+- **Breaking Change**: removed the third param (original value) from the `afterUpdate` parameters.
 - **Breaking Change**: replaced `unstickModel` with `unstickit`.
 - Fixed a bug introduced in 0.6.2 where re-rendering/re-sticking wasn't unbinding view events [#66](https://github.com/NYTimes/backbone.stickit/issues/66).
 - Added `update` to the bindings api which is an override for handling how the View element gets updated with Model changes.
 - Added `getVal` to the bindings api which is an override for retrieving the value of the View element. 
+- Added support for passing in Backbone.Collection's into `selectOptions.collection`.
+- Added support for referencing the view's scope with a String `selectOptions.collection` reference. For example: `collection:'this.viewCollection'`.
 
 #### 0.6.2
 
