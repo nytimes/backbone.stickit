@@ -57,17 +57,17 @@
       // Iterate through the selectors in the bindings configuration and configure
       // the various options for each field.
       _.each(_.keys(bindings), function(selector) {
-        var $el, options, modelAttr, visibleCb, config,
+        var $el, options, modelAttr, config,
           binding = bindings[selector] || {},
           bindKey = _.uniqueId();
-        
+
         // Support ':el' selector - special case selector for the view managed delegate.
         if (selector != ':el') $el = self.$(selector);
         else {
           $el = self.$el;
           selector = '';
         }
-     
+
         // Fail fast if the selector didn't match an element.
         if (!$el.length) return false;
 
@@ -244,7 +244,7 @@
   //
   var initializeVisible = function(view, $el, config, model, modelAttr) {
     if (config.visible == null) return;
-	var visibleCb = function() {
+    var visibleCb = function() {
       var visible = config.visible,
           visibleFn = config.visibleFn,
           val = getAttr(model, modelAttr, config, view),
@@ -257,9 +257,11 @@
         if (isVisible) $el.show();
         else $el.hide();
       }
-	};
-	observeModelEvent(model, view, 'change:' + modelAttr, visibleCb);
-	visibleCb();
+    };
+    _.each(_.flatten([modelAttr]), function(attr) {
+      observeModelEvent(model, view, 'change:' + attr, visibleCb);
+    });
+    visibleCb();
   };
 
   // Update the value of `$el` using the given configuration and trigger the

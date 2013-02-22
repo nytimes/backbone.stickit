@@ -1031,7 +1031,7 @@ $(document).ready(function() {
     equal(Number(view.$('#test11').val()), 2);
   });
 
-  test('visible', 16, function() {
+  test('visible', 19, function() {
 
     model.set({'water':false, 'candy':'twix', 'costume':false});
     view.model = model;
@@ -1050,12 +1050,12 @@ $(document).ready(function() {
         }
       },
       '#test14-3': {
-        observe: 'costume',
+        observe: ['candy', 'costume'],
         visible: true,
-        visibleFn: function($el, val, options) {
+        visibleFn: function($el, isVisible, options) {
           equal($el.attr('id'), 'test14-3');
-          equal(val, this.model.get('costume'));
-          equal(options.observe, 'costume');
+          ok(isVisible);
+          equal(options.observe.toString(), 'candy,costume');
         }
       }
     };
