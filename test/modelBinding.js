@@ -2,8 +2,16 @@ $(document).ready(function() {
 
   module("view.unstickit");
 
+  var eventsPresent = function(model, n) {
+    var key, events = model._events, num = 0;
+    for (key in events) {
+        if (events[key].length) num++;
+    }
+    equal(n, num);
+  };
+
   test('unstickit', function() {
-    
+
     model.set({'water':'fountain', 'test':'nada', 'copy':'cat', 'fickle':'brat'});
     view.model = model;
     view.templateId = 'jst10';
@@ -21,15 +29,15 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(_.keys(view.model._callbacks).length, 3);
+    eventsPresent(view.model, 3);
 
     view.unstickit();
 
-    equal(_.keys(view.model._callbacks).length, 0);
+    eventsPresent(view.model, 0);
   });
 
   test('unstickit (multiple models)', function() {
-    
+
     var model1, model2, view, model3;
 
     model1 = new (Backbone.Model)({one:'', two:''});
@@ -62,22 +70,22 @@ $(document).ready(function() {
       }
     }))().render();
 
-    equal(_.keys(model1._callbacks).length, 2);
-    equal(_.keys(model2._callbacks).length, 2);
-    equal(_.keys(model3._callbacks).length, 2);
+    eventsPresent(model1, 2);
+    eventsPresent(model2, 2);
+    eventsPresent(model3, 2);
     equal(view._modelBindings.length, 6);
 
     view.unstickit(model3);
 
-    equal(_.keys(model1._callbacks).length, 2);
-    equal(_.keys(model2._callbacks).length, 2);
-    equal(_.keys(model3._callbacks).length, 0);
+    eventsPresent(model1, 2);
+    eventsPresent(model2, 2);
+    eventsPresent(model3, 0);
     equal(view._modelBindings.length, 4);
 
     view.unstickit();
 
-    equal(_.keys(model1._callbacks).length, 0);
-    equal(_.keys(model2._callbacks).length, 0);
+    eventsPresent(model1, 0);
+    eventsPresent(model2, 0);
     equal(view._modelBindings.length, 0);
   });
 
