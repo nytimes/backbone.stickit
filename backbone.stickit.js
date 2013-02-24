@@ -25,37 +25,25 @@
 
   _.extend(Backbone.View.prototype, {
 
-    // Collection of model event bindings.
-    //   [{model,event,fn}, ...]
-    _modelBindings: null,
-
-    // Unbind the model and event bindings from `this._modelBindings` and
-    // `this.$el`. If the optional `model` parameter is defined, then only
-    // delete bindings for the given `model` and its corresponding view events.
+    // Unbind the given model or `view.model` and its
+    // corresponding `view.$el` events.
     unstickit: function(model) {
-      _.each(this._modelBindings, _.bind(function(binding, i) {
-        if (model && binding.model !== model) return false;
-        binding.model.off(binding.event, binding.fn);
-        delete this._modelBindings[i];
-      }, this));
-      this._modelBindings = _.compact(this._modelBindings);
-
-      this.$el.off('.stickit' + (model ? '.' + model.cid : ''));
+      model || (model = this.model);
+      this.stopListening(model);
+      this.$el.off('.stickit' + model.cid);
     },
 
-    // Using `this.bindings` configuration or the `optionalBindingsConfig`, binds `this.model`
-    // or the `optionalModel` to elements in the view.
+    // Using `this.bindings` configuration or the `optionalBindingsConfig`,
+    // binds `this.model` or the `optionalModel` to elements in the view.
     stickit: function(optionalModel, optionalBindingsConfig) {
       var self = this,
         model = optionalModel || this.model,
-        namespace = '.stickit.' + model.cid,
         bindings = optionalBindingsConfig || this.bindings || {};
 
-      this._modelBindings || (this._modelBindings = []);
       this.unstickit(model);
 
-      // Iterate through the selectors in the bindings configuration and configure
-      // the various options for each field.
+      // Iterate through the selectors in the bindings configuration
+      // and configure the various options for each field.
       _.each(_.keys(bindings), function(selector) {
         var $el, options, modelAttr, config,
           binding = bindings[selector] || {},
@@ -89,7 +77,7 @@
         if (modelAttr) {
           // Setup one-way, form element to model, bindings.
           _.each(config.events || [], function(type) {
-            var event = type + namespace;
+            var event = type + '.stickit.' + model.cid;
             var method = function(event) {
               var val = config.getVal.call(self, $el, event, config);
               // Don't update the model if false is returned from the `updateModel` configuration.
@@ -103,7 +91,7 @@
           // Setup a `change:modelAttr` observer to keep the view element in sync.
           // `modelAttr` may be an array of attributes or a single string value.
           _.each(_.flatten([modelAttr]), function(attr) {
-            observeModelEvent(model, self, 'change:'+attr, function(model, val, options) {
+            self.listenTo(model, 'change:'+attr, function(model, val, options) {
               if (options == null || options.bindKey != bindKey)
                 updateViewBindEl(self, $el, config, getAttr(model, modelAttr, config, self), model);
             });
@@ -115,7 +103,7 @@
 
       // Wrap `view.remove` to unbind stickit model and dom events.
       this.remove = _.wrap(this.remove, function(oldRemove) {
-        self.unstickit();
+        self.unstickit(model);
         if (oldRemove) oldRemove.call(self);
       });
     }
@@ -138,8 +126,6 @@
     if (fn) return (_.isString(fn) ? view[fn] : fn).apply(view, _.toArray(arguments).slice(2));
   };
 
-  var getSelectedOption = function($select) { return $select.find('option').not(function(){ return !this.selected; }); };
-
   // Given a function, string (view function reference), or a boolean
   // value, returns the truthy result. Any other types evaluate as false.
   var evaluateBoolean = function(view, reference) {
@@ -147,13 +133,6 @@
     else if (_.isFunction(reference) || _.isString(reference))
       return applyViewFn.apply(this, _.toArray(arguments));
     return false;
-  };
-
-  // Setup a model event binding with the given function, and track the event
-  // in the view's _modelBindings.
-  var observeModelEvent = function(model, view, event, fn) {
-    model.on(event, fn, view);
-    view._modelBindings.push({model:model, event:event, fn:fn});
   };
 
   // Prepares the given `val`ue and sets it into the `model`.
@@ -221,7 +200,7 @@
           else $el[updateType](attrConfig.name, val);
         };
       _.each(_.flatten([observed]), function(attr) {
-        observeModelEvent(model, view, 'change:' + attr, updateAttr);
+        view.listenTo(model, 'change:' + attr, updateAttr);
       });
       updateAttr();
     });
@@ -253,7 +232,7 @@
       }
     };
     _.each(_.flatten([modelAttr]), function(attr) {
-      observeModelEvent(model, view, 'change:' + attr, visibleCb);
+      view.listenTo(model, 'change:' + attr, visibleCb);
     });
     visibleCb();
   };
@@ -437,7 +416,10 @@
       }
     },
     getVal: function($el) {
-      var val;
+      var val, getSelectedOption = function($select) {
+        return $select.find('option').not(function(){ return !this.selected; });
+      };
+
       if ($el.prop('multiple')) {
         val = $(getSelectedOption($el).map(function() {
           return $(this).data('stickit_bind_val');

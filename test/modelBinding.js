@@ -36,7 +36,7 @@ $(document).ready(function() {
     eventsPresent(view.model, 0);
   });
 
-  test('unstickit (multiple models)', function() {
+  test('unstickit (multiple models)', 9, function() {
 
     var model1, model2, view, model3;
 
@@ -73,20 +73,21 @@ $(document).ready(function() {
     eventsPresent(model1, 2);
     eventsPresent(model2, 2);
     eventsPresent(model3, 2);
-    equal(view._modelBindings.length, 6);
 
     view.unstickit(model3);
 
     eventsPresent(model1, 2);
     eventsPresent(model2, 2);
     eventsPresent(model3, 0);
-    equal(view._modelBindings.length, 4);
 
     view.unstickit();
 
     eventsPresent(model1, 0);
+    eventsPresent(model2, 2);
+
+    view.unstickit(model2);
+
     eventsPresent(model2, 0);
-    equal(view._modelBindings.length, 0);
   });
 
 });
