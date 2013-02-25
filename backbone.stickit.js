@@ -69,7 +69,7 @@
         }
 
         // Fail fast if the selector didn't match an element.
-        if (!$el.length) return false;
+        if (!$el.length) return;
 
         // Allow shorthand setting of model attributes - `'selector':'observe'`.
         if (_.isString(binding)) binding = {observe:binding};
