@@ -386,7 +386,7 @@
         list = list.replace(/^[a-z]*\.(.+)$/, '$1');
         return evaluatePath(context, list);
       };
-      optList = _.isFunction(list) ? applyViewFn(this, list) : evaluate(this, list);
+      optList = _.isFunction(list) ? applyViewFn(this, list, $el, options) : evaluate(this, list);
 
       // Add an empty default option if the current model attribute isn't defined.
       if (val == null)

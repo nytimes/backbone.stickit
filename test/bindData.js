@@ -484,7 +484,7 @@ $(document).ready(function() {
     model.set('candy', false);
   });
 
-  test('bindings:selectOptions', function() {
+  test('bindings:selectOptions', 7, function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -493,7 +493,11 @@ $(document).ready(function() {
       '#test8': {
         observe: 'water',
         selectOptions: {
-          collection: function() { return [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]; },
+          collection: function($el, options) {
+            ok($el.is('select'));
+            equal(options.observe, 'water');
+            return [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}];
+          },
           labelPath: 'name',
           valuePath: 'name'
         }
