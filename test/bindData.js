@@ -394,29 +394,6 @@ $(document).ready(function() {
     equal(view.$('#test5').text(), '<a href="www.test.com">river</a>');
   });
 
-  test('bindings:format', 3, function() {
-
-    // Deprecated version of `onget`.
-    
-    model.set({'water':'fountain'});
-    view.model = model;
-    view.templateId = 'jst5';
-    view.bindings = {
-      '#test5': {
-        observe: 'water',
-        format: function(val, options) {
-          equal(val, this.model.get('water'));
-          equal(options.observe, 'water');
-          return '_' + val + '_' + options.observe;
-        }
-      }
-    };
-
-    $('#qunit-fixture').html(view.render().el);
-
-    equal(view.$('#test5').text(), '_fountain_water');
-  });
-
   test('bindings:onSet/onGet', 6, function() {
     
     model.set({'water':'_fountain'});
@@ -888,31 +865,6 @@ $(document).ready(function() {
     ok(view.$('#test9').hasClass('test') && view.$('#test9').hasClass('evian'));
   });
 
-  test('bindings:attributes:format', function() {
-
-    // Deprecated version of `onGet`
-
-    model.set({'water':'fountain'});
-    view.model = model;
-    view.templateId = 'jst5';
-    view.bindings = {
-      '#test5': {
-        observe: 'water',
-        attributes: [{
-          name: 'data-name',
-          format: function(val, options) { return '_' + val + '_' + options.observe; }
-        }]
-      }
-    };
-
-    $('#qunit-fixture').html(view.render().el);
-
-    equal(view.$('#test5').attr('data-name'), '_fountain_water');
-
-    model.set('water', 'evian');
-    equal(view.$('#test5').attr('data-name'), '_evian_water');
-  });
-
   test('bindings:attributes:onGet', function() {
 
     model.set({'water':'fountain'});
@@ -1176,27 +1128,6 @@ $(document).ready(function() {
 
     view.$('#test1').val('evian').trigger('keydown');
     equal(model.get('water'), 'evian');
-  });
-
-  test('bindings:modelAttr (deprecated)', function() {
-
-    model.set({'water':'fountain'});
-    view.model = model;
-    view.templateId = 'jst1';
-    view.bindings = {
-      '#test1': {
-        modelAttr: 'water'
-      }
-    };
-    $('#qunit-fixture').html(view.render().el);
-
-    equal(view.$('#test1').val(), 'fountain');
-
-    model.set('water', 'evian');
-    equal(view.$('#test1').val(), 'evian');
-
-    view.$('#test1').val('dasina').trigger('keyup');
-    equal(model.get('water'), 'dasina');
   });
 
   test('checkbox multiple', function() {

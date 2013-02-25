@@ -4,7 +4,7 @@
   // --------------------------
 
   Backbone.Stickit = {
-  
+
     _handlers: [],
 
     addHandler: function(handlers) {
@@ -76,11 +76,7 @@
 
         config = getConfiguration($el, binding);
 
-        // Keep backward-compatibility for `modelAttr` which was renamed `observe`.
-        modelAttr = config.observe || config.modelAttr;
-
-        // Keep backward-compatibility for `format` which was renamed `onGet`.
-        if (config.format && !config.onGet) config.onGet = config.format;
+        modelAttr = config.observe;
 
         // Create the model set options with a unique `bindKey` so that we
         // can avoid double-binding in the `change:attribute` event handler.
@@ -224,8 +220,6 @@
           }
           else $el[updateType](attrConfig.name, val);
         };
-      // Keep backward-compatibility for `format` which is now `onGet`.
-      if (attrConfig.format && !attrConfig.onGet) attrConfig.onGet = attrConfig.format;
       _.each(_.flatten([observed]), function(attr) {
         observeModelEvent(model, view, 'change:' + attr, updateAttr);
       });

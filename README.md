@@ -503,6 +503,8 @@ MIT
 - **Breaking Change**: `eventsOverride` was changed to `events`.
 - **Breaking Change**: removed the third param (original value) from the `afterUpdate` parameters.
 - **Breaking Change**: replaced `unstickModel` with `unstickit`.
+- **Breaking Change**: removed deprecated `modelAttr` from bindings api.
+- **Breaking Change**: removed deprecated `format` from bindings api.
 - Fixed a bug introduced in 0.6.2 where re-rendering/re-sticking wasn't unbinding view events [#66](https://github.com/NYTimes/backbone.stickit/issues/66).
 - Added `update` to the bindings api which is an override for handling how the View element gets updated with Model changes.
 - Added `getVal` to the bindings api which is an override for retrieving the value of the View element. 
