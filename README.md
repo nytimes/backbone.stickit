@@ -291,7 +291,7 @@ The following is a list of the supported form elements, their binding details, a
    - model attribute value matched to a radio group `value` attribute
    - `change` event is used for handling
  - select
-   - see the `selectOptions` configuration
+   - if you choose to pre-render your select-options (unrecommended) then the binding will be configured with the "option[value]" attributes in the DOM; otherwise, see the `selectOptions` configuration.
    - `change` event is used for handling
 
 ### events
@@ -312,13 +312,13 @@ Specify a list of events which will override stickit's default events for a form
 
 ### selectOptions
 
-Binds an object collection, html select box, and a model attribute value. The following are configuration options for binding:
+With the given `collection`, creates `<option>`s for the bound `<select>`, and binds their selected values to the observed model attribute. It is recommended to use `selectOptions` instead of pre-rendering select-options since Stickit will render them and can bind Objects, Arrays, and non-String values as data to the `<option>` values. The following are configuration options for binding:
 
  - `collection`: an object path of a collection relative to `window` or `view`/`this`, or a string function reference which returns a collection of objects. A collection should be either an  array of objects or Backbone.Collection.
  - `labelPath`: the path to the label value for select options within the collection of objects. Default value when undefined is `label`.
  - `valuePath`: the path to the values for select options within the collection of objects. When an options is selected, the value that is defined for the given option is set in the model. Leave this undefined if the whole object is the value or to use the default `value`.
 
-When bindings are initialized, Stickit will build the `select` element with the options and bindings configured.
+When bindings are initialized, Stickit will build the `<select>` element with the `<option>`s and bindings configured. `selectOptions` are not required - if left undefined, then Stickit will expect that the `<option>`s are pre-rendered and build the collection from the DOM.
 
 **Note:** if you are using Zepto and referencing object values for your select options, like in the second example, then you will need to also include the Zepto data module.
 
@@ -333,8 +333,8 @@ The following example references a collection of stooges at `window.app.stooges`
     'select#stooges': {
       observe: 'stooge',
       selectOptions: {
-        // Alternatively, `this.` can be used to reference anything in the view's scope.
-        // For example: `collection:'this.stooges'`` would reference `view.stooges`.
+        // Alternatively, `this` can be used to reference anything in the view's scope.
+        // For example: `collection:'this.stooges'` would reference `view.stooges`.
         collection: 'window.app.stooges',
         labelPath: 'age',
         valuePath: 'name'

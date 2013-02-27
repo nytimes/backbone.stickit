@@ -515,6 +515,28 @@ $(document).ready(function() {
     equal(model.get('water'), 'dasina');
   });
 
+  test('bindings:selectOptions (pre-rendered)', 3, function() {
+
+    model.set({'water':'1'});
+    view.model = model;
+    view.templateId = 'jst21';
+    view.bindings = {
+      '#test21': {
+        observe: 'water'
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(getSelectedOption(view.$('#test21')).data('stickit_bind_val'), '1');
+
+    model.set('water', '2');
+    equal(getSelectedOption(view.$('#test21')).data('stickit_bind_val'), '2');
+
+    view.$('#test21 option').eq(2).prop('selected', true).trigger('change');
+    equal(model.get('water'), '3');
+  });
+
   test('bindings:selectOptions (Backbone.Collection)', function() {
 
     var collection = new Backbone.Collection([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);
@@ -748,6 +770,34 @@ $(document).ready(function() {
 
   });
 
+  test('bindings:selectOptions (pre-rendered multi-select)', function() {
+
+    model.set({'water': ['1', '3']});
+    view.model = model;
+    view.templateId = 'jst23';
+    view.bindings = {
+      '#test23': {
+        observe: 'water'
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(getSelectedOption(view.$('#test23')).eq(0).data('stickit_bind_val'), '1');
+    equal(getSelectedOption(view.$('#test23')).eq(1).data('stickit_bind_val'), '3');
+
+    var field = _.clone(model.get('water'));
+    field.push('2');
+
+    model.set({'water':field});
+    equal(getSelectedOption(view.$('#test23')).eq(1).data('stickit_bind_val'), '2');
+
+    view.$('#test23 option').eq(3).prop('selected', true).trigger('change');
+
+    equal(model.get('water').length, '4');
+
+  });
+
   test('bindings:selectOptions (multi-select with onGet/onSet)', function() {
 
     var collection = [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}, {id:4,name:'aquafina'}];
@@ -822,6 +872,30 @@ $(document).ready(function() {
 
     view.$('#test8 option').eq(3).prop('selected', true).trigger('change');
     equal(model.get('character'), 4);
+  });
+
+  test('bindings:selectOptions (pre-rendered optgroup)', function() {
+
+    model.set({'character':'3'});
+    view.model = model;
+    view.templateId = 'jst22';
+    view.bindings = {
+      '#test22': {
+        observe: 'character'
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(getSelectedOption(view.$('#test22')).parent().is('optgroup'), true);
+    equal(getSelectedOption(view.$('#test22')).parent().attr('label'), 'Three Stooges');
+    equal(getSelectedOption(view.$('#test22')).data('stickit_bind_val'), '3');
+
+    model.set({'character':'2'});
+    equal(getSelectedOption(view.$('#test22')).data('stickit_bind_val'), '2');
+
+    view.$('#test22 option').eq(3).prop('selected', true).trigger('change');
+    equal(model.get('character'), '4');
   });
 
   test('bindings:attributes:name', function() {

@@ -343,8 +343,29 @@
     update: function($el, val, model, options) {
       var optList,
         selectConfig = options.selectOptions,
-        list = selectConfig.collection,
+        list = selectConfig && selectConfig.collection || undefined,
         isMultiple = $el.prop('multiple');
+
+      // If there are no `selectOptions` then we assume that the `<select>`
+      // is pre-rendered and that we need to generate the collection.
+      if (!selectConfig) {
+        selectConfig = {};
+        var getList = function($el) {
+          return $el.find('option').map(function() {
+              return {value:this.value, label:this.text};
+          }).get();
+        };
+        if ($el.find('optgroup').length) {
+          list = {opt_labels:[]};
+          _.each($el.find('optgroup'), function(el) {
+            var label = $(el).attr('label');
+            list.opt_labels.push(label);
+            list[label] = getList($(el));
+          });
+        } else {
+          list = getList($el);
+        }
+      }
 
       var addSelectOptions = function(optList, $el, selectConfig, fieldVal, isMultiple) {
         _.each(optList, function(obj) {
@@ -366,7 +387,7 @@
             option.prop('selected', true);
           else if (isMultiple && _.isArray(fieldVal)) {
             _.each(fieldVal, function(val) {
-              if (_.isObject(val)) val = evaluatePath(val, selectConfig.valuePath);
+              if (_.isObject(val)) val = evaluatePath(val, selectConfig.valuePath || 'value');
               if (val == optionVal || (_.isObject(val) && _.isEqual(optionVal, val)))
                 option.prop('selected', true);
             });
@@ -386,7 +407,9 @@
         list = list.replace(/^[a-z]*\.(.+)$/, '$1');
         return evaluatePath(context, list);
       };
-      optList = _.isFunction(list) ? applyViewFn(this, list, $el, options) : evaluate(this, list);
+      if (_.isString(list)) optList = evaluate(this, list);
+      else if (_.isFunction(list)) optList = applyViewFn(this, list, $el, options)
+      else optList = list;
 
       // Add an empty default option if the current model attribute isn't defined.
       if (val == null)
