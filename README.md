@@ -115,7 +115,7 @@ A callback which returns a formatted version of the model attribute value that i
     }
   },
   formatHeader: function(value, options) {
-    return options.observe + ': ' + val;
+    return options.observe + ': ' + value;
   }
  ```
 
