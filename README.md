@@ -317,6 +317,7 @@ With the given `collection`, creates `<option>`s for the bound `<select>`, and b
  - `collection`: an object path of a collection relative to `window` or `view`/`this`, or a string function reference which returns a collection of objects. A collection should be either an  array of objects or Backbone.Collection.
  - `labelPath`: the path to the label value for select options within the collection of objects. Default value when undefined is `label`.
  - `valuePath`: the path to the values for select options within the collection of objects. When an options is selected, the value that is defined for the given option is set in the model. Leave this undefined if the whole object is the value or to use the default `value`.
+ - `defaultOption`: an object with `label` and `value` keys, used to define a default option value. A common use case would be something like the following: `{label: "Choose one...", value: null}`.
 
 When bindings are initialized, Stickit will build the `<select>` element with the `<option>`s and bindings configured. `selectOptions` are not required - if left undefined, then Stickit will expect that the `<option>`s are pre-rendered and build the collection from the DOM.
 
@@ -341,6 +342,25 @@ The following example references a collection of stooges at `window.app.stooges`
     }
   }
 ```
+The following is an example where the default `label` and `value` are used along with a `defaultOption`:
+```javascript
+  bindings: {
+    'select#stooges': {
+      observe: 'stooge',
+      selectOptions: {
+        collection: function() {
+          // No need for `labelPath` or `valuePath` since the defaults
+          // `label` and `value` are used in the collection.
+          return [{value:1, label:'OH'}, {value:2, label:{name:'IN'}}];
+        },
+        defaultOption: {
+          label: 'Choose one...',
+          value: null
+        }
+    }
+  }
+```
+
 The following is an example where a collection is returned by callback and the collection objects are used as option values:
 
 ```javascript

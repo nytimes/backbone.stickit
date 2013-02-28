@@ -367,15 +367,22 @@
         }
       }
 
+      // Fill in default label and path values.
+      selectConfig.valuePath = selectConfig.valuePath || 'value';
+      selectConfig.labelPath = selectConfig.labelPath || 'label';
+
       var addSelectOptions = function(optList, $el, selectConfig, fieldVal, isMultiple) {
         _.each(optList, function(obj) {
           var option = $('<option/>'), optionVal = obj;
 
           // If the list contains a null/undefined value, then an empty option should
           // be appended in the list; otherwise, fill the option with text and value.
-          if (obj != null) {
-            option.text(evaluatePath(obj, selectConfig.labelPath || "label"));
-            optionVal = evaluatePath(obj, selectConfig.valuePath || "value");
+          if (obj === '__default__') {
+            option.text(selectConfig.defaultOption.label);
+            optionVal = selectConfig.defaultOption.value;
+          } else if (obj != null) {
+            option.text(evaluatePath(obj, selectConfig.labelPath));
+            optionVal = evaluatePath(obj, selectConfig.valuePath);
           } else if ($el.find('option').length && $el.find('option').eq(0).data('stickit_bind_val') == null) return false;
 
           // Save the option value so that we can reference it later.
@@ -387,7 +394,7 @@
             option.prop('selected', true);
           else if (isMultiple && _.isArray(fieldVal)) {
             _.each(fieldVal, function(val) {
-              if (_.isObject(val)) val = evaluatePath(val, selectConfig.valuePath || 'value');
+              if (_.isObject(val)) val = evaluatePath(val, selectConfig.valuePath);
               if (val == optionVal || (_.isObject(val) && _.isEqual(optionVal, val)))
                 option.prop('selected', true);
             });
@@ -411,24 +418,24 @@
       else if (_.isFunction(list)) optList = applyViewFn(this, list, $el, options)
       else optList = list;
 
-      // Add an empty default option if the current model attribute isn't defined.
-      if (val == null)
+      // Support Backbone.Collection and deserialize.
+      if (optList instanceof Backbone.Collection) optList = optList.toJSON();
+
+      // Add an empty default option if the current model attribute isn't defined and there is no default.
+      if (val == null && !selectConfig.defaultOption)
         $el.append('<option/>').find('option').prop('selected', true).data('stickit_bind_val', val);
 
       if (_.isArray(optList)) {
+        if (selectConfig.defaultOption) optList.unshift('__default__'); 
         addSelectOptions(optList, $el, selectConfig, val, isMultiple);
-      } else if (optList instanceof Backbone.Collection) {
-        addSelectOptions(optList.toJSON(), $el, selectConfig, val, isMultiple);
       } else {
         // If the optList is an object, then it should be used to define an optgroup. An
         // optgroup object configuration looks like the following:
-        //
         //     {
         //       'opt_labels': ['Looney Tunes', 'Three Stooges'],
         //       'Looney Tunes': [{id: 1, name: 'Bugs Bunny'}, {id: 2, name: 'Donald Duck'}],
         //       'Three Stooges': [{id: 3, name : 'moe'}, {id: 4, name : 'larry'}, {id: 5, name : 'curly'}]
         //     }
-        //
         _.each(optList.opt_labels, function(label) {
           var $group = $('<optgroup/>').attr('label', label);
           addSelectOptions(optList[label], $group, selectConfig, val, isMultiple);
