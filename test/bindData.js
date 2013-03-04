@@ -633,7 +633,7 @@ $(document).ready(function() {
 
     model.set({'water':{id:1, name:'fountain'}});
     window.test = {
-      collection: [null, {id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]
+      collection: [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]
     };
     view.model = model;
     view.templateId = 'jst8';
@@ -653,37 +653,8 @@ $(document).ready(function() {
     model.set('water', {id:2, name:'evian'});
     equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val').id, 2);
 
-    view.$('#test8 option').eq(3).prop('selected', true).trigger('change');
+    view.$('#test8 option').eq(2).prop('selected', true).trigger('change');
     equal(model.get('water').id, 3);
-  });
-
-  test('bindings:selectOptions (null model val - empty option)', function() {
-
-    model.set({'water':null});
-    window.test = {
-      collection: [null, {id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]
-    };
-    view.model = model;
-    view.templateId = 'jst8';
-    view.bindings = {
-      '#test8': {
-        observe: 'water',
-        selectOptions: {
-          collection: 'window.test.collection',
-          labelPath: 'name'
-        }
-      }
-    };
-
-    $('#qunit-fixture').html(view.render().el);
-
-    equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), null);
-
-    model.set('water', {id:2, name:'evian'});
-    equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val').id, 2);
-
-    view.$('#test8 option').eq(0).prop('selected', true).trigger('change');
-    equal(model.get('water'), null);
   });
 
   test('bindings:selectOptions (empty string label)', function() {

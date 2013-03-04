@@ -369,8 +369,7 @@ The following is an example where a collection is returned by callback and the c
       observe: 'state',
       selectOptions: {
         collection: function() {
-          // Prepend null or undefined for an empty select option and value.
-          return [null, {id:1, data:{name:'OH'}}, {id:2, data:{name:'IN'}}];
+          return [{id:1, data:{name:'OH'}}, {id:2, data:{name:'IN'}}];
         },
         labelPath: 'data.name'
         // Leaving `valuePath` undefined so that the collection objects are used 
@@ -525,6 +524,8 @@ MIT
 - **Breaking Change**: replaced `unstickModel` with `unstickit`.
 - **Breaking Change**: removed deprecated `modelAttr` from bindings api.
 - **Breaking Change**: removed deprecated `format` from bindings api.
+- **Breaking Change**: removed support for null value default/empty options in selectOptions.collection.
+- Added `defaultOption` to the `selectOptions`.
 - Fixed a bug introduced in 0.6.2 where re-rendering/re-sticking wasn't unbinding view events [#66](https://github.com/NYTimes/backbone.stickit/issues/66).
 - Added `update` to the bindings api which is an override for handling how the View element gets updated with Model changes.
 - Added `getVal` to the bindings api which is an override for retrieving the value of the View element. 
