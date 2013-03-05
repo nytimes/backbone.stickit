@@ -513,14 +513,13 @@ Backbone.Stickit.addHandler({
 ```
 With this handler in place, anytime you bind to a `textarea`, if the `textarea` contains a `trim` class then this handler will be mixed into the default `textarea` handler and `getVal` will be overridden.
 
-Another good use for handlers is setup for third-party plugins. At the end of `View.render`, it is common to include boilerplate third-party initialization code. For example,
+Another good use for handlers is setup code for third-party plugins. At the end of `View.render`, it is common to include boilerplate third-party initialization code. For example the following sets up a [Chosen](http://harvesthq.github.com/chosen/) multiselect,
 
 ```javascript
 render: function() {
   this.$el.html(this.template());
   this.setupChosenSelect(this.$('.friends'), 'friends');
   this.setupChosenSelect(this.$('.albums'), 'albums');
-  return this;
 }
 
 setupChosenSelect: function($el, modelAttr) { /* initialize Chosen for the el and map to model */ }
@@ -529,7 +528,7 @@ setupChosenSelect: function($el, modelAttr) { /* initialize Chosen for the el an
 Instead, a handler could be setup to match bound elements that have a `chosen` class and initialize a [Chosen](http://harvesthq.github.com/chosen/) multiselect for the element:
 
 ```javascript
-// Setup a generic, global handler for the Chosen plugin:
+// Setup a generic, global handler for the Chosen plugin.
 Backbone.Stickit.addHandler({
   selector: 'select.chosen',
   initialize: function($el, model, options) {
@@ -543,12 +542,12 @@ Backbone.Stickit.addHandler({
 ```
 
 ```html
-<!-- Some HTML for the View, marked with the chosen class -->
+<!-- A template for the View, marked with the chosen class -->
 <select class="friends chosen" multiple="multiple"></select>
 ```
 
 ```javascript
-// The View binding where Chosen will be initialized.
+// In a View ...
 bindings: {
   '.friends': {
     observe: 'friends',
