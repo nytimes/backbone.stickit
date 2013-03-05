@@ -1282,7 +1282,7 @@ $(document).ready(function() {
   });
 
   test('update', 8, function() {
-    
+
     model.set({'water':'fountain'});
     view.model = model;
     view.templateId = 'jst1';
@@ -1298,11 +1298,29 @@ $(document).ready(function() {
       }
     };
     $('#qunit-fixture').html(view.render().el);
-    
+
     equal(view.$('#test1').val(), 'test-fountain');
 
     model.set('water', 'dasina');
     equal(view.$('#test1').val(), 'test-dasina');
+  });
+
+  test('initialize', 3, function() {
+
+    model.set({'water':'fountain'});
+    view.model = model;
+    view.templateId = 'jst1';
+    view.bindings = {
+      '#test1': {
+        observe: 'water',
+        initialize: function($el, model, options) {
+          equal($el.val(), 'fountain');
+          equal(model.get('water'), 'fountain');
+          equal(options.observe, 'water');
+        }
+      }
+    };
+    $('#qunit-fixture').html(view.render().el);
   });
 
 });

@@ -111,6 +111,9 @@
 
           updateViewBindEl(self, $el, config, getAttr(model, modelAttr, config, self), model, true);
         }
+
+        // After each binding is setup, call the `initialize` callback.
+        applyViewFn(self, config.initialize, $el, model, config);
       });
 
       // Wrap `view.remove` to unbind stickit model and dom events.

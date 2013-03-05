@@ -236,6 +236,21 @@ A boolean which when true escapes the model before setting it in the view - inte
   }
 ```
 
+### initialize
+
+Called for each binding after it is configured in the initial call to `stickit()`. Useful for setting up third-party plugins, see the handlers section for examples.
+
+```javascript  
+  bindings: {
+    '#album': {
+      observe: 'exai',
+      initialize: function($el, model, options) {
+        // Executed only once after this binding is setup.
+      }
+    }
+  }
+```
+
 ### visible and visibleFn
 
 When true, `visible` shows or hides the view element based on the model attribute's truthiness. `visible` may also be defined with a callback which should return a truthy value.
@@ -526,6 +541,7 @@ MIT
 - **Breaking Change**: removed deprecated `format` from bindings api.
 - **Breaking Change**: removed support for null value default/empty options in selectOptions.collection.
 - Added `defaultOption` to the `selectOptions`.
+- Added `initialize` to the bindings api which is called for each binding after it is initialized.
 - Fixed a bug introduced in 0.6.2 where re-rendering/re-sticking wasn't unbinding view events [#66](https://github.com/NYTimes/backbone.stickit/issues/66).
 - Added `update` to the bindings api which is an override for handling how the View element gets updated with Model changes.
 - Added `getVal` to the bindings api which is an override for retrieving the value of the View element. 
