@@ -245,7 +245,7 @@ Called for each binding after it is configured in the initial call to `stickit()
     '#album': {
       observe: 'exai',
       initialize: function($el, model, options) {
-        // Executed only once after this binding is setup.
+        // Setup a Chosen or thirdy-party plugin for this bound element.
       }
     }
   }
@@ -512,6 +512,56 @@ Backbone.Stickit.addHandler({
 
 ```
 With this handler in place, anytime you bind to a `textarea`, if the `textarea` contains a `trim` class then this handler will be mixed into the default `textarea` handler and `getVal` will be overridden.
+
+Another good use for handlers is setup for third-party plugins. At the end of `View.render`, it is common to include boilerplate third-party initialization code. For example,
+
+```javascript
+render: function() {
+  this.$el.html(this.template());
+  this.setupChosenSelect(this.$('.friends'), 'friends');
+  this.setupChosenSelect(this.$('.albums'), 'albums');
+  return this;
+}
+
+setupChosenSelect: function($el, modelAttr) { /* initialize Chosen for the el and map to model */ }
+```
+
+Instead, a handler could be setup to match bound elements that have a `chosen` class and initialize a [Chosen](http://harvesthq.github.com/chosen/) multiselect for the element:
+
+```javascript
+// Setup a generic, global handler for the Chosen plugin:
+Backbone.Stickit.addHandler({
+  selector: 'select.chosen',
+  initialize: function($el, model, options) {
+    $el.chosen();
+    var up = function(m, v, opt) {
+      if (!opt.bindKey) $el.trigger('liszt:updated');
+    };
+    this.listenTo(model, 'change:' + options.observe, up)
+  }
+});
+```
+
+```html
+<!-- Some HTML for the View, marked with the chosen class -->
+<select class="friends chosen" multiple="multiple"></select>
+```
+
+```javascript
+// The View binding where Chosen will be initialized.
+bindings: {
+  '.friends': {
+    observe: 'friends',
+    selectOptions: {
+      collection: 'this.friendsCollection'
+    }
+  }
+},
+render: function() {
+  this.$el.html(this.template());
+  this.stickit(); // Chosen is initialized.
+}
+```
 
 ## F.A.Q.
 
