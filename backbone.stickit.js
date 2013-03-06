@@ -355,7 +355,7 @@
         selectConfig = {};
         var getList = function($el) {
           return $el.find('option').map(function() {
-              return {value:this.value, label:this.text};
+            return {value:this.value, label:this.text};
           }).get();
         };
         if ($el.find('optgroup').length) {
@@ -378,7 +378,7 @@
         // Add a flag for default option at the beginning of the list.
         if (selectConfig.defaultOption) {
           optList = _.clone(optList);
-          optList.unshift('__default__'); 
+          optList.unshift('__default__');
         }
         _.each(optList, function(obj) {
           var option = $('<option/>'), optionVal = obj;
@@ -422,7 +422,7 @@
         return evaluatePath(context, list);
       };
       if (_.isString(list)) optList = evaluate(this, list);
-      else if (_.isFunction(list)) optList = applyViewFn(this, list, $el, options)
+      else if (_.isFunction(list)) optList = applyViewFn(this, list, $el, options);
       else optList = list;
 
       // Support Backbone.Collection and deserialize.
@@ -433,11 +433,13 @@
       } else {
         // If the optList is an object, then it should be used to define an optgroup. An
         // optgroup object configuration looks like the following:
+        //
         //     {
         //       'opt_labels': ['Looney Tunes', 'Three Stooges'],
         //       'Looney Tunes': [{id: 1, name: 'Bugs Bunny'}, {id: 2, name: 'Donald Duck'}],
         //       'Three Stooges': [{id: 3, name : 'moe'}, {id: 4, name : 'larry'}, {id: 5, name : 'curly'}]
         //     }
+        //
         _.each(optList.opt_labels, function(label) {
           var $group = $('<optgroup/>').attr('label', label);
           addSelectOptions(optList[label], $group, val);
