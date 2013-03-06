@@ -111,6 +111,9 @@
 
           updateViewBindEl(self, $el, config, getAttr(model, modelAttr, config, self), model, true);
         }
+
+        // After each binding is setup, call the `initialize` callback.
+        applyViewFn(self, config.initialize, $el, model, config);
       });
 
       // Wrap `view.remove` to unbind stickit model and dom events.
@@ -352,7 +355,7 @@
         selectConfig = {};
         var getList = function($el) {
           return $el.find('option').map(function() {
-              return {value:this.value, label:this.text};
+            return {value:this.value, label:this.text};
           }).get();
         };
         if ($el.find('optgroup').length) {
@@ -371,23 +374,27 @@
       selectConfig.valuePath = selectConfig.valuePath || 'value';
       selectConfig.labelPath = selectConfig.labelPath || 'label';
 
-      var addSelectOptions = function(optList, $el, selectConfig, fieldVal, isMultiple) {
+      var addSelectOptions = function(optList, $el, fieldVal) {
+        // Add a flag for default option at the beginning of the list.
+        if (selectConfig.defaultOption) {
+          optList = _.clone(optList);
+          optList.unshift('__default__');
+        }
         _.each(optList, function(obj) {
           var option = $('<option/>'), optionVal = obj;
 
-          // If the list contains a null/undefined value, then an empty option should
-          // be appended in the list; otherwise, fill the option with text and value.
-          if (obj === '__default__') {
-            option.text(selectConfig.defaultOption.label);
-            optionVal = selectConfig.defaultOption.value;
-          } else if (obj != null) {
-            option.text(evaluatePath(obj, selectConfig.labelPath));
-            optionVal = evaluatePath(obj, selectConfig.valuePath);
-          } else if ($el.find('option').length && $el.find('option').eq(0).data('stickit_bind_val') == null) return false;
+          var fillOption = function(text, val) {
+            option.text(text);
+            optionVal = val;
+            // Save the option value as data so that we can reference it later.
+            option.data('stickit_bind_val', optionVal);
+            if (!_.isArray(optionVal) && !_.isObject(optionVal)) option.val(optionVal);
+          };
 
-          // Save the option value so that we can reference it later.
-          option.data('stickit_bind_val', optionVal);
-          if (!_.isArray(optionVal) && !_.isObject(optionVal)) option.val(optionVal);
+          if (obj === '__default__')
+            fillOption(selectConfig.defaultOption.label, selectConfig.defaultOption.value);
+          else
+            fillOption(evaluatePath(obj, selectConfig.labelPath), evaluatePath(obj, selectConfig.valuePath));
 
           // Determine if this option is selected.
           if (!isMultiple && optionVal != null && fieldVal != null && optionVal == fieldVal || (_.isObject(fieldVal) && _.isEqual(optionVal, fieldVal)))
@@ -415,30 +422,27 @@
         return evaluatePath(context, list);
       };
       if (_.isString(list)) optList = evaluate(this, list);
-      else if (_.isFunction(list)) optList = applyViewFn(this, list, $el, options)
+      else if (_.isFunction(list)) optList = applyViewFn(this, list, $el, options);
       else optList = list;
 
       // Support Backbone.Collection and deserialize.
       if (optList instanceof Backbone.Collection) optList = optList.toJSON();
 
-      // Add an empty default option if the current model attribute isn't defined and there is no default.
-      if (val == null && !selectConfig.defaultOption)
-        $el.append('<option/>').find('option').prop('selected', true).data('stickit_bind_val', val);
-
       if (_.isArray(optList)) {
-        if (selectConfig.defaultOption) optList.unshift('__default__'); 
-        addSelectOptions(optList, $el, selectConfig, val, isMultiple);
+        addSelectOptions(optList, $el, val);
       } else {
         // If the optList is an object, then it should be used to define an optgroup. An
         // optgroup object configuration looks like the following:
+        //
         //     {
         //       'opt_labels': ['Looney Tunes', 'Three Stooges'],
         //       'Looney Tunes': [{id: 1, name: 'Bugs Bunny'}, {id: 2, name: 'Donald Duck'}],
         //       'Three Stooges': [{id: 3, name : 'moe'}, {id: 4, name : 'larry'}, {id: 5, name : 'curly'}]
         //     }
+        //
         _.each(optList.opt_labels, function(label) {
           var $group = $('<optgroup/>').attr('label', label);
-          addSelectOptions(optList[label], $group, selectConfig, val, isMultiple);
+          addSelectOptions(optList[label], $group, val);
           $el.append($group);
         });
       }
