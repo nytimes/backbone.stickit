@@ -1,4 +1,4 @@
-[-> **Documentation for current/stable release: 0.6.2**](http://nytimes.github.com/backbone.stickit/)
+[-> **Documentation for current/stable release: 0.6.3**](http://nytimes.github.com/backbone.stickit/)
 
 **The following is documentation for the code in master/edge version...**
 
@@ -10,7 +10,7 @@ Stickit is a Backbone data binding plugin that binds Model attributes to View el
 
 ## Download + Source
 
-[download v0.6.2](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.6.2.zip)
+[download v0.6.3](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.6.3.zip)
 
 [download master/edge](https://raw.github.com/NYTimes/backbone.stickit/master/backbone.stickit.js)
 
@@ -580,7 +580,7 @@ MIT
 
 ## Change Log
 
-#### Master
+#### 0.6.3
 
 - Added `Backbone.Stickit.addHandler()`, useful for defining a custom configuration for any bindings that match the `handler.selector`. 
 - **Breaking Change**: `eventsOverride` was changed to `events`.

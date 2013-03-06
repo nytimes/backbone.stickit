@@ -112,7 +112,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-compress');
 
-  grunt.registerTask('build', ['jshint', 'clean:build', 'uglify:nasty', 'concat', 'docco', 'compress:gz', 'compress:zip']);
+  grunt.registerTask('build', ['jshint', 'clean:build', 'uglify:nasty', 'concat', 'docco', 'compress:gz', 'cp-docs', 'compress:zip']);
 
   grunt.registerTask('cp-docs', function() {
     grunt.file.copy('docs/docco.css', 'dist/docs/annotated/docco.css');
