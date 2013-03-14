@@ -171,7 +171,7 @@
   var getAttr = function(model, attr, config, context) {
     var val, retrieveVal = function(field) {
       var retrieved = config.escape ? model.escape(field) : model.get(field);
-      return _.isUndefined(retrieved) ? '' : retrieved;
+      return _.isUndefined(retrieved) || _.isNull(retrieved) ? '' : retrieved;
     };
     val = _.isArray(attr) ? _.map(attr, retrieveVal) : retrieveVal(attr);
     return config.onGet ? applyViewFn(context, config.onGet, val, config) : val;

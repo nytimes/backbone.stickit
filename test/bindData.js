@@ -3,7 +3,7 @@ $(document).ready(function() {
   module("view.stickit");
 
   test('input:text', function() {
-    
+
     model.set({'water':'fountain'});
     view.model = model;
     view.templateId = 'jst1';
@@ -18,13 +18,13 @@ $(document).ready(function() {
 
     model.set('water', 'evian');
     equal(view.$('#test1').val(), 'evian');
-    
+
     view.$('#test1').val('dasina').trigger('keyup');
     equal(model.get('water'), 'dasina');
   });
 
   test('textarea', function() {
-    
+
     model.set({'water':'fountain'});
     view.model = model;
     view.templateId = 'jst2';
@@ -39,13 +39,13 @@ $(document).ready(function() {
 
     model.set('water', 'evian');
     equal(view.$('#test2').val(), 'evian');
-    
+
     view.$('#test2').val('dasina').trigger('keyup');
     equal(model.get('water'), 'dasina');
   });
 
   test('contenteditable', function() {
-    
+
     model.set({'water':'<span>fountain</span>'});
     view.model = model;
     view.templateId = 'jst17';
@@ -60,13 +60,13 @@ $(document).ready(function() {
 
     model.set('water', '<span>evian</span>');
     equal(view.$('#test17').html(), '<span>evian</span>');
-    
+
     view.$('#test17').html('<span>dasina</span>').trigger('keyup');
     equal(model.get('water'), '<span>dasina</span>');
   });
 
   test('checkbox', function() {
-    
+
     model.set({'water':true});
     view.model = model;
     view.templateId = 'jst3';
@@ -81,13 +81,13 @@ $(document).ready(function() {
 
     model.set('water', false);
     equal(view.$('#test3').prop('checked'), false);
-    
+
     view.$('#test3').prop('checked', true).trigger('change');
     equal(model.get('water'), true);
   });
 
   test('radio', function() {
-    
+
     model.set({'water':'fountain'});
     view.model = model;
     view.templateId = 'jst4';
@@ -102,13 +102,13 @@ $(document).ready(function() {
 
     model.set('water', 'evian');
     equal(view.$('.test4:checked').val(), 'evian');
-    
+
     view.$('.test4[value=fountain]').prop('checked', true).trigger('change');
     equal(model.get('water'), 'fountain');
   });
 
   test('div', function() {
-    
+
     model.set({'water':'fountain'});
     view.model = model;
     view.templateId = 'jst5';
@@ -126,7 +126,7 @@ $(document).ready(function() {
   });
 
   test(':el selector', function() {
-    
+
     model.set({'water':'fountain'});
     view.model = model;
     view.templateId = 'jst5';
@@ -151,7 +151,7 @@ $(document).ready(function() {
       '#test5': 'water'
     };
     $('#qunit-fixture').html(view.render().el);
-    
+
     equal(view.$('#test5').text(), 'fountain');
 
     model.set('water', 'evian');
@@ -161,13 +161,13 @@ $(document).ready(function() {
   });
 
   test('stickit (multiple models and bindings)', function() {
-  
+
     // Test sticking two times to two different models and configs.
     var model1, model2, testView;
-    
+
     model1 = new (Backbone.Model)({id:1, water:'fountain', candy:'twix'});
     model2 = new (Backbone.Model)({id:2, water:'evian', candy:'snickers'});
-    
+
     testView = new (Backbone.View.extend({
       initialize: function() {
         this.model = model1;
@@ -341,7 +341,7 @@ $(document).ready(function() {
   });
 
   test('bindings:setOptions', function() {
-    
+
     model.set({'water':'fountain'});
     view.model = model;
     view.templateId = 'jst1';
@@ -354,14 +354,14 @@ $(document).ready(function() {
     $('#qunit-fixture').html(view.render().el);
 
     equal(view.$('#test1').val(), 'fountain');
-    
+
     view.$('#test1').val('dasina').trigger('keyup');
     equal(model.get('water'), 'dasina');
     equal(model.changedAttributes().water, 'dasina');
   });
 
   test('bindings:updateMethod', function() {
-    
+
     model.set({'water':'<a href="www.test.com">river</a>'});
     view.model = model;
     view.templateId = 'jst5';
@@ -1321,6 +1321,30 @@ $(document).ready(function() {
       }
     };
     $('#qunit-fixture').html(view.render().el);
+  });
+
+  test('null form value', function() {
+
+    model.set({'water':null});
+    view.model = model;
+    view.templateId = 'jst1';
+    view.bindings = {
+      '#test1': 'water'
+    };
+    $('#qunit-fixture').html(view.render().el);
+    equal(view.$('#test1').val(), '');
+  });
+
+  test('null html value', function() {
+
+    model.set({'water':null});
+    view.model = model;
+    view.templateId = 'jst5';
+    view.bindings = {
+      '#test5': 'water'
+    };
+    $('#qunit-fixture').html(view.render().el);
+    equal(view.$('#test5').html(), '');
   });
 
 });
