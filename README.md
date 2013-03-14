@@ -580,6 +580,10 @@ MIT
 
 ## Change Log
 
+#### Master
+
+- Fixed a bug where "null" would show in Chrome when binding `attribute:null` to an element value.
+
 #### 0.6.3
 
 - Added `Backbone.Stickit.addHandler()`, useful for defining a custom configuration for any bindings that match the `handler.selector`. 
