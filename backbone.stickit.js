@@ -105,11 +105,11 @@
           _.each(_.flatten([modelAttr]), function(attr) {
             observeModelEvent(model, self, 'change:'+attr, function(model, val, options) {
               if (options == null || options.bindKey != bindKey)
-                updateViewBindEl(self, $el, config, getAttr(model, modelAttr, config, self), model);
+                updateViewBindEl(self, $el, config, getAttr(model, modelAttr, config, self, $el), model);
             });
           });
 
-          updateViewBindEl(self, $el, config, getAttr(model, modelAttr, config, self), model, true);
+          updateViewBindEl(self, $el, config, getAttr(model, modelAttr, config, self, $el), model, true);
         }
 
         // After each binding is setup, call the `initialize` callback.
@@ -168,13 +168,13 @@
   // Returns the given `attr`'s value from the `model`, escaping and
   // formatting if necessary. If `attr` is an array, then an array of
   // respective values will be returned.
-  var getAttr = function(model, attr, config, context) {
+  var getAttr = function(model, attr, config, context, $el) {
     var val, retrieveVal = function(field) {
       var retrieved = config.escape ? model.escape(field) : model.get(field);
       return _.isUndefined(retrieved) || _.isNull(retrieved) ? '' : retrieved;
     };
     val = _.isArray(attr) ? _.map(attr, retrieveVal) : retrieveVal(attr);
-    return config.onGet ? applyViewFn(context, config.onGet, val, config) : val;
+    return config.onGet ? applyViewFn(context, config.onGet, val, config, $el) : val;
   };
 
   // Find handlers in `Backbone.Stickit._handlers` with selectors that match
@@ -215,7 +215,7 @@
         observed = attrConfig.observe || (attrConfig.observe = modelAttr),
         updateAttr = function() {
           var updateType = _.indexOf(props, attrConfig.name, true) > -1 ? 'prop' : 'attr',
-            val = getAttr(model, observed, attrConfig, view);
+            val = getAttr(model, observed, attrConfig, view, $el);
           // If it is a class then we need to remove the last value and add the new.
           if (attrConfig.name == 'class') {
             $el.removeClass(lastClass).addClass(val);
@@ -244,7 +244,7 @@
     var visibleCb = function() {
       var visible = config.visible,
           visibleFn = config.visibleFn,
-          val = getAttr(model, modelAttr, config, view),
+          val = getAttr(model, modelAttr, config, view, $el),
           isVisible = !!val;
       // If `visible` is a function then it should return a boolean result to show/hide.
       if (_.isFunction(visible) || _.isString(visible)) isVisible = applyViewFn(view, visible, val, config);
