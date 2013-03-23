@@ -373,7 +373,7 @@
             list[label] = getList($(el).find('option'));
           });
         } else {
-          list = getList($el);
+          list = getList($el.find('option'));
         }
       }
 
