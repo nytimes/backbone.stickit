@@ -354,16 +354,23 @@
       if (!selectConfig) {
         selectConfig = {};
         var getList = function($el) {
-          return $el.find('option').map(function() {
+          return $el.map(function() {
             return {value:this.value, label:this.text};
           }).get();
         };
         if ($el.find('optgroup').length) {
           list = {opt_labels:[]};
+          // Search for options without optgroup
+          if ($el.find('> option').length) {
+            list.opt_labels.push(undefined);
+            _.each($el.find('> option'), function(el) {
+              list[undefined] = getList($(el));
+            });
+          }
           _.each($el.find('optgroup'), function(el) {
             var label = $(el).attr('label');
             list.opt_labels.push(label);
-            list[label] = getList($(el));
+            list[label] = getList($(el).find('option'));
           });
         } else {
           list = getList($el);
