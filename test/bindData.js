@@ -905,6 +905,30 @@ $(document).ready(function() {
     equal(model.get('character'), '4');
   });
 
+  test('bindings:selectOptions (pre-rendered optgroup with extra option)', function() {
+
+    model.set({'character':'3'});
+    view.model = model;
+    view.templateId = 'jst24';
+    view.bindings = {
+      '#test24': {
+        observe: 'character'
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(getSelectedOption(view.$('#test24')).parent().is('optgroup'), true);
+    equal(getSelectedOption(view.$('#test24')).parent().attr('label'), 'Three Stooges');
+    equal(getSelectedOption(view.$('#test24')).data('stickit_bind_val'), '3');
+
+    model.set({'character':'0'});
+    equal(getSelectedOption(view.$('#test24')).data('stickit_bind_val'), '0');
+
+    view.$('#test24 option').eq(4).prop('selected', true).trigger('change');
+    equal(model.get('character'), '4');
+  });
+
   test('bindings:attributes:name', function() {
 
     model.set({'water':'fountain'});
