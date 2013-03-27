@@ -120,6 +120,7 @@
       this.remove = _.wrap(this.remove, function(oldRemove) {
         self.unstickit();
         if (oldRemove) oldRemove.call(self);
+        return self;
       });
     }
   });
