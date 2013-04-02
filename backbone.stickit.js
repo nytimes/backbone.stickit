@@ -189,7 +189,7 @@
       updateModel: false,
       updateView: true,
       updateMethod: 'text',
-      update: function($el, val, m, opts) { $el[opts.updateMethod](val); },
+      update: function($el, val, m, opts) { if($el[opts.updateMethod]) $el[opts.updateMethod](val); },
       getVal: function($el, e, opts) { return $el[opts.updateMethod](); }
     }];
     _.each(Backbone.Stickit._handlers, function(handler) {
@@ -274,6 +274,7 @@
   //
   var updateViewBindEl = function(view, $el, config, val, model, isInitializing) {
     if (!evaluateBoolean(view, config.updateView, val, config)) return;
+    if (config.visible) return;
     config.update.call(view, $el, val, model, config);
     if (!isInitializing) applyViewFn(view, config.afterUpdate, $el, val, config);
   };

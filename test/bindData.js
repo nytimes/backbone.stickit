@@ -1092,7 +1092,7 @@ $(document).ready(function() {
     equal(Number(view.$('#test11').val()), 2);
   });
 
-  test('visible', 19, function() {
+  test('visible', 21, function() {
 
     model.set({'water':false, 'candy':'twix', 'costume':false});
     view.model = model;
@@ -1124,6 +1124,7 @@ $(document).ready(function() {
 
     equal(view.$('#test14-1').css('display') == 'block' , false);
     equal(view.$('#test14-2').css('display') == 'block' , true);
+    equal(view.$('#test14-2').text(), 'Test');
     equal(view.$('#test14-3').css('display') == 'block' , true);
 
     model.set('water', true);
@@ -1132,6 +1133,7 @@ $(document).ready(function() {
 
     equal(view.$('#test14-1').css('display') == 'block' , true);
     equal(view.$('#test14-2').css('display') == 'block' , false);
+    equal(view.$('#test14-2').text(), 'Test');
     equal(view.$('#test14-3').css('display') == 'block' , true);
   });
 
