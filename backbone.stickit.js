@@ -1,4 +1,21 @@
-(function($) {
+(function (root, factory) {
+  if (typeof exports === 'object') {
+
+    var jquery = require('jquery');
+    var underscore = require('underscore');
+    var backbone = require('backbone');
+
+    module.exports = factory(jquery, underscore, backbone);
+
+  } else if (typeof define === 'function' && define.amd) {
+
+    define(['jquery', 'underscore', 'backbone'], factory);
+
+  } else {
+    // Browser globals
+    factory(root.jQuery, root._, root.Backbone);
+  }
+}(this, function ($, _, Backbone) {
 
   // Backbone.Stickit Namespace
   // --------------------------
@@ -477,5 +494,5 @@
       return val;
     }
   }]);
-
-})(window.jQuery || window.Zepto);
+  return Backbone.Stickit;
+}));
