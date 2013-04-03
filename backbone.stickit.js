@@ -180,8 +180,8 @@
 
   // Find handlers in `Backbone.Stickit._handlers` with selectors that match
   // `$el` and generate a configuration by mixing them in the order that they
-  // were found with the with the givne `binding`.
-  var getConfiguration = function($el, binding) {
+  // were found then with the given `binding`.
+  var getConfiguration = Backbone.Stickit.getConfiguration = function($el, binding) {
     var handlers = [{
       updateModel: false,
       updateView: true,
