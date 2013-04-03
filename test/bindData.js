@@ -1163,6 +1163,42 @@ $(document).ready(function() {
     equal(view.$('#test5').text(), 'evian snickers');
   });
 
+  test('observe (function)', function() {
+    model.set({'water':'fountain'});
+
+    var testView = new (Backbone.View.extend({
+      bindings: {
+        '#test1': {
+          observe: function(m) {
+            equal(model, m);
+            equal(this, testView);
+            equal(this.options.observeValue, 'water');
+            return this.options.observeValue;
+          }
+        }
+      },
+      render: function() {
+        var html = document.getElementById('jst1').innerHTML;
+        this.$el.html(_.template(html)());
+        this.stickit();
+        return this;
+      }
+    }))({
+      model: model,
+      observeValue: 'water'
+    });
+
+    $('#qunit-fixture').html(testView.render().el);
+
+    equal(testView.$('#test1').val(), 'fountain');
+
+    model.set('water', 'evian');
+    equal(testView.$('#test1').val(), 'evian');
+    
+    testView.$('#test1').val('dasina').trigger('keyup');
+    equal(model.get('water'), 'dasina');
+  });
+
   test('bindings:updateView', 9, function() {
 
     model.set({'water':'fountain'});
