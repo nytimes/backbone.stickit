@@ -73,7 +73,9 @@
 
         // Allow shorthand setting of model attributes - `'selector':'observe'`.
         if (_.isString(binding)) binding = {observe:binding};
-        if (_.isFunction(binding.observe)) {binding.observe = binding.observe.call(self, model);}
+
+        // Handle case where `observe` is in the form of a function.
+        if (_.isFunction(binding.observe)) binding.observe = binding.observe.call(self);
 
         config = getConfiguration($el, binding);
 

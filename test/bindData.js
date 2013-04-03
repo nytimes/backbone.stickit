@@ -1163,14 +1163,13 @@ $(document).ready(function() {
     equal(view.$('#test5').text(), 'evian snickers');
   });
 
-  test('observe (function)', function() {
+  test('observe (function)', 5, function() {
     model.set({'water':'fountain'});
 
     var testView = new (Backbone.View.extend({
       bindings: {
         '#test1': {
-          observe: function(m) {
-            equal(model, m);
+          observe: function() {
             equal(this, testView);
             equal(this.options.observeValue, 'water');
             return this.options.observeValue;
@@ -1194,7 +1193,7 @@ $(document).ready(function() {
 
     model.set('water', 'evian');
     equal(testView.$('#test1').val(), 'evian');
-    
+
     testView.$('#test1').val('dasina').trigger('keyup');
     equal(model.get('water'), 'dasina');
   });

@@ -66,7 +66,7 @@ The `view.bindings` is a hash of jQuery or Zepto selector keys with binding conf
 
 ### observe
 
-A string or array which is used to map a model attribute to a view element. If binding to `observe` is the only configuration needed, then it can be written in short form where the attribute name is the value of the whole binding configuration.
+A string, function, or array which is used to map a model attribute to a view element. If binding to `observe` is the only configuration needed, then it can be written in short form where the attribute name is the value of the whole binding configuration.
 
 Note, binding to multiple model attributes using an array configuration only applies to one-way bindings (model->view), and should be paired with an `onGet` callback.
 
@@ -74,10 +74,17 @@ Note, binding to multiple model attributes using an array configuration only app
   bindings: {
     // Short form binding
     '#author': 'author',
+
     // Normal binding
     '#title': {
       observe: 'title'
-    }
+    },
+
+    // As a function
+    'body': function() {
+      return 'body';
+    },
+
     // Bind to multiple model attributes
     '#header': {
       observe: ['title', 'author'],
@@ -583,6 +590,7 @@ MIT
 #### Master
 
 - Fixed a bug where "null" would show in Chrome when binding `attribute:null` to an element value.
+- Added handling for `observe` in function form.
 
 #### 0.6.3
 
