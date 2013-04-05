@@ -62,7 +62,7 @@ Removes event bindings from all models. Optionally, a model can be passed in whi
 
 ## Bindings
 
-The `view.bindings` is a hash of jQuery or Zepto selector keys with binding configuration values. Similar to the callback definitions configured in `view.events`, an actual function or a string function name may be configured. 
+The `view.bindings` is a hash of jQuery or Zepto selector keys with binding configuration values. Similar to the callback definitions configured in `view.events`, bindings callbacks can be defined as the name of a method on the view or a direct function body.
 
 ### observe
 
