@@ -87,7 +87,7 @@
 
         initializeAttributes(self, $el, config, model, modelAttr);
 
-        initializeVisible(self, $el, config, model, modelAttr);
+        initializeVisible(self, $el, config, model, modelAttr, binding.updateView);
 
         if (modelAttr) {
           // Setup one-way, form element to model, bindings.
@@ -243,8 +243,9 @@
   //     visible: true, // or function(val, options) {}
   //     visibleFn: function($el, isVisible, options) {} // optional handler
   //
-  var initializeVisible = function(view, $el, config, model, modelAttr) {
+  var initializeVisible = function(view, $el, config, model, modelAttr, updateView) {
     if (config.visible == null) return;
+    config.updateView = updateView || false;
     var visibleCb = function() {
       var visible = config.visible,
           visibleFn = config.visibleFn,
@@ -274,7 +275,6 @@
   //
   var updateViewBindEl = function(view, $el, config, val, model, isInitializing) {
     if (!evaluateBoolean(view, config.updateView, val, config)) return;
-    if (config.visible) return;
     config.update.call(view, $el, val, model, config);
     if (!isInitializing) applyViewFn(view, config.afterUpdate, $el, val, config);
   };
