@@ -1092,9 +1092,9 @@ $(document).ready(function() {
     equal(Number(view.$('#test11').val()), 2);
   });
 
-  test('visible', 19, function() {
+  test('visible', 25, function() {
 
-    model.set({'water':false, 'candy':'twix', 'costume':false});
+    model.set({'water':false, 'candy':'twix', 'costume':false, 'visible': 'yes'});
     view.model = model;
     view.templateId = 'jst14';
     view.bindings = {
@@ -1118,21 +1118,33 @@ $(document).ready(function() {
           ok(isVisible);
           equal(options.observe.toString(), 'candy,costume');
         }
+      },
+      '#test14-4': {
+        observe: 'visible',
+        visible: function(val) { return val == 'yes'; },
+        updateView: true
       }
     };
     $('#qunit-fixture').html(view.render().el);
 
     equal(view.$('#test14-1').css('display') == 'block' , false);
     equal(view.$('#test14-2').css('display') == 'block' , true);
+    equal(view.$('#test14-2').text(), 'Test');
     equal(view.$('#test14-3').css('display') == 'block' , true);
+    equal(view.$('#test14-4').css('display') == 'block' , true);
+    equal(view.$('#test14-4').text(), 'yes');
 
     model.set('water', true);
     model.set('candy', 'snickers');
     model.set('costume', true);
+    model.set('visible', 'no')
 
     equal(view.$('#test14-1').css('display') == 'block' , true);
     equal(view.$('#test14-2').css('display') == 'block' , false);
+    equal(view.$('#test14-2').text(), 'Test');
     equal(view.$('#test14-3').css('display') == 'block' , true);
+    equal(view.$('#test14-4').css('display') == 'block' , false);
+    equal(view.$('#test14-4').text(), 'no');
   });
 
   test('observe (multiple; array)', 12, function() {

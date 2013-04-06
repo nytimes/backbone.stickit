@@ -261,6 +261,7 @@ Called for each binding after it is configured in the initial call to `stickit()
 ### visible and visibleFn
 
 When true, `visible` shows or hides the view element based on the model attribute's truthiness. `visible` may also be defined with a callback which should return a truthy value.
+The `updateView` option defaults to `false` when using `visible`.  You must opt-in to `updateView` in order to have both view element visibility and value changes bound to the observed attribute.
 
 If more than the standard jQuery show/hide is required, then you can manually take control by defining `visibleFn` with a callback. 
 
@@ -277,7 +278,8 @@ If more than the standard jQuery show/hide is required, then you can manually ta
   bindings: {
     '#title': {
       observe: 'title',
-      visible: function(val, options) { return val == 'Mille Plateaux'; }
+      visible: function(val, options) { return val == 'Mille Plateaux'; },
+      updateView: true
     }
   }
 ```

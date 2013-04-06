@@ -87,7 +87,7 @@
 
         initializeAttributes(self, $el, config, model, modelAttr);
 
-        initializeVisible(self, $el, config, model, modelAttr);
+        initializeVisible(self, $el, config, model, modelAttr, binding.updateView);
 
         if (modelAttr) {
           // Setup one-way, form element to model, bindings.
@@ -189,7 +189,7 @@
       updateModel: false,
       updateView: true,
       updateMethod: 'text',
-      update: function($el, val, m, opts) { $el[opts.updateMethod](val); },
+      update: function($el, val, m, opts) { if($el[opts.updateMethod]) $el[opts.updateMethod](val); },
       getVal: function($el, e, opts) { return $el[opts.updateMethod](); }
     }];
     _.each(Backbone.Stickit._handlers, function(handler) {
@@ -243,8 +243,9 @@
   //     visible: true, // or function(val, options) {}
   //     visibleFn: function($el, isVisible, options) {} // optional handler
   //
-  var initializeVisible = function(view, $el, config, model, modelAttr) {
+  var initializeVisible = function(view, $el, config, model, modelAttr, updateView) {
     if (config.visible == null) return;
+    config.updateView = updateView || false;
     var visibleCb = function() {
       var visible = config.visible,
           visibleFn = config.visibleFn,
