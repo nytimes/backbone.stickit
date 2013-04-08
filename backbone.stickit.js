@@ -87,7 +87,7 @@
 
         initializeAttributes(self, $el, config, model, modelAttr);
 
-        initializeVisible(self, $el, config, model, modelAttr, binding.updateView);
+        initializeVisible(self, $el, config, model, modelAttr);
 
         if (modelAttr) {
           // Setup one-way, form element to model, bindings.
@@ -183,13 +183,12 @@
 
   // Find handlers in `Backbone.Stickit._handlers` with selectors that match
   // `$el` and generate a configuration by mixing them in the order that they
-  // were found with the with the givne `binding`.
+  // were found with the given `binding`.
   var getConfiguration = function($el, binding) {
     var handlers = [{
       updateModel: false,
-      updateView: true,
       updateMethod: 'text',
-      update: function($el, val, m, opts) { if($el[opts.updateMethod]) $el[opts.updateMethod](val); },
+      update: function($el, val, m, opts) { if ($el[opts.updateMethod]) $el[opts.updateMethod](val); },
       getVal: function($el, e, opts) { return $el[opts.updateMethod](); }
     }];
     _.each(Backbone.Stickit._handlers, function(handler) {
@@ -197,6 +196,10 @@
     });
     handlers.push(binding);
     var config = _.extend.apply(_, handlers);
+    // `updateView` is defaulted to false for configutrations with
+    // `visible`; otherwise, `updateView` is defaulted to true.
+    if (config.visible && !_.has(config, 'updateView')) config.updateView = false;
+    else if (!_.has(config, 'updateView')) config.updateView = true;
     delete config.selector;
     return config;
   };
@@ -243,9 +246,8 @@
   //     visible: true, // or function(val, options) {}
   //     visibleFn: function($el, isVisible, options) {} // optional handler
   //
-  var initializeVisible = function(view, $el, config, model, modelAttr, updateView) {
+  var initializeVisible = function(view, $el, config, model, modelAttr) {
     if (config.visible == null) return;
-    config.updateView = updateView || false;
     var visibleCb = function() {
       var visible = config.visible,
           visibleFn = config.visibleFn,
