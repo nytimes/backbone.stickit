@@ -184,7 +184,7 @@
   // Find handlers in `Backbone.Stickit._handlers` with selectors that match
   // `$el` and generate a configuration by mixing them in the order that they
   // were found with the given `binding`.
-  var getConfiguration = function($el, binding) {
+  var getConfiguration = Backbone.Stickit.getConfiguration = function($el, binding) {
     var handlers = [{
       updateModel: false,
       updateMethod: 'text',

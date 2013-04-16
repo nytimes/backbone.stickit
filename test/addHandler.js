@@ -3,7 +3,7 @@ $(document).ready(function() {
   module("Backbone.Stickit");
 
   test('addHandler', function() {
-		
+
     Backbone.Stickit.addHandler({
       selector: 'input.trim',
       update: function($el, val) { $el.val($.trim(val)); }
@@ -30,14 +30,20 @@ $(document).ready(function() {
       'input.trim': 'input',
       '#textarea': 'textarea',
       '#div': 'div'
-	};
-	$('#qunit-fixture').html(view.render().el);
+    };
+    $('#qunit-fixture').html(view.render().el);
 
-	equal(view.$('.input').val(), ' clot ');
-	equal(view.$('input.trim').val(), 'clot');
-	equal(view.$('#textarea').val(), 'blood clot');
-	equal(view.$('#div').text(), 'clot');
+    equal(view.$('.input').val(), ' clot ');
+    equal(view.$('input.trim').val(), 'clot');
+    equal(view.$('#textarea').val(), 'blood clot');
+    equal(view.$('#div').text(), 'clot');
 
-	Backbone.Stickit._handlers = _.first(Backbone.Stickit._handlers, Backbone.Stickit._handlers.length - 3);
+    Backbone.Stickit._handlers = _.first(Backbone.Stickit._handlers, Backbone.Stickit._handlers.length - 3);
+  });
+
+  test('public getConfiguration', function(){
+    $('#qunit-fixture').html($('#jst25').html());
+    var $el = $('#qunit-fixture').find('.test25');
+    equal(Backbone.Stickit.getConfiguration($el).getVal($el), 'two');
   });
 });
