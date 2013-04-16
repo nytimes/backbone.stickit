@@ -594,6 +594,7 @@ MIT
 - Fixed a bug where "null" would show in Chrome when binding `attribute:null` to an element value.
 - Added handling for `observe` in function form.
 - When binding with `visible` the `{updateView:false}` property is defaulted.
+- Added Backbone.Stickit.getConfiguration which exposes the method of deriving configurations from handlers.
 
 #### 0.6.3
 
