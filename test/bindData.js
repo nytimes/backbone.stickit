@@ -1418,4 +1418,21 @@ $(document).ready(function() {
     equal(view.$('#test5').html(), '');
   });
 
+  test('stickitChange', 1, function() {
+
+    model.set({'water':null});
+    view.model = model;
+    view.templateId = 'jst1';
+    view.bindings = {
+      '#test1': 'water'
+    };
+    $('#qunit-fixture').html(view.render().el);
+
+    model.on('change:water', function(m, v, options) {
+      ok(options.stickitChange);
+    });
+
+    view.$('#test1').val('dasina').trigger('keyup');
+  });
+
 });

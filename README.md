@@ -463,6 +463,21 @@ An object which is used as the set options when setting values in the model. Thi
   }
 ```
 
+### stickitChange
+
+A property that is passed into the set options when stickit changes a model attribute. The value of this property is assigned to the binding configuration.
+
+```javascript
+model.on('change:observed', function(m, v, options) {
+  if (options.stickitChange) {
+    ...
+  } else {
+    ...
+  }
+});
+
+```
+
 ## Attribute and Property Bindings
 
 ### attributes
@@ -591,6 +606,7 @@ MIT
 
 #### Master
 
+- The `bindKey` that was passed into the Backbone `change:attr` options was changed to `stickitChange` which is assigned the binding options which have a unique `bindId`.
 - Fixed a bug where "null" would show in Chrome when binding `attribute:null` to an element value.
 - Added handling for `observe` in function form.
 - When binding with `visible` the `{updateView:false}` property is defaulted.

@@ -59,7 +59,7 @@
       _.each(_.keys(bindings), function(selector) {
         var $el, options, modelAttr, config,
           binding = bindings[selector] || {},
-          bindKey = _.uniqueId();
+          bindId = _.uniqueId();
 
         // Support ':el' selector - special case selector for the view managed delegate.
         if (selector != ':el') $el = self.$(selector);
@@ -81,9 +81,10 @@
 
         modelAttr = config.observe;
 
-        // Create the model set options with a unique `bindKey` so that we
+        // Create the model set options with a unique `bindId` so that we
         // can avoid double-binding in the `change:attribute` event handler.
-        options = _.extend({bindKey:bindKey}, config.setOptions || {});
+        config.bindId = bindId;
+        options = _.extend({stickitChange:config}, config.setOptions || {});
 
         initializeAttributes(self, $el, config, model, modelAttr);
 
@@ -107,7 +108,8 @@
           // `modelAttr` may be an array of attributes or a single string value.
           _.each(_.flatten([modelAttr]), function(attr) {
             observeModelEvent(model, self, 'change:'+attr, function(model, val, options) {
-              if (options == null || options.bindKey != bindKey)
+              var changeId = options && options.stickitChange && options.stickitChange.bindId || null;
+              if (changeId != bindId)
                 updateViewBindEl(self, $el, config, getAttr(model, modelAttr, config, self), model);
             });
           });
