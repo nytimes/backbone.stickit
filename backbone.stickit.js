@@ -290,10 +290,10 @@
   Backbone.Stickit.addHandler([{
     selector: '[contenteditable="true"]',
     updateMethod: 'html',
-    events: ['keyup', 'change', 'paste', 'cut']
+    events: ['input', 'change']
   }, {
     selector: 'input',
-    events: ['keyup', 'change', 'paste', 'cut'],
+    events: ['propertychange', 'input', 'change'],
     update: function($el, val) { $el.val(val); },
     getVal: function($el) {
       var val = $el.val();
@@ -302,7 +302,7 @@
     }
   }, {
     selector: 'textarea',
-    events: ['keyup', 'change', 'paste', 'cut'],
+    events: ['propertychange', 'input', 'change'],
     update: function($el, val) { $el.val(val); },
     getVal: function($el) { return $el.val(); }
   }, {

@@ -19,7 +19,7 @@ $(document).ready(function() {
     model.set('water', 'evian');
     equal(view.$('#test1').val(), 'evian');
 
-    view.$('#test1').val('dasina').trigger('keyup');
+    view.$('#test1').val('dasina').trigger('change');
     equal(model.get('water'), 'dasina');
   });
 
@@ -40,7 +40,7 @@ $(document).ready(function() {
     model.set('water', 'evian');
     equal(view.$('#test2').val(), 'evian');
 
-    view.$('#test2').val('dasina').trigger('keyup');
+    view.$('#test2').val('dasina').trigger('change');
     equal(model.get('water'), 'dasina');
   });
 
@@ -61,7 +61,7 @@ $(document).ready(function() {
     model.set('water', '<span>evian</span>');
     equal(view.$('#test17').html(), '<span>evian</span>');
 
-    view.$('#test17').html('<span>dasina</span>').trigger('keyup');
+    view.$('#test17').html('<span>dasina</span>').trigger('change');
     equal(model.get('water'), '<span>dasina</span>');
   });
 
@@ -213,8 +213,8 @@ $(document).ready(function() {
     equal(testView.$('#test0-span').text(), 'poland springs');
     equal(testView.$('#test0-input').val(), 'almond joy');
 
-    testView.$('#test0-textarea').val('kit kat').trigger('keyup');
-    testView.$('#test0-input').val('butterfinger').trigger('keyup');
+    testView.$('#test0-textarea').val('kit kat').trigger('change');
+    testView.$('#test0-input').val('butterfinger').trigger('change');
 
     equal(model1.get('candy'), 'kit kat');
     equal(model2.get('candy'), 'butterfinger');
@@ -262,8 +262,8 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(testView.render().el);
 
-    testView.$('#test0-textarea').val('kit kat').trigger('keyup');
-    testView.$('#test0-input').val('butterfinger').trigger('keyup');
+    testView.$('#test0-textarea').val('kit kat').trigger('change');
+    testView.$('#test0-input').val('butterfinger').trigger('change');
 
     equal(model1.get('candy'), 'kit kat');
     equal(model2.get('candy'), 'butterfinger');
@@ -275,8 +275,8 @@ $(document).ready(function() {
     // Remove the view which should unbind the event handlers.
     testView.remove();
 
-    testView.$('#test0-textarea').val('mounds').trigger('keyup');
-    testView.$('#test0-input').val('skittles').trigger('keyup');
+    testView.$('#test0-textarea').val('mounds').trigger('change');
+    testView.$('#test0-input').val('skittles').trigger('change');
 
     equal(model1.get('candy'), 'kit kat');
     equal(model2.get('candy'), 'butterfinger');
@@ -328,8 +328,8 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(testView.render().el);
 
-    testView.$('#test0-textarea').val('kit kat').trigger('keyup');
-    testView.$('#test0-input').val('butterfinger').trigger('keyup');
+    testView.$('#test0-textarea').val('kit kat').trigger('change');
+    testView.$('#test0-input').val('butterfinger').trigger('change');
 
     equal(model1.get('candy'), 'kit kat');
     equal(model2.get('candy'), 'butterfinger');
@@ -355,7 +355,7 @@ $(document).ready(function() {
 
     equal(view.$('#test1').val(), 'fountain');
 
-    view.$('#test1').val('dasina').trigger('keyup');
+    view.$('#test1').val('dasina').trigger('change');
     equal(model.get('water'), 'dasina');
     equal(model.changedAttributes().water, 'dasina');
   });
@@ -418,7 +418,7 @@ $(document).ready(function() {
     $('#qunit-fixture').html(view.render().el);
 
     equal(view.$('#test1').val(), 'fountain');
-    view.$('#test1').val('evian').trigger('keyup');
+    view.$('#test1').val('evian').trigger('change');
     equal(model.get('water'), '_evian');
   });
 
@@ -1206,7 +1206,7 @@ $(document).ready(function() {
     model.set('water', 'evian');
     equal(testView.$('#test1').val(), 'evian');
 
-    testView.$('#test1').val('dasina').trigger('keyup');
+    testView.$('#test1').val('dasina').trigger('change');
     equal(model.get('water'), 'dasina');
   });
 
@@ -1253,10 +1253,10 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    view.$('#test1').val('dasina').trigger('keyup');
+    view.$('#test1').val('dasina').trigger('change');
     equal(model.get('water'), 'fountain');
 
-    view.$('#test1').val('evian').trigger('keyup');
+    view.$('#test1').val('evian').trigger('change');
     equal(model.get('water'), 'evian');
   });
 
@@ -1275,8 +1275,8 @@ $(document).ready(function() {
 
     equal(view.$('#test1').val(), 'fountain');
 
-    // keyup should be overriden, so no change...
-    view.$('#test1').val('dasina').trigger('keyup');
+    // change should be overriden, so no change...
+    view.$('#test1').val('dasina').trigger('change');
     equal(model.get('water'), 'fountain');
 
     view.$('#test1').trigger('blur');
@@ -1340,7 +1340,7 @@ $(document).ready(function() {
         observe: 'water',
         getVal: function($el, event, options) {
           equal($el.attr('id'), 'test1');
-          equal(event.type, 'keyup');
+          equal(event.type, 'change');
           equal(options.observe, 'water');
           return 'test-' + $el.val();
         }
@@ -1348,7 +1348,7 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
     
-    view.$('#test1').val('dasina').trigger('keyup');
+    view.$('#test1').val('dasina').trigger('change');
     equal(model.get('water'), 'test-dasina');
   });
 
@@ -1432,7 +1432,7 @@ $(document).ready(function() {
       ok(options.stickitChange);
     });
 
-    view.$('#test1').val('dasina').trigger('keyup');
+    view.$('#test1').val('dasina').trigger('change');
   });
 
 });
