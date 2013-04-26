@@ -60,6 +60,8 @@ Uses `view.bindings` and `view.model` to setup bindings. Optionally, you can pas
 
 Removes event bindings from all models. Optionally, a model can be passed in which will remove events for the given model and its corresponding bindings configuration only. Unbinding will be taken care of automatically in `view.remove()`, but if you want to unbind early, use this.
 
+For each model that is unbound a `stickit:unstuck` event will be triggered.
+
 ## Bindings
 
 The `view.bindings` is a hash of jQuery or Zepto selector keys with binding configuration values. Similar to the callback definitions configured in `view.events`, bindings callbacks can be defined as the name of a method on the view or a direct function body.
@@ -606,8 +608,9 @@ MIT
 
 #### Master
 
-- The `bindKey` that was passed into the Backbone `change:attr` options was changed to `stickitChange` which is assigned the binding options which have a unique `bindId`.
-- Changed the default events for input, textarea, and contenteditable form elements from [`keyup`, `cut`, `paste`, `change`] to [`propertychange`, `input`, `change`].
+- **Breaking Change**: the `bindKey` that was passed into the Backbone `change:attr` (undocumented) options was changed to `stickitChange` which is assigned the binding options which have a unique `bindId`.
+- **Breaking Change**: the default events for input, textarea, and contenteditable form elements from [`keyup`, `cut`, `paste`, `change`] to [`propertychange`, `input`, `change`].
+- Trigger `stickit:unstick` for each model that is unbound in `unstickit` (or `view.remove`).
 - Fixed a bug where "null" would show in Chrome when binding `attribute:null` to an element value.
 - Added handling for `observe` in function form.
 - When binding with `visible` the `{updateView:false}` property is defaulted.

@@ -36,6 +36,7 @@
       _.each(this._modelBindings, _.bind(function(binding, i) {
         if (model && binding.model !== model) return false;
         binding.model.off(binding.event, binding.fn);
+        binding.model.trigger('stickit:unstuck');
         delete this._modelBindings[i];
       }, this));
       this._modelBindings = _.compact(this._modelBindings);

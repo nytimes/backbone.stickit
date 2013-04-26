@@ -3,7 +3,7 @@ $(document).ready(function() {
   module("view.unstickit");
 
   test('unstickit', function() {
-    
+
     model.set({'water':'fountain', 'test':'nada', 'copy':'cat', 'fickle':'brat'});
     view.model = model;
     view.templateId = 'jst10';
@@ -29,7 +29,7 @@ $(document).ready(function() {
   });
 
   test('unstickit (multiple models)', function() {
-    
+
     var model1, model2, view, model3;
 
     model1 = new (Backbone.Model)({one:'', two:''});
@@ -79,6 +79,22 @@ $(document).ready(function() {
     equal(_.keys(model1._callbacks).length, 0);
     equal(_.keys(model2._callbacks).length, 0);
     equal(view._modelBindings.length, 0);
+  });
+
+  test('stickit:unstuck event', 1, function() {
+
+    model.set({'water':'fountain'});
+    view.model = model;
+    view.templateId = 'jst10';
+    view.bindings = {
+      '.test10': {
+        observe: 'water'
+      }
+    };
+    $('#qunit-fixture').html(view.render().el);
+
+    model.on('stickit:unstuck', function() { ok(true); });
+    view.unstickit();
   });
 
 });
