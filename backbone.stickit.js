@@ -85,6 +85,8 @@
         // Create the model set options with a unique `bindId` so that we
         // can avoid double-binding in the `change:attribute` event handler.
         config.bindId = bindId;
+        // Add a reference to the view for handlers of stickitChange events
+        config.view = self;
         options = _.extend({stickitChange:config}, config.setOptions || {});
 
         initializeAttributes(self, $el, config, model, modelAttr);
