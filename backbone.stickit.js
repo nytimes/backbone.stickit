@@ -58,68 +58,73 @@
       // Iterate through the selectors in the bindings configuration and configure
       // the various options for each field.
       _.each(_.keys(bindings), function(selector) {
-        var $el, options, modelAttr, config,
-          binding = bindings[selector] || {},
-          bindId = _.uniqueId();
+        var bindings_list = bindings[selector] || [{}];
+        if (!_.isArray(bindings_list))
+          bindings_list = [bindings_list];
+        _.each(bindings_list, function(binding) {
+          var $el, options, modelAttr, config,
+            bindId = _.uniqueId();
 
-        // Support ':el' selector - special case selector for the view managed delegate.
-        if (selector != ':el') $el = self.$(selector);
-        else {
-          $el = self.$el;
-          selector = '';
-        }
+          // Support ':el' selector - special case selector for the view managed delegate.
+          if (selector != ':el') $el = self.$(selector);
+          else {
+            $el = self.$el;
+            selector = '';
+          }
 
-        // Fail fast if the selector didn't match an element.
-        if (!$el.length) return;
+          // Fail fast if the selector didn't match an element.
+          if (!$el.length) return;
 
-        // Allow shorthand setting of model attributes - `'selector':'observe'`.
-        if (_.isString(binding)) binding = {observe:binding};
+          // Allow shorthand setting of model attributes - `'selector':'observe'`.
+          if (_.isString(binding)) binding = {observe:binding};
 
-        // Handle case where `observe` is in the form of a function.
-        if (_.isFunction(binding.observe)) binding.observe = binding.observe.call(self);
+          // Handle case where `observe` is in the form of a function.
+          if (_.isFunction(binding.observe)) binding.observe = binding.observe.call(self);
 
-        config = getConfiguration($el, binding);
+          config = getConfiguration($el, binding);
 
-        modelAttr = config.observe;
+          modelAttr = config.observe;
 
-        // Create the model set options with a unique `bindId` so that we
-        // can avoid double-binding in the `change:attribute` event handler.
-        config.bindId = bindId;
-        options = _.extend({stickitChange:config}, config.setOptions || {});
+          // Create the model set options with a unique `bindId` so that we
+          // can avoid double-binding in the `change:attribute` event handler.
+          config.bindId = bindId;
+          options = _.extend({stickitChange:config}, config.setOptions || {});
 
-        initializeAttributes(self, $el, config, model, modelAttr);
+          initializeAttributes(self, $el, config, model, modelAttr);
 
-        initializeVisible(self, $el, config, model, modelAttr);
+          initializeVisible(self, $el, config, model, modelAttr);
 
-        if (modelAttr) {
-          // Setup one-way, form element to model, bindings.
-          _.each(config.events || [], function(type) {
-            var event = type + namespace;
-            var method = function(event) {
-              var val = config.getVal.call(self, $el, event, config);
-              // Don't update the model if false is returned from the `updateModel` configuration.
-              if (evaluateBoolean(self, config.updateModel, val, config))
-                setAttr(model, modelAttr, val, options, self, config);
-            };
-            if (selector === '') self.$el.on(event, method);
-            else self.$el.on(event, selector, method);
-          });
-
-          // Setup a `change:modelAttr` observer to keep the view element in sync.
-          // `modelAttr` may be an array of attributes or a single string value.
-          _.each(_.flatten([modelAttr]), function(attr) {
-            observeModelEvent(model, self, 'change:'+attr, function(model, val, options) {
-              var changeId = options && options.stickitChange && options.stickitChange.bindId || null;
-              if (changeId != bindId)
-                updateViewBindEl(self, $el, config, getAttr(model, modelAttr, config, self), model);
+          if (modelAttr) {
+            // Setup one-way, form element to model, bindings.
+            _.each(config.events || [], function(type) {
+              var event = type + namespace;
+              var method = function(event) {
+                var val = config.getVal.call(self, $el, event, config);
+                // Don't update the model if false is returned from the `updateModel` configuration.
+                if (evaluateBoolean(self, config.updateModel, val, config))
+                  setAttr(model, modelAttr, val, options, self, config);
+              };
+              if (selector === '') self.$el.on(event, method);
+              else self.$el.on(event, selector, method);
             });
-          });
 
-          updateViewBindEl(self, $el, config, getAttr(model, modelAttr, config, self), model, true);
-        }
+            // Setup a `change:modelAttr` observer to keep the view element in sync.
+            // `modelAttr` may be an array of attributes or a single string value.
+            _.each(_.flatten([modelAttr]), function(attr) {
+              observeModelEvent(model, self, 'change:'+attr, function(model, val, options) {
+                var changeId = options && options.stickitChange && options.stickitChange.bindId || null;
+                if (changeId != bindId)
+                  updateViewBindEl(self, $el, config, getAttr(model, modelAttr, config, self), model);
+              });
+            });
 
-        // After each binding is setup, call the `initialize` callback.
-        applyViewFn(self, config.initialize, $el, model, config);
+            updateViewBindEl(self, $el, config, getAttr(model, modelAttr, config, self), model, true);
+          }
+
+          // After each binding is setup, call the `initialize` callback.
+          applyViewFn(self, config.initialize, $el, model, config);
+
+        });
       });
 
       // Wrap `view.remove` to unbind stickit model and dom events.

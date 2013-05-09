@@ -1260,6 +1260,43 @@ $(document).ready(function() {
     equal(model.get('water'), 'evian');
   });
 
+  test('bindings:multiple events', 9, function() {
+
+    model.set({'water':'fountain'});
+    view.model = model;
+    view.templateId = 'jst1';
+    view.bindings = {
+      '#test1': [{
+        observe: 'water',
+        events: ['change'],
+        updateModel: function (val, options) {
+          equal(val, view.$('#test1').val());
+          equal(options.observe, 'water');
+          return val === 'evian';
+        }
+      }, {
+        observe: 'water',
+        events: ['keyup'],
+        updateModel: function (val, options) {
+          equal(val, view.$('#test1').val());
+          equal(options.observe, 'water');
+          return val === 'fiji';
+        }
+      }]
+    };
+    $('#qunit-fixture').html(view.render().el);
+
+    view.$('#test1').val('dasina').trigger('change');
+    equal(model.get('water'), 'fountain');
+
+    view.$('#test1').val('evian').trigger('change');
+    equal(model.get('water'), 'evian');
+
+    view.$('#test1').val('fiji').trigger('keyup');
+    equal(model.get('water'), 'fiji');
+
+  });
+
   test('bindings:events', function() {
 
     model.set({'water':'fountain'});
