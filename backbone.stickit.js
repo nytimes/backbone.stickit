@@ -299,9 +299,7 @@
     events: ['propertychange', 'input', 'change'],
     update: function($el, val) { $el.val(val); },
     getVal: function($el) {
-      var val = $el.val();
-      if ($el.is('[type="number"]')) return val == null ? val : Number(val);
-      else return val;
+      return $el.val();
     }
   }, {
     selector: 'textarea',

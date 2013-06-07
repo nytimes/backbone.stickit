@@ -308,7 +308,6 @@ The following is a list of the supported form elements, their binding details, a
 
  - input, textarea, and contenteditable
    - element value synced with model attribute value
-   - input[type=number] will update the model with a Number value 
    - `propertychange`, `input`, `change` events are used for handling
  - input[type=checkbox]
    - `checked` property determined by the truthiness of the model attribute or if the checkbox "value" attribute is defined, then its value is used to match against the model. If a binding selector matches multiple checkboxes then it is expected that the observed model attribute will be an array of values to match against the checkbox value attributes.
@@ -610,6 +609,7 @@ MIT
 
 - **Breaking Change**: the `bindKey` that was passed into the Backbone `change:attr` (undocumented) options was changed to `stickitChange` which is assigned the binding options which have a unique `bindId`.
 - **Breaking Change**: the default events for input, textarea, and contenteditable form elements from [`keyup`, `cut`, `paste`, `change`] to [`propertychange`, `input`, `change`].
+- **Breaking Change**: removed support for `input[type="number"]`. Instead, use `onSet` to format Number values, if needed.
 - Trigger `stickit:unstick` for each model that is unbound in `unstickit` (or `view.remove`).
 - Fixed a bug where "null" would show in Chrome when binding `attribute:null` to an element value.
 - Added handling for `observe` in function form.
