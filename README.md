@@ -612,6 +612,7 @@ MIT
 - **Breaking Change**: removed support for `input[type="number"]`. Instead, use `onSet` to format Number values, if needed.
 - Trigger `stickit:unstick` for each model that is unbound in `unstickit` (or `view.remove`).
 - Fixed a bug where "null" would show in Chrome when binding `attribute:null` to an element value.
+- Fixed a bug where optgroup `<select>` handlers were rendering multiple `collection.defaultOptions`.
 - Added handling for `observe` in function form.
 - When binding with `visible` the `{updateView:false}` property is defaulted.
 - Added Backbone.Stickit.getConfiguration which exposes the method of deriving configurations from handlers.
