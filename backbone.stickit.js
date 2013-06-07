@@ -393,11 +393,6 @@
       selectConfig.labelPath = selectConfig.labelPath || 'label';
 
       var addSelectOptions = function(optList, $el, fieldVal) {
-        // Add a flag for default option at the beginning of the list.
-        if (selectConfig.defaultOption) {
-          optList = _.clone(optList);
-          optList.unshift('__default__');
-        }
         _.each(optList, function(obj) {
           var option = $('<option/>'), optionVal = obj;
 
@@ -445,6 +440,10 @@
 
       // Support Backbone.Collection and deserialize.
       if (optList instanceof Backbone.Collection) optList = optList.toJSON();
+
+      if (selectConfig.defaultOption) {
+        addSelectOptions(["__default__"], $el)
+      }
 
       if (_.isArray(optList)) {
         addSelectOptions(optList, $el, val);

@@ -377,7 +377,7 @@ $(document).ready(function() {
   });
 
   test('bindings:escape', function() {
-    
+
     model.set({'water':'<a href="www.test.com">river</a>'});
     view.model = model;
     view.templateId = 'jst5';
@@ -395,7 +395,7 @@ $(document).ready(function() {
   });
 
   test('bindings:onSet/onGet', 6, function() {
-    
+
     model.set({'water':'_fountain'});
     view.model = model;
     view.templateId = 'jst1';
@@ -423,7 +423,7 @@ $(document).ready(function() {
   });
 
   test('bindings:afterUpdate', 14, function() {
-    
+
     model.set({'water':'fountain', 'candy':true});
     view.model = model;
     view.templateId = 'jst15';
@@ -551,6 +551,45 @@ $(document).ready(function() {
     equal(model.get('water'), 'dasina');
   });
 
+test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
+
+    model.set({'water':null});
+    view.model = model;
+    view.templateId = 'jst8';
+    view.bindings = {
+      '#test8': {
+        observe: 'water',
+        selectOptions: {
+          collection: function($el, options) {
+            ok($el.is('select'));
+            equal(options.observe, 'water');
+            return {
+              'opt_labels': ['Types'],
+              'Types': [{id:1,type:{name:'fountain'}}, {id:2,type:{name:'evian'}}, {id:3,type:{name:'dasina'}}]
+            };
+          },
+          defaultOption: {
+            label: 'Choose one...',
+            value: null
+          },
+          labelPath: 'type.name',
+          valuePath: 'type.name'
+        }
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(view.$('#test8 > option').eq(0).text(), 'Choose one...');
+    equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), null);
+
+    model.set('water', 'evian');
+    equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), 'evian');
+
+    view.$('#test8 option').eq(3).prop('selected', true).trigger('change');
+    equal(model.get('water'), 'dasina');
+  });
+
   test('bindings:selectOptions (pre-rendered)', 3, function() {
 
     model.set({'water':'1'});
@@ -596,7 +635,7 @@ $(document).ready(function() {
 
     model.set('water', 'evian');
     equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), 'evian');
-    
+
     view.$('#test8 option').eq(2).prop('selected', true).trigger('change');
     equal(model.get('water'), 'dasina');
   });
@@ -685,7 +724,7 @@ $(document).ready(function() {
   });
 
   test('bindings:selectOptions (default labelPath/valuePath)', function() {
-  
+
     model.set({'water':'evian'});
     view.model = model;
     view.templateId = 'jst8';
@@ -1347,7 +1386,7 @@ $(document).ready(function() {
       }
     };
     $('#qunit-fixture').html(view.render().el);
-    
+
     view.$('#test1').val('dasina').trigger('change');
     equal(model.get('water'), 'test-dasina');
   });
