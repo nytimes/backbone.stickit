@@ -347,7 +347,7 @@ With the given `collection`, creates `<option>`s for the bound `<select>`, and b
 
 When bindings are initialized, Stickit will build the `<select>` element with the `<option>`s and bindings configured. `selectOptions` are not required - if left undefined, then Stickit will expect that the `<option>`s are pre-rendered and build the collection from the DOM.
 
-**Note:** if you are using Zepto and referencing object values for your select options, like in the second example, then you will need to also include the Zepto data module.
+**Note:** if you are using Zepto and referencing object values for your select options, like in the second example, then you will need to also include the Zepto data module. Also, `<select>` bindings are two-way bindings only - `updateView:false` will be ignored.
 
 The following example references a collection of stooges at `window.app.stooges` and uses the `age` attribute for labels and the `name` attribute for option values:  
 
