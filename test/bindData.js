@@ -747,6 +747,63 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), 'fountain');
   });
 
+  test('bindings:selectOptions (collection defined as value/label map)', function() {
+
+    model.set({'sound':'moo'});
+    view.model = model;
+    view.templateId = 'jst8';
+    view.bindings = {
+      '#test8': {
+        observe: 'sound',
+        selectOptions: {
+          collection: {
+            moo: 'cow',
+            baa: 'sheep',
+            oink: 'pig'
+          }
+        }
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), 'moo');
+
+    // Options are sorted alphabetically by label
+    equal(view.$('#test8 option:eq(0)').data('stickit_bind_val'), 'moo');
+    equal(view.$('#test8 option:eq(1)').data('stickit_bind_val'), 'oink');
+    equal(view.$('#test8 option:eq(2)').data('stickit_bind_val'), 'baa');
+  });
+
+  test('bindings:selectOptions (collection defined as value/label map, sorted by value)', function() {
+
+    model.set({'sound':'moo'});
+    view.model = model;
+    view.templateId = 'jst8';
+    view.bindings = {
+      '#test8': {
+        observe: 'sound',
+        selectOptions: {
+          collection: {
+            moo: 'cow',
+            baa: 'sheep',
+            oink: 'pig'
+          },
+          comparator: function(sound) { return sound.value; }
+        }
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), 'moo');
+
+    // Options are sorted alphabetically by value
+    equal(view.$('#test8 option:eq(0)').data('stickit_bind_val'), 'baa');
+    equal(view.$('#test8 option:eq(1)').data('stickit_bind_val'), 'moo');
+    equal(view.$('#test8 option:eq(2)').data('stickit_bind_val'), 'oink');
+  });
+
   test('bindings:selectOptions (multi-select without valuePath)', function() {
 
     var collection = [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}, {id:4,name:'aquafina'}];
