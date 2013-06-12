@@ -33,12 +33,17 @@
     // `this.$el`. If the optional `model` parameter is defined, then only
     // delete bindings for the given `model` and its corresponding view events.
     unstickit: function(model) {
-      _.each(this._modelBindings, _.bind(function(binding, i) {
+      var models = [], self = this;
+      _.each(this._modelBindings, function(binding, i) {
         if (model && binding.model !== model) return false;
         binding.model.off(binding.event, binding.fn);
-        binding.model.trigger('stickit:unstuck');
-        delete this._modelBindings[i];
-      }, this));
+        models.push(binding.model);
+        delete self._modelBindings[i];
+      });
+
+      // Trigger an event for each model that was unbound.
+      _.each(_.uniq(models), function(m) {m.trigger('stickit:unstuck', self.cid)});
+      // Cleanup the null values.
       this._modelBindings = _.compact(this._modelBindings);
 
       this.$el.off('.stickit' + (model ? '.' + model.cid : ''));
@@ -119,6 +124,10 @@
 
           updateViewBindEl(self, $el, config, getAttr(model, modelAttr, config, self), model, true);
         }
+
+        model.on('stickit:unstuck', function(cid) {
+          if (cid == self.cid) applyViewFn(self, config.destroy, $el, model, config);
+        });
 
         // After each binding is setup, call the `initialize` callback.
         applyViewFn(self, config.initialize, $el, model, config);

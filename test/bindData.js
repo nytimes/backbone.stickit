@@ -1433,6 +1433,25 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     $('#qunit-fixture').html(view.render().el);
   });
 
+  test('destroy', 3, function() {
+
+    model.set({'water':'fountain'});
+    view.model = model;
+    view.templateId = 'jst1';
+    view.bindings = {
+      '#test1': {
+        observe: 'water',
+        destroy: function($el, model, options) {
+          equal($el.val(), 'fountain');
+          equal(model.get('water'), 'fountain');
+          equal(options.observe, 'water');
+        }
+      }
+    };
+    $('#qunit-fixture').html(view.render().el);
+    view.unstickit();
+  });
+
   test('null form value', function() {
 
     model.set({'water':null});

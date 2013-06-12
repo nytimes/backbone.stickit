@@ -260,6 +260,21 @@ Called for each binding after it is configured in the initial call to `stickit()
   }
 ```
 
+### destroy
+
+Called for each binding after it is unstuck from the model and view. Useful for tearing down third-party plugins or events that were configured in `initialze`.
+
+```javascript  
+  bindings: {
+    '#album': {
+      observe: 'Tomorrow's Harvest,
+      destroy: function($el, model, options) {
+        // Tear down any events or clean up.
+      }
+    }
+  }
+```
+
 ### visible and visibleFn
 
 When true, `visible` shows or hides the view element based on the model attribute's truthiness. `visible` may also be defined with a callback which should return a truthy value.
@@ -610,6 +625,7 @@ MIT
 - **Breaking Change**: the `bindKey` that was passed into the Backbone `change:attr` (undocumented) options was changed to `stickitChange` which is assigned the binding options which have a unique `bindId`.
 - **Breaking Change**: the default events for input, textarea, and contenteditable form elements from [`keyup`, `cut`, `paste`, `change`] to [`propertychange`, `input`, `change`].
 - **Breaking Change**: removed support for `input[type="number"]`. Instead, use `onSet` to format Number values, if needed.
+- Added the `destroy` binding callback to compliment `initialize`.
 - Trigger `stickit:unstick` for each model that is unbound in `unstickit` (or `view.remove`).
 - Fixed a bug where "null" would show in Chrome when binding `attribute:null` to an element value.
 - Fixed a bug where optgroup `<select>` handlers were rendering multiple `collection.defaultOptions`.

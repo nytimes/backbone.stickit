@@ -21,11 +21,11 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(_.keys(view.model._callbacks).length, 3);
+    equal(_.keys(view.model._callbacks).length, 4);
 
     view.unstickit();
 
-    equal(_.keys(view.model._callbacks).length, 0);
+    equal(_.keys(view.model._callbacks).length, 1);
   });
 
   test('unstickit (multiple models)', function() {
@@ -62,22 +62,22 @@ $(document).ready(function() {
       }
     }))().render();
 
-    equal(_.keys(model1._callbacks).length, 2);
-    equal(_.keys(model2._callbacks).length, 2);
-    equal(_.keys(model3._callbacks).length, 2);
+    equal(_.keys(model1._callbacks).length, 3);
+    equal(_.keys(model2._callbacks).length, 3);
+    equal(_.keys(model3._callbacks).length, 3);
     equal(view._modelBindings.length, 6);
 
     view.unstickit(model3);
 
-    equal(_.keys(model1._callbacks).length, 2);
-    equal(_.keys(model2._callbacks).length, 2);
-    equal(_.keys(model3._callbacks).length, 0);
+    equal(_.keys(model1._callbacks).length, 3);
+    equal(_.keys(model2._callbacks).length, 3);
+    equal(_.keys(model3._callbacks).length, 1);
     equal(view._modelBindings.length, 4);
 
     view.unstickit();
 
-    equal(_.keys(model1._callbacks).length, 0);
-    equal(_.keys(model2._callbacks).length, 0);
+    equal(_.keys(model1._callbacks).length, 1);
+    equal(_.keys(model2._callbacks).length, 1);
     equal(view._modelBindings.length, 0);
   });
 
@@ -96,5 +96,4 @@ $(document).ready(function() {
     model.on('stickit:unstuck', function() { ok(true); });
     view.unstickit();
   });
-
 });
