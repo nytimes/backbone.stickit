@@ -456,9 +456,9 @@
 
       if (_.isArray(optList)) {
         addSelectOptions(optList, $el, val);
-      } else {
-        // If the optList is an object, then it should be used to define an optgroup. An
-        // optgroup object configuration looks like the following:
+      } else if (optList.opt_labels) {
+        // To define a select with optgroups, format selectOptions.collection as an object
+        // with an 'opt_labels' property, as in the following:
         //
         //     {
         //       'opt_labels': ['Looney Tunes', 'Three Stooges'],
@@ -471,6 +471,17 @@
           addSelectOptions(optList[label], $group, val);
           $el.append($group);
         });
+        // With no 'opt_labels' parameter, the object is assumed to be a simple value-label map.
+        // Pass a selectOptions.comparator to override the default order of alphabetical by label.
+      } else {
+        var opts = [], opt;
+        for (var i in optList) {
+          opt = {};
+          opt[selectConfig.valuePath] = i;
+          opt[selectConfig.labelPath] = optList[i];
+          opts.push(opt);
+        }
+        addSelectOptions(_.sortBy(opts, selectConfig.comparator || selectConfig.labelPath), $el, val);
       }
     },
     getVal: function($el) {
