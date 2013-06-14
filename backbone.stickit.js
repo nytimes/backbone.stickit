@@ -292,7 +292,7 @@
   //
   var updateViewBindEl = function(view, $el, config, val, model, isInitializing) {
     if (!evaluateBoolean(view, config.updateView, val, config)) return;
-    config.update.call(view, $el, val, model, config);
+    applyViewFn(view, config.update, $el, val, model, config);
     if (!isInitializing) applyViewFn(view, config.afterUpdate, $el, val, config);
   };
 
