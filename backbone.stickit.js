@@ -486,4 +486,4 @@
     }
   }]);
 
-})(window.jQuery || window.Zepto);
+})(jQuery || Zepto);
