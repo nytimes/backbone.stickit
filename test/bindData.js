@@ -1113,6 +1113,25 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     equal(view.$('#test1').prop('readonly'), false);
   });
 
+  test('bindings:attributes:id', function () {
+
+    model.idAttribute = 'other_id';
+    model.set({'id':101, 'other_id':999});
+    view.model = model;
+    view.templateId = 'jst1';
+    view.bindings = {
+      '#test1': {
+        attributes: [{
+          name: 'data-id',
+          observe: 'id'
+        }]
+      }
+    };    
+
+    $('#qunit-fixture').html(view.render().el);
+    equal(view.$('#test1').data('id'), 999);
+  });
+
   test('input:number', function() {
 
     model.set({'code':1});
