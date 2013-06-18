@@ -354,7 +354,7 @@ Specify a list of events which will override stickit's default events for a form
 
 With the given `collection`, creates `<option>`s for the bound `<select>`, and binds their selected values to the observed model attribute. It is recommended to use `selectOptions` instead of pre-rendering select-options since Stickit will render them and can bind Objects, Arrays, and non-String values as data to the `<option>` values. The following are configuration options for binding:
 
- - `collection`: an object path of a collection relative to `window` or `view`/`this`, or a string function reference which returns a collection of objects. A collection should be either an  array of objects or Backbone.Collection.
+ - `collection`: an object path of a collection relative to `window` or `view`/`this`, or a string function reference which returns a collection of objects. A collection should be an array of objects, a Backbone.Collection or a value/label map.
  - `labelPath`: the path to the label value for select options within the collection of objects. Default value when undefined is `label`.
  - `valuePath`: the path to the values for select options within the collection of objects. When an options is selected, the value that is defined for the given option is set in the model. Leave this undefined if the whole object is the value or to use the default `value`.
  - `defaultOption`: an object with `label` and `value` keys, used to define a default option value. A common use case would be something like the following: `{label: "Choose one...", value: null}`.
@@ -435,6 +435,23 @@ Optgroups are supported, where the collection is formatted into an object with a
         },
         labelPath: 'name',
         valuePath: 'id'
+      }
+    }
+  }
+```
+
+It is often useful to have a lookup table for converting between underlying values which are actually stored and transmitted and the human-readable labels that represent them. Such a lookup table (an object like `{ value1: label1, value2: label2 }`) can be used to populate a select directly. By default, the options will be sorted alphabetically by label; pass a `comparator`function or property name string to override this ordering (which delegates to `_.sortBy`).
+
+```javascript
+  bindings: {
+    'select#sounds': {
+      observe: 'sound',
+      selectOptions: {
+        collection: {
+          moo: 'cow',
+          baa: 'sheep',
+          oink: 'pig'
+        }
       }
     }
   }
