@@ -1025,6 +1025,20 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     equal(model.get('character'), '4');
   });
 
+  test('bindings:selectOptions (pre-rendered preserves disabled attribute)', function() {
+    view.model = model;
+    view.templateId = 'jst26';
+    view.bindings = {
+      '#test26': {
+        observe: 'water'
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(view.$('#test26 option[value=""]').attr('disabled'), 'disabled')
+  });
+
   test('bindings:attributes:name', function() {
 
     model.set({'water':'fountain'});

@@ -375,7 +375,10 @@
         selectConfig = {};
         var getList = function($el) {
           return $el.map(function() {
-            return {value:this.value, label:this.text};
+            var result = {value:this.value, label:this.text};
+            if (this.disabled)
+              result.disabled = 'disabled';
+            return result;
           }).get();
         };
         if ($el.find('optgroup').length) {
@@ -417,6 +420,9 @@
             fillOption(selectConfig.defaultOption.label, selectConfig.defaultOption.value);
           else
             fillOption(evaluatePath(obj, selectConfig.labelPath), evaluatePath(obj, selectConfig.valuePath));
+
+          if (obj.disabled)
+            option.attr('disabled', 'disabled');
 
           // Determine if this option is selected.
           if (!isMultiple && optionVal != null && fieldVal != null && optionVal == fieldVal || (_.isObject(fieldVal) && _.isEqual(optionVal, fieldVal)))
