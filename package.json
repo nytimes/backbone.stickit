@@ -8,6 +8,9 @@
     "url": "git://github.com/nytimes/backbone.stickit"
   },
   "main": "backbone.stickit.js",
+  "dependencies": {
+    "backbone": "~0.9.0"
+  },
   "devDependencies": {
     "grunt-contrib": "~0.4.0",
     "grunt-docco": "~0.1.2",
