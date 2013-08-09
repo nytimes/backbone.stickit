@@ -135,9 +135,10 @@
 
       // Wrap `view.remove` to unbind stickit model and dom events.
       this.remove = _.wrap(this.remove, function(oldRemove) {
+        var ret = self;
         self.unstickit();
-        if (oldRemove) oldRemove.call(self);
-        return self;
+        if (oldRemove) ret = oldRemove.apply(self, _.rest(arguments));
+        return ret;
       });
     }
   });
