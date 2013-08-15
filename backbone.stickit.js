@@ -186,7 +186,7 @@
         if (_.isArray(attr)) {
             var attrs = {};
             _.each(attr, function(attribute, index) {
-                attrs[attribute] = _.has(val, index) ? val[index] : val;
+                attrs[attribute] = _.has(val, index) ? val[index] : null;
             });
 
             model.set(attrs, options);
