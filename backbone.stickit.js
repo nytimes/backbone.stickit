@@ -102,8 +102,8 @@
           // Setup one-way, form element to model, bindings.
           _.each(config.events || [], function(type) {
             var event = type + namespace;
-            var method = function(event) {
-              var val = config.getVal.call(self, $el, event, config);
+            var method = function(event, extra) {
+              var val = config.getVal.call(self, $el, event, config, extra);
               // Don't update the model if false is returned from the `updateModel` configuration.
               if (evaluateBoolean(self, config.updateModel, val, config))
                 setAttr(model, modelAttr, val, options, self, config);
