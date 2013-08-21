@@ -189,7 +189,14 @@
   // respective values will be returned.
   var getAttr = function(model, attr, config, context) {
     var val, retrieveVal = function(field) {
-      var retrieved = config.escape ? model.escape(field) : model.get(field);
+      var retrieved; 
+      
+      if (field === 'id') { 
+        retrieved = model.id;
+      } else {
+        retrieved = config.escape ? model.escape(field) : model.get(field);
+      }      
+      
       return _.isUndefined(retrieved) || _.isNull(retrieved) ? '' : retrieved;
     };
     val = _.isArray(attr) ? _.map(attr, retrieveVal) : retrieveVal(attr);
