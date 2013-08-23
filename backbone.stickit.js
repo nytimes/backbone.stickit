@@ -183,7 +183,7 @@
     if (config.onSet) {
         val = applyViewFn(context, config.onSet, val, config);
         // if observe var defined as array, prepare attrs instead of attr and val
-        if (_.isArray(attr)) {
+        if (_.isArray(attr) && _.isArray(val)) {
             var attrs = {};
             _.each(attr, function(attribute, index) {
                 attrs[attribute] = _.has(val, index) ? val[index] : null;
