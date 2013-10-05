@@ -267,7 +267,7 @@ Called for each binding after it is unstuck from the model and view. Useful for 
 ```javascript  
   bindings: {
     '#album': {
-      observe: 'Tomorrow's Harvest,
+      observe: 'Tomorrow\'s Harvest',
       destroy: function($el, model, options) {
         // Tear down any events or clean up.
       }
