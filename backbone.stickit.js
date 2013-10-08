@@ -55,7 +55,7 @@
       var self = this,
         model = optionalModel || this.model,
         namespace = '.stickit.' + model.cid,
-        bindings = optionalBindingsConfig || this.bindings || {};
+        bindings = optionalBindingsConfig || _.result(this, "bindings") || {};
 
       this._modelBindings || (this._modelBindings = []);
       this.unstickit(model);
