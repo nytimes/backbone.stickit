@@ -1275,6 +1275,9 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     model.set({'water':'fountain'});
 
     var testView = new (Backbone.View.extend({
+      initialize: function(options) {
+        this.options = options;
+      },
       bindings: {
         '#test1': {
           observe: function() {
