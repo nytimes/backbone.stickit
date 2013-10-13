@@ -1,4 +1,5 @@
-(function(Backbone, $) {
+(function(Backbone) {
+  var $ = Backbone.$ || window.jQuery || window.Zepto;
 
   // Backbone.Stickit Namespace
   // --------------------------
@@ -498,4 +499,4 @@
     }
   }]);
 
-})(Backbone, Backbone.$);
+})(Backbone);
