@@ -66,6 +66,8 @@ For each model that is unbound a `stickit:unstuck` event will be triggered.
 
 The `view.bindings` is a hash of jQuery or Zepto selector keys with binding configuration values. Similar to the callback definitions configured in `view.events`, bindings callbacks can be defined as the name of a method on the view or a direct function body.
 
+Once you are familiarized with the bindings callbacks, use [this reference](#binding-callbacks-flowchart) for a better idea of when they are called.
+
 ### observe
 
 A string, function, or array which is used to map a model attribute to a view element. If binding to `observe` is the only configuration needed, then it can be written in short form where the attribute name is the value of the whole binding configuration.
