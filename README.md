@@ -619,6 +619,12 @@ render: function() {
 }
 ```
 
+## Binding Callbacks Flowchart
+
+The following image demonstrates the order in which bindings callbacks are called after stickit is initialized, a bound model attribute changes, and a bound view element changes.
+
+![alt tag](https://raw.github.com/nytimes/backbone.stickit/gh-pages/flow.png)
+
 ## F.A.Q.
 
 ### Why Stickit?
