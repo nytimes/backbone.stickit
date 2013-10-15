@@ -186,11 +186,15 @@
   // respective values will be returned.
   var getAttr = function(model, attr, config, context) {
     var val, retrieveVal = function(field) {
-      var retrieved = model[config.escape ? 'escape' : 'get'](field);
-      return retrieved == null ? '' : retrieved;
+      return model[config.escape ? 'escape' : 'get'](field);
+    }, sanitizeVal = function(val){
+      return val == null ? '' : val;
     };
     val = _.isArray(attr) ? _.map(attr, retrieveVal) : retrieveVal(attr);
-    return config.onGet ? applyViewFn(context, config.onGet, val, config) : val;
+    if (config.onGet) {
+      val = applyViewFn(context, config.onGet, val, config);
+    }
+    return _.isArray(val) ? _.map(val, sanitizeVal) : sanitizeVal(val);
   };
 
   // Find handlers in `Backbone.Stickit._handlers` with selectors that match

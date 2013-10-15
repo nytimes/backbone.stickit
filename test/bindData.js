@@ -422,6 +422,35 @@ $(document).ready(function() {
     equal(model.get('water'), '_evian');
   });
 
+  test('bindings:sanitization', 7, function() {
+
+    model.set({'duration':null});
+    view.model = model;
+    view.templateId = 'jst1';
+    view.bindings = {
+      '#test1': {
+        observe: 'duration',
+        onGet: function(val, options) {
+          equal(val, null);
+          equal(options.observe, 'duration');
+          return val;
+        },
+        onSet: function(val, options) {
+          equal(parseInt(val, 10), 30);
+          equal(val, view.$('#test1').val());
+          equal(options.observe, 'duration');
+          return null;
+        }
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(view.$('#test1').val(), '');
+    view.$('#test1').val(30).trigger('change');
+    equal(model.get('duration'), null);
+  });
+
   test('bindings:afterUpdate', 14, function() {
 
     model.set({'water':'fountain', 'candy':true});
