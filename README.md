@@ -656,6 +656,7 @@ MIT
 - Fixed a bug where optgroup `<select>` handlers were rendering multiple `collection.defaultOptions`.
 - Added handling for `observe` in function form.
 - When binding with `visible` the `{updateView:false}` property is defaulted.
+- Stickit will no longer sanitize (convert a `null`/`undefined` model attribute value to empty string) values if `onGet` is defined.
 - Added Backbone.Stickit.getConfiguration which exposes the method of deriving configurations from handlers.
 
 #### 0.6.3

@@ -185,15 +185,15 @@
   // formatting if necessary. If `attr` is an array, then an array of
   // respective values will be returned.
   var getAttr = function(model, attr, config, context) {
-    var val, retrieveVal = function(field) {
-      return model[config.escape ? 'escape' : 'get'](field);
-    }, sanitizeVal = function(val){
-      return val == null ? '' : val;
-    };
+    var val,
+      retrieveVal = function(field) {
+        return model[config.escape ? 'escape' : 'get'](field);
+      },
+      sanitizeVal = function(val) {
+        return val == null ? '' : val;
+      };
     val = _.isArray(attr) ? _.map(attr, retrieveVal) : retrieveVal(attr);
-    if (config.onGet) {
-      val = applyViewFn(context, config.onGet, val, config);
-    }
+    if (config.onGet) val = applyViewFn(context, config.onGet, val, config);
     return _.isArray(val) ? _.map(val, sanitizeVal) : sanitizeVal(val);
   };
 
