@@ -121,7 +121,7 @@
           updateViewBindEl(this, $el, config, getAttr(model, modelAttr, config, this), model, true);
         }
 
-        model.on('stickit:unstuck', function(cid) {
+        model.once('stickit:unstuck', function(cid) {
           if (cid === this.cid) applyViewFn(this, config.destroy, $el, model, config);
         }, this);
 
