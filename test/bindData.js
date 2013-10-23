@@ -1217,7 +1217,7 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     equal(Number(view.$('#test11').val()), 2);
   });
 
-  test('visible', 25, function() {
+  test('visible', 28, function() {
 
     model.set({'water':false, 'candy':'twix', 'costume':false, 'visible': 'yes'});
     view.model = model;
@@ -1248,6 +1248,10 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
         observe: 'visible',
         visible: function(val) { return val == 'yes'; },
         updateView: true
+      },
+      '#test14-5': {
+        observe: 'visible',
+        visible: function(val) { return val; }
       }
     };
     $('#qunit-fixture').html(view.render().el);
@@ -1258,6 +1262,11 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     equal(view.$('#test14-3').css('display') == 'block' , true);
     equal(view.$('#test14-4').css('display') == 'block' , true);
     equal(view.$('#test14-4').text(), 'yes');
+    equal(view.$('#test14-5').css('display') == 'block' , true);
+
+    // Force-hide #test14-5 to make sure the fact that it's still visible
+    // later is due to the truthiness check.
+    view.$('#test14-5').hide()
 
     model.set('water', true);
     model.set('candy', 'snickers');
@@ -1270,6 +1279,14 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     equal(view.$('#test14-3').css('display') == 'block' , true);
     equal(view.$('#test14-4').css('display') == 'block' , false);
     equal(view.$('#test14-4').text(), 'no');
+
+    // 'no' is still truthy.
+    equal(view.$('#test14-5').css('display') == 'block' , true);
+
+    model.set('visible', false);
+
+    equal(view.$('#test14-5').css('display') == 'block' , false);
+
   });
 
   test('observe (multiple; array)', 12, function() {

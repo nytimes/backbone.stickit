@@ -271,7 +271,7 @@
           val = getAttr(model, modelAttr, config, view),
           isVisible = !!val;
       // If `visible` is a function then it should return a boolean result to show/hide.
-      if (_.isFunction(visible) || _.isString(visible)) isVisible = applyViewFn(view, visible, val, config);
+      if (_.isFunction(visible) || _.isString(visible)) isVisible = !! applyViewFn(view, visible, val, config);
       // Either use the custom `visibleFn`, if provided, or execute the standard show/hide.
       if (visibleFn) applyViewFn(view, visibleFn, $el, isVisible, config);
       else {
