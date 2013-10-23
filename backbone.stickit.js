@@ -199,7 +199,7 @@
 
   // Find handlers in `Backbone.Stickit._handlers` with selectors that match
   // `$el` and generate a configuration by mixing them in the order that they
-  // were found with the given `binding`.
+  // were found with the with the givne `binding`.
   var getConfiguration = Backbone.Stickit.getConfiguration = function($el, binding) {
     var handlers = [{
       updateModel: false,
@@ -211,8 +211,10 @@
       return $el.is(handler.selector);
     }));
     handlers.push(binding);
-    var config = _.extend.apply(_, handlers);
-    // `updateView` is defaulted to false for configutrations with
+    // use lodash _.merge if it exist, this allows for deep extend
+    // to cover attribute -> onGet on custom handlers
+    var config = (_.merge) ? _.merge.apply(_, handlers) : _.extend.apply(_, handlers);
+    // `updateView` is defaulted to false for configurations with
     // `visible`; otherwise, `updateView` is defaulted to true.
     if (config.visible && !_.has(config, 'updateView')) config.updateView = false;
     else if (!_.has(config, 'updateView')) config.updateView = true;
