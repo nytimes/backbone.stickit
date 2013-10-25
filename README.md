@@ -146,6 +146,22 @@ A callback which prepares a formatted version of the view value before setting i
   }
 ```
 
+### afterSet
+
+Called after a value is updated on the model.
+
+```javascript  
+  bindings: {
+    '#author': {
+      observe: 'author',
+      afterSet: 'autosave'
+    }
+  },
+  autosave: function(val, options) {
+    this.model.save();
+  }
+```
+
 ### getVal
 
 A callback which overrides stickit's default handling for retrieving the value from the bound view element. Use `onSet` to format values - this is better used in [handlers](#custom-handlers) or when extra/different dom operations need to be handled.
@@ -647,6 +663,7 @@ MIT
 
 #### Master
 
+- Added `afterSet` binding which is called after a value is updated on the model.  
 - **Breaking Change**: the `bindKey` that was passed into the Backbone `change:attr` (undocumented) options was changed to `stickitChange` which is assigned the binding options which have a unique `bindId`.
 - **Breaking Change**: the default events for input, textarea, and contenteditable form elements from [`keyup`, `cut`, `paste`, `change`] to [`propertychange`, `input`, `change`].
 - **Breaking Change**: removed support for `input[type="number"]`. Instead, use `onSet` to format Number values, if needed.
