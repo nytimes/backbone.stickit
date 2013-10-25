@@ -319,7 +319,7 @@ If more than the standard jQuery show/hide is required, then you can manually ta
 
 ## Form Element Bindings and Contenteditable
 
-By default, form and contenteditable elements will be configured with two-way bindings, syncing changes in the view elements with model attributes. Optionally, one-way bindings can be configured with `updateView` or `updateModel`. With the `eventsOverride`, you can specify a different set of events to use for reflecting changes to the model.
+By default, form and contenteditable elements will be configured with two-way bindings, syncing changes in the view elements with model attributes. Optionally, one-way bindings can be configured with `updateView` or `updateModel`. With the `events`, you can specify a different set of events to use for reflecting changes to the model.
 
 The following is a list of the supported form elements, their binding details, and the default events used for binding:  
 
