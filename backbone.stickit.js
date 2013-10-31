@@ -402,6 +402,10 @@
       selectConfig.labelPath = selectConfig.labelPath || 'label';
 
       var addSelectOptions = function(optList, $el, fieldVal) {
+
+        // Support nested collections for each optGroup
+        if (optList instanceof Backbone.Collection) optList = optList.toJSON();
+
         _.each(optList, function(obj) {
           var option = $('<option/>'), optionVal = obj;
 
