@@ -451,7 +451,7 @@
       if (optList instanceof Backbone.Collection) optList = optList.toJSON();
 
       if (selectConfig.defaultOption) {
-        addSelectOptions(["__default__"], $el)
+        addSelectOptions(["__default__"], $el);
       }
 
       if (_.isArray(optList)) {
