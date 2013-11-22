@@ -1,5 +1,4 @@
 (function(Backbone) {
-  var $ = Backbone.$ || window.jQuery || window.Zepto;
 
   // Backbone.Stickit Namespace
   // --------------------------
@@ -333,20 +332,22 @@
         // There are multiple checkboxes so we need to go through them and check
         // any that have value attributes that match what's in the array of `val`s.
         val || (val = []);
-        _.each($el, function(el) {
-          if (_.indexOf(val, $(el).val()) > -1) $(el).prop('checked', true);
-          else $(el).prop('checked', false);
+        $el.each(function(i, el) {
+          var checkbox = Backbone.$(el);
+          var checked = _.indexOf(val, checkbox.val()) > -1;
+          checkbox.prop('checked', checked);
         });
       } else {
-        if (_.isBoolean(val)) $el.prop('checked', val);
-        else $el.prop('checked', val === $el.val());
+        var checked = _.isBoolean(val) ? val : val === $el.val();
+        $el.prop('checked', checked);
       }
     },
     getVal: function($el) {
       var val;
       if ($el.length > 1) {
         val = _.reduce($el, function(memo, el) {
-          if ($(el).prop('checked')) memo.push($(el).val());
+          var checkbox = Backbone.$(el);
+          if (checkbox.prop('checked')) memo.push(checkbox.val());
           return memo;
         }, []);
       } else {
@@ -384,13 +385,13 @@
           if ($el.find('> option').length) {
             list.opt_labels.push(undefined);
             _.each($el.find('> option'), function(el) {
-              list[undefined] = getList($(el));
+              list[undefined] = getList(Backbone.$(el));
             });
           }
           _.each($el.find('optgroup'), function(el) {
-            var label = $(el).attr('label');
+            var label = Backbone.$(el).attr('label');
             list.opt_labels.push(label);
-            list[label] = getList($(el).find('option'));
+            list[label] = getList(Backbone.$(el).find('option'));
           });
         } else {
           list = getList($el.find('option'));
@@ -403,7 +404,7 @@
 
       var addSelectOptions = function(optList, $el, fieldVal) {
         _.each(optList, function(obj) {
-          var option = $('<option/>'), optionVal = obj;
+          var option = Backbone.$('<option/>'), optionVal = obj;
 
           var fillOption = function(text, val) {
             option.text(text);
@@ -467,7 +468,7 @@
         //     }
         //
         _.each(optList.opt_labels, function(label) {
-          var $group = $('<optgroup/>').attr('label', label);
+          var $group = Backbone.$('<optgroup/>').attr('label', label);
           addSelectOptions(optList[label], $group, val);
           $el.append($group);
         });
@@ -487,8 +488,8 @@
     getVal: function($el) {
       var val;
       if ($el.prop('multiple')) {
-        val = $(getSelectedOption($el).map(function() {
-          return $(this).data('stickit_bind_val');
+        val = Backbone.$(getSelectedOption($el).map(function() {
+          return Backbone.$(this).data('stickit_bind_val');
         })).get();
       } else {
         val = getSelectedOption($el).data('stickit_bind_val');
