@@ -1390,6 +1390,7 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
       '#test1': {
         observe: 'water',
         updateModel: function(val, options) {
+          equal(this, view);
           equal(val, view.$('#test1').val());
           equal(options.observe, 'water');
           return val == 'evian';
