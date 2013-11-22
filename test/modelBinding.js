@@ -25,7 +25,7 @@ $(document).ready(function() {
 
     view.unstickit();
 
-    equal(_.keys(view.model._events).length, 1);
+    equal(_.keys(view.model._events).length, 0);
   });
 
   test('unstickit (multiple models)', function() {
@@ -71,13 +71,13 @@ $(document).ready(function() {
 
     equal(_.keys(model1._events).length, 3);
     equal(_.keys(model2._events).length, 3);
-    equal(_.keys(model3._events).length, 1);
+    equal(_.keys(model3._events).length, 0);
     equal(view._modelBindings.length, 4);
 
     view.unstickit();
 
-    equal(_.keys(model1._events).length, 1);
-    equal(_.keys(model2._events).length, 1);
+    equal(_.keys(model1._events).length, 0);
+    equal(_.keys(model2._events).length, 0);
     equal(view._modelBindings.length, 0);
   });
 
