@@ -1484,6 +1484,7 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
       '#test1': {
         observe: 'water',
         getVal: function($el, event, options) {
+          equal(this, view);
           equal($el.attr('id'), 'test1');
           equal(event.type, 'change');
           equal(options.observe, 'water');

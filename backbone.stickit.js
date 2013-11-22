@@ -104,6 +104,7 @@
               if (evaluateBoolean(this, config.updateModel, val, config))
                 setAttr(model, modelAttr, val, options, this, config);
             };
+            method = _.bind(method, this);
             if (selector === ':el') this.$el.on(event, method);
             else this.$el.on(event, selector, method);
           }, this);
