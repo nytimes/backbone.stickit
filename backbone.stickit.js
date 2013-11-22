@@ -231,7 +231,7 @@
   //     }, ...]
   //
   var initializeAttributes = function(view, $el, config, model, modelAttr) {
-    var props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'];
+    var props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'indeterminate', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'];
 
     _.each(config.attributes || [], function(attrConfig) {
       var lastClass = '', observed, updateAttr;
