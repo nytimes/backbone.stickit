@@ -1390,6 +1390,7 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
       '#test1': {
         observe: 'water',
         updateModel: function(val, options) {
+          equal(this.cid, view.cid);
           equal(val, view.$('#test1').val());
           equal(options.observe, 'water');
           return val == 'evian';
@@ -1484,6 +1485,7 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
       '#test1': {
         observe: 'water',
         getVal: function($el, event, options) {
+          equal(this.cid, view.cid);
           equal($el.attr('id'), 'test1');
           equal(event.type, 'change');
           equal(options.observe, 'water');
