@@ -1381,7 +1381,7 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     equal(view.$('#test1').val(), 'evian');
   });
 
-  test('bindings:updateModel', 6, function() {
+  test('bindings:updateModel', 8, function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1476,7 +1476,7 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     equal(model.get('water'), null);
   });
 
-  test('getVal', 4, function() {
+  test('getVal', 5, function() {
 
     model.set({'water':'fountain'});
     view.model = model;
