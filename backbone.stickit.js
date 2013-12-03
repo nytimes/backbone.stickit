@@ -180,6 +180,7 @@
   var setAttr = function(model, attr, val, options, context, config) {
     if (config.onSet) val = applyViewFn(context, config.onSet, val, config);
     model.set(attr, val, options);
+    if (config.afterSet) applyViewFn(config.view, config.afterSet, val, config);
   };
 
   // Returns the given `attr`'s value from the `model`, escaping and
