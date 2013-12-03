@@ -1,7 +1,6 @@
 $(document).ready(function() {
 
   QUnit.testStart = function() {
-    
     window.view = new (Backbone.View.extend({
       model: null,
       templateId: '',
