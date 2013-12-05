@@ -112,7 +112,7 @@
           // Setup a `change:modelAttr` observer to keep the view element in sync.
           // `modelAttr` may be an array of attributes or a single string value.
           _.each(_.flatten([modelAttr]), function(attr) {
-            observeModelEvent(model, this, 'change:'+attr, function(model, val, options) {
+            observeModelEvent(model, this, attr, function(model, val, options) {
               var changeId = options && options.stickitChange && options.stickitChange.bindId || null;
               if (changeId !== bindId)
                 updateViewBindEl(this, $el, config, getAttr(model, modelAttr, config, this), model);
@@ -171,7 +171,11 @@
 
   // Setup a model event binding with the given function, and track the event
   // in the view's _modelBindings.
-  var observeModelEvent = function(model, view, event, fn) {
+  var observeModelEvent = function(model, view, attr, fn) {
+    // Detect attr type for Backbone.Associations
+    var event = (model.get(attr) instanceof Backbone.Collection) ?
+      'add:'+attr+' remove:'+attr+' change:'+attr+'[*]' :
+      'change:'+attr;
     model.on(event, fn, view);
     view._modelBindings.push({model:model, event:event, fn:fn});
   };
@@ -188,7 +192,10 @@
   var getAttr = function(model, attr, config, context) {
     var val,
       retrieveVal = function(field) {
-        return model[config.escape ? 'escape' : 'get'](field);
+        var retrieved;
+        // On the collection add/remove callback - return the model's collection
+        if (!model.get(field) && config.collection) return model.collection;
+        else return model[config.escape ? 'escape' : 'get'](field);
       },
       sanitizeVal = function(val) {
         return val == null ? '' : val;
@@ -249,7 +256,7 @@
         else $el[updateType](attrConfig.name, val);
       };
       _.each(_.flatten([observed]), function(attr) {
-        observeModelEvent(model, view, 'change:' + attr, updateAttr);
+        observeModelEvent(model, view, attr, updateAttr);
       });
       updateAttr();
     });
@@ -280,7 +287,7 @@
       }
     };
     _.each(_.flatten([modelAttr]), function(attr) {
-      observeModelEvent(model, view, 'change:' + attr, visibleCb);
+      observeModelEvent(model, view, attr, visibleCb);
     });
     visibleCb();
   };
