@@ -112,10 +112,10 @@
           // Setup a `change:modelAttr` observer to keep the view element in sync.
           // `modelAttr` may be an array of attributes or a single string value.
           _.each(_.flatten([modelAttr]), function(attr) {
-            observeModelEvent(model, this, attr, function(model, val, options) {
+            observeModelEvent(model, this, attr, function(m, val, options) {
               var changeId = options && options.stickitChange && options.stickitChange.bindId || null;
               if (changeId !== bindId)
-                updateViewBindEl(this, $el, config, getAttr(model, modelAttr, config, this), model);
+                updateViewBindEl(this, $el, config, getAttr(model, modelAttr, config, this), m);
             });
           }, this);
 
@@ -192,10 +192,7 @@
   var getAttr = function(model, attr, config, context) {
     var val,
       retrieveVal = function(field) {
-        var retrieved;
-        // On the collection add/remove callback - return the model's collection
-        if (!model.get(field) && config.collection) return model.collection;
-        else return model[config.escape ? 'escape' : 'get'](field);
+        return model[config.escape ? 'escape' : 'get'](field);
       },
       sanitizeVal = function(val) {
         return val == null ? '' : val;
