@@ -1,11 +1,17 @@
 (function (factory) {
-  if (typeof define === 'function' && define.amd) {
+
+  // Set up Stickit appropriately for the environment. Start with AMD.
+  if (typeof define === 'function' && define.amd)
     define(['underscore', 'backbone'], factory);
-  } else if (typeof exports === 'object') {
+
+  // Next for Node.js or CommonJS.
+  else if (typeof exports === 'object')
     factory(require('underscore'), require('backbone'));
-  } else {
+
+  // Finally, as a browser global.
+  else
     factory(_, Backbone);
-  }
+
 }(function (_, Backbone) {
 
   // Backbone.Stickit Namespace

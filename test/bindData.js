@@ -222,7 +222,7 @@ $(document).ready(function() {
 
   test('stickit (existing events property as hash with multiple models and bindings)', function() {
 
-    var model1, testView;
+    var model1, model2, testView;
 
     model1 = new (Backbone.Model)({id:1, candy:'twix' });
     model2 = new (Backbone.Model)({id:2, candy:'snickers'});
@@ -284,7 +284,7 @@ $(document).ready(function() {
 
   test('stickit (existing events property as function with multiple models and bindings)', function() {
 
-    var model1, testView;
+    var model1, model2, testView;
 
     model1 = new (Backbone.Model)({id:1, candy:'twix' });
     model2 = new (Backbone.Model)({id:2, candy:'snickers'});

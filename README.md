@@ -648,8 +648,9 @@ MIT
 #### Master
 
 - **Breaking Change**: the `bindKey` that was passed into the Backbone `change:attr` (undocumented) options was changed to `stickitChange` which is assigned the binding options which have a unique `bindId`.
-- **Breaking Change**: the default events for input, textarea, and contenteditable form elements from [`keyup`, `cut`, `paste`, `change`] to [`propertychange`, `input`, `change`].
+- **Breaking Change**: the default events for input, textarea, and contenteditable form elements changed from [`keyup`, `cut`, `paste`, `change`] to [`propertychange`, `input`, `change`].
 - **Breaking Change**: removed support for `input[type="number"]`. Instead, use `onSet` to format Number values, if needed.
+- Stickit will now load using the UMD pattern so it is compatible with AMD, Node.js, and CommonJS.
 - Added the `destroy` binding callback to compliment `initialize`.
 - Trigger `stickit:unstick` for each model that is unbound in `unstickit` (or `view.remove`).
 - Fixed a bug where "null" would show in Chrome when binding `attribute:null` to an element value.
