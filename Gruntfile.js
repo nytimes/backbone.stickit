@@ -48,12 +48,29 @@ module.exports = function(grunt) {
           '// Copyright (c) 2012 The New York Times, CMS Group, Matthew DeLambo <delambo@gmail.com> \n' +
           '//\n'
       },
-      dist: {
-        src: 'backbone.stickit.js',
-        dest: 'dist/backbone.stickit.js'
-      }
+      dist:{
+        files: [{
+          src: 'backbone.stickit.js',
+          dest: 'dist/backbone.stickit.js'
+        }, {
+          src: 'backbone.stickit.amd.js',
+          dest: 'dist/backbone.stickit.amd.js'
+        }]
+      } 
     },
 
+    rig: {
+      browser: {
+        files: {
+          'dist/<%= pkg.name %>.js': ['<%= pkg.name %>.js']
+        }
+      },
+      amd: {
+        files: {
+          'dist/<%= pkg.name %>.amd.js': ['<%= pkg.name %>.amd.js']
+        }
+      }
+    },
     uglify: {
       options: {
         banner: '//\n' +
@@ -67,7 +84,8 @@ module.exports = function(grunt) {
           preserveComments: false
         },
         files: {
-          'dist/backbone.stickit.min.js': ['backbone.stickit.js']
+          'dist/backbone.stickit.min.js': ['backbone.stickit.js'],
+          'dist/backbone.stickit.amd.min.js': ['backbone.stickit.amd.js']
         }
       }
     },
@@ -84,9 +102,7 @@ module.exports = function(grunt) {
         options: {
           archive: 'dist/backbone.stickit.gz'
         },
-        files: [
-          {src: 'dist/backbone.stickit.min.js'}
-        ]
+        files: ['dist/backbone.stickit.min.js', 'dist/backbone.stickit.amd.min.js'] 
       },
       zip: {
         options: {
@@ -105,6 +121,7 @@ module.exports = function(grunt) {
   });
 
   grunt.loadNpmTasks('grunt-docco');
+  grunt.loadNpmTasks('grunt-rigger');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-qunit');
@@ -112,7 +129,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-compress');
 
-  grunt.registerTask('build', ['jshint', 'clean:build', 'uglify:nasty', 'concat', 'docco', 'compress:gz', 'cp-docs', 'compress:zip']);
+  grunt.registerTask('build', ['jshint', 'clean:build', 'uglify:nasty', 'concat', 'rig', 'docco', 'compress:gz', 'cp-docs', 'compress:zip']);
 
   grunt.registerTask('cp-docs', function() {
     grunt.file.copy('docs/docco.css', 'dist/docs/annotated/docco.css');
