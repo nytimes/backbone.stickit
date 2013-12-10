@@ -653,12 +653,13 @@ MIT
 - Stickit will now load using the UMD pattern so it is compatible with AMD, Node.js, and CommonJS.
 - Added the `destroy` binding callback to compliment `initialize`.
 - Trigger `stickit:unstick` for each model that is unbound in `unstickit` (or `view.remove`).
-- Fixed a bug where "null" would show in Chrome when binding `attribute:null` to an element value.
-- Fixed a bug where optgroup `<select>` handlers were rendering multiple `collection.defaultOptions`.
 - Added handling for `observe` in function form.
 - When binding with `visible` the `{updateView:false}` property is defaulted.
 - Stickit will no longer sanitize (convert a `null`/`undefined` model attribute value to empty string) values if `onGet` is defined.
+- Added support for the use of dot-notation in binding callbacks that are defined with a string that names a method on the view. For example - `onGet: "myObj.myCallback"`.
 - Added Backbone.Stickit.getConfiguration which exposes the method of deriving configurations from handlers.
+- Fixed a bug where "null" would show in Chrome when binding `attribute:null` to an element value.
+- Fixed a bug where optgroup `<select>` handlers were rendering multiple `collection.defaultOptions`.
 
 #### 0.6.3
 
