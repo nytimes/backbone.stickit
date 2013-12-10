@@ -191,7 +191,20 @@
 
   // Prepares the given `val`ue and sets it into the `model`.
   var setAttr = function(model, attr, val, options, context, config) {
-    if (config.onSet) val = applyViewFn(context, config.onSet, val, config);
+    if (config.onSet) {
+        val = applyViewFn(context, config.onSet, val, config);
+        // if observe var defined as array, prepare attrs instead of attr and val
+        if (_.isArray(attr) && _.isArray(val)) {
+            var attrs = {};
+            _.each(attr, function(attribute, index) {
+                attrs[attribute] = _.has(val, index) ? val[index] : null;
+            });
+
+            model.set(attrs, options);
+            return;
+        }
+    }
+
     model.set(attr, val, options);
   };
 
