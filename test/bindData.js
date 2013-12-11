@@ -451,6 +451,54 @@ $(document).ready(function() {
     equal(model.get('duration'), null);
   });
 
+  test('bindings:onSet (returning array of observed values)', 2, function() {
+
+    model.set({'water':'fountain', 'candy':'skittles'});
+    view.model = model;
+    view.templateId = 'jst1';
+    view.bindings = {
+      '#test1': {
+        observe: ['water', 'candy'],
+        onGet: function(val, options) {
+          return model.get(options[0]) + '-' + model.get(options[1]);
+        },
+        onSet: function(val, options) {
+          return val.split('-');
+        }
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    view.$('#test1').val('evian-kitkat').trigger('change');
+    equal(model.get('water'), 'evian');
+    equal(model.get('candy'), 'kitkat');
+  });
+
+  test('bindings:set', 5, function() {
+
+    model.set({'water':'fountain'});
+    view.model = model;
+    view.templateId = 'jst1';
+    view.bindings = {
+      '#test1': {
+        observe: 'water',
+        set: function(attr, val, options, config) {
+          equal(attr, 'water');
+          equal(val, 'evian');
+          equal(options.stickitChange.observe, attr);
+          equal(config.observe, attr);
+          model.set(attr, val);
+        }
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    view.$('#test1').val('evian').trigger('change');
+    equal(model.get('water'), 'evian');
+  });
+
   test('bindings:afterUpdate', 14, function() {
 
     model.set({'water':'fountain', 'candy':true});

@@ -191,21 +191,24 @@
 
   // Prepares the given `val`ue and sets it into the `model`.
   var setAttr = function(model, attr, val, options, context, config) {
-    if (config.onSet) {
-        val = applyViewFn(context, config.onSet, val, config);
-        // if observe var defined as array, prepare attrs instead of attr and val
-        if (_.isArray(attr) && _.isArray(val)) {
-            var attrs = {};
-            _.each(attr, function(attribute, index) {
-                attrs[attribute] = _.has(val, index) ? val[index] : null;
-            });
+    var value = {};
+    if (config.onSet)
+      val = applyViewFn(context, config.onSet, val, config);
 
-            model.set(attrs, options);
-            return;
-        }
+    if (config.set)
+      applyViewFn(context, config.set, attr, val, options, config);
+    else {
+      value[attr] = val;
+      // If `observe` is defined as an array and `onSet` returned
+      // an array, then map attributes to their values.
+      if (_.isArray(attr) && _.isArray(val)) {
+        value = _.reduce(attr, function(memo, attribute, index) {
+          memo[attribute] = _.has(val, index) ? val[index] : null;
+          return memo;
+        }, {});
+      }
+      model.set(value, options);
     }
-
-    model.set(attr, val, options);
   };
 
   // Returns the given `attr`'s value from the `model`, escaping and

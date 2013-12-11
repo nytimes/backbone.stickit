@@ -72,7 +72,7 @@ Once you are familiarized with the bindings callbacks, use [this reference](#bin
 
 A string, function, or array which is used to map a model attribute to a view element. If binding to `observe` is the only configuration needed, then it can be written in short form where the attribute name is the value of the whole binding configuration.
 
-Note, binding to multiple model attributes using an array configuration only applies to one-way bindings (model->view), and should be paired with an `onGet` callback.
+Notes on binding to an array of attributes: when binding from model->view, this configuration should be paired with an `onGet` callback that can unpack/format the values. When binding from view->model, then `onSet` or `getVal` should be defined and should return an array of values that stickit will set into the model. 
 
 ```javascript  
   bindings: {
@@ -94,7 +94,10 @@ Note, binding to multiple model attributes using an array configuration only app
       observe: ['title', 'author'],
       onGet: function(values) {
         // onGet called after title *or* author model attributes change.
-        return values[0] + ', by ' + values[1];
+        return values[0] + '-' + values[1];
+      },
+      onSet: function(value) {
+        return value.split('-');
       }
     }
   }
@@ -651,6 +654,8 @@ MIT
 - **Breaking Change**: the default events for input, textarea, and contenteditable form elements changed from [`keyup`, `cut`, `paste`, `change`] to [`propertychange`, `input`, `change`].
 - **Breaking Change**: removed support for `input[type="number"]`. Instead, use `onSet` to format Number values, if needed.
 - Stickit will now load using the UMD pattern so it is compatible with AMD, Node.js, and CommonJS.
+- When observing an array, if `onSet` or `getVal` return an array of values, Stickit will match the values to their respective attributes defined in `observe` and set them in the model. If you don't desire this change, then you can override this behavior with the following change:
+- Added a `set` callback which by default calls `model#set`
 - Added the `destroy` binding callback to compliment `initialize`.
 - Trigger `stickit:unstick` for each model that is unbound in `unstickit` (or `view.remove`).
 - Added handling for `observe` in function form.
