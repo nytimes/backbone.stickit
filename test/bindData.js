@@ -143,6 +143,21 @@ $(document).ready(function() {
     equal(view.$el.text(), 'evian');
   });
 
+  test('bindings as a function', 2, function() {
+
+    model.set({'water':'fountain'});
+    view.model = model;
+    view.templateId = 'jst1';
+    view.bindings = function() {
+      return {'#test1':'water'};
+    };
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(view.$('#test1').val(), 'fountain');
+    view.$('#test1').val('dasina').trigger('change');
+    equal(model.get('water'), 'dasina');
+  });
+
   test('stickit (shorthand bindings)', function() {
     model.set({'water':'fountain'});
     view.model = model;

@@ -64,7 +64,7 @@ For each model that is unbound a `stickit:unstuck` event will be triggered.
 
 ## Bindings
 
-The `view.bindings` is a hash of jQuery or Zepto selector keys with binding configuration values. Similar to the callback definitions configured in `view.events`, bindings callbacks can be defined as the name of a method on the view or a direct function body.
+The `view.bindings` is a hash of jQuery or Zepto selector keys with binding configuration values. Similar to the callback definitions configured in `view.events`, bindings callbacks can be defined as the name of a method on the view or a direct function body. `view.bindings` may also be defined as a function.
 
 Once you are familiarized with the bindings callbacks, use [this reference](#binding-callbacks-flowchart) for a better idea of when they are called.
 
@@ -654,6 +654,7 @@ MIT
 - **Breaking Change**: the default events for input, textarea, and contenteditable form elements changed from [`keyup`, `cut`, `paste`, `change`] to [`propertychange`, `input`, `change`].
 - **Breaking Change**: removed support for `input[type="number"]`. Instead, use `onSet` to format Number values, if needed.
 - Stickit will now load using the UMD pattern so it is compatible with AMD, Node.js, and CommonJS.
+- A view's `bindings` configuration can be defined as a function.
 - When observing an array, if `onSet` or `getVal` return an array of values, Stickit will match the values to their respective attributes defined in `observe` and set them in the model. If you don't desire this change, then you can override this behavior with the following change:
 - Added a `set` callback which by default calls `model#set`
 - Added the `destroy` binding callback to compliment `initialize`.
