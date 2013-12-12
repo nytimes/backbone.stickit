@@ -1444,7 +1444,7 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     equal(view.$('#test1').val(), 'evian');
   });
 
-  test('bindings:updateModel', 8, function() {
+  test('bindings:updateModel', 10, function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1452,10 +1452,11 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     view.bindings = {
       '#test1': {
         observe: 'water',
-        updateModel: function(val, options) {
+        updateModel: function(val, event, options) {
           equal(this.cid, view.cid);
           equal(val, view.$('#test1').val());
           equal(options.observe, 'water');
+          equal(event.type, 'change');
           return val == 'evian';
         }
       }

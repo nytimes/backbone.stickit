@@ -186,7 +186,7 @@ A boolean value or a function that returns a boolean value which controls whethe
       updateModel: 'confirmFormat'
     }
   },
-  confirmFormat: function(val, options) {
+  confirmFormat: function(val, event, options) {
     // Only update the title attribute if the value starts with "by".
     return val.startsWith('by ');
   }
@@ -657,6 +657,7 @@ MIT
 - A view's `bindings` configuration can be defined as a function.
 - When observing an array, if `onSet` or `getVal` return an array of values, Stickit will match the values to their respective attributes defined in `observe` and set them in the model. If you don't desire this change, then you can override this behavior with the following change:
 - Added a `set` callback which by default calls `model#set`
+- **Breaking Change**: The `updateModel` method parameters changed so the `event` is now passed as the second parameter. `updateModel(val, options)` -> `updateModel(val, event, options)`
 - Added the `destroy` binding callback to compliment `initialize`.
 - Trigger `stickit:unstick` for each model that is unbound in `unstickit` (or `view.remove`).
 - Added handling for `observe` in function form.

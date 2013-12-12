@@ -114,7 +114,7 @@
             var method = function(event) {
               var val = config.getVal.call(this, $el, event, config, _.rest(arguments));
               // Don't update the model if false is returned from the `updateModel` configuration.
-              if (evaluateBoolean(this, config.updateModel, val, config))
+              if (evaluateBoolean(this, config.updateModel, val, event, config))
                 setAttr(model, modelAttr, val, options, this, config);
             };
             method = _.bind(method, this);
