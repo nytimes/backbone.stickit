@@ -1,349 +1,1222 @@
-<!DOCTYPE html>  <html> <head>   <title>backbone.stickit.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               backbone.stickit.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>backbone.stickit - v0.6.3
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>backbone.stickit.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
+  <link rel="stylesheet" media="all" href="docco.css" />
+</head>
+<body>
+  <div id="container">
+    <div id="background"></div>
+    
+    <ul class="sections">
+        
+          <li id="title">
+              <div class="annotation">
+                  <h1>backbone.stickit.js</h1>
+              </div>
+          </li>
+        
+        
+        
+        <li id="section-1">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-1">&#182;</a>
+              </div>
+              <p>backbone.stickit - v0.7.0
 The MIT License
-Copyright (c) 2012 The New York Times, CMS Group, Matthew DeLambo <a href="&#x6D;&#97;&#x69;&#108;&#x74;&#111;:&#100;el&#97;&#109;&#x62;&#111;&#x40;&#103;&#x6D;&#x61;&#x69;&#x6C;&#46;c&#x6F;&#x6D;">&#100;el&#97;&#109;&#x62;&#111;&#x40;&#103;&#x6D;&#x61;&#x69;&#x6C;&#46;c&#x6F;&#x6D;</a> </p>             </td>             <td class="code">               <div class="highlight"><pre><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <h2>Backbone.Stickit Namespace</h2>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Stickit</span> <span class="o">=</span> <span class="p">{</span>
+Copyright (c) 2012 The New York Times, CMS Group, Matthew DeLambo <a href="&#x6d;&#x61;&#x69;&#108;&#116;&#x6f;&#58;&#x64;&#101;&#x6c;&#x61;&#109;&#98;&#111;&#x40;&#103;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#x6d;">&#x64;&#101;&#x6c;&#x61;&#109;&#98;&#111;&#x40;&#103;&#x6d;&#97;&#x69;&#x6c;&#x2e;&#99;&#x6f;&#x6d;</a> </p>
 
-    <span class="nx">_handlers</span><span class="o">:</span> <span class="p">[],</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>(<span class="function"><span class="keyword">function</span> <span class="params">(factory)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-2">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Set up Stickit appropriately for the environment. Start with AMD.</p>
 
-    <span class="nx">addHandler</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">handlers</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Fill-in default values.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">handlers</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">flatten</span><span class="p">([</span><span class="nx">handlers</span><span class="p">]),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">handler</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
-          <span class="nx">updateModel</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-          <span class="nx">updateView</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-          <span class="nx">updateMethod</span><span class="o">:</span> <span class="s1">&#39;text&#39;</span>
-        <span class="p">},</span> <span class="nx">handler</span><span class="p">);</span>
-      <span class="p">});</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_handlers</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_handlers</span><span class="p">.</span><span class="nx">concat</span><span class="p">(</span><span class="nx">handlers</span><span class="p">);</span>
-    <span class="p">}</span>
-  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <h2>Backbone.View Mixins</h2>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>Collection of model event bindings.
-  [{model,event,fn}, ...]</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">_modelBindings</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Unbind the model and event bindings from <code>this._modelBindings</code> and
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">if</span> (<span class="keyword">typeof</span> define === <span class="string">'function'</span> &amp;&amp; define.amd)
+    define([<span class="string">'underscore'</span>, <span class="string">'backbone'</span>], factory);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-3">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+              <p>Next for Node.js or CommonJS.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">typeof</span> exports === <span class="string">'object'</span>)
+    factory(require(<span class="string">'underscore'</span>), require(<span class="string">'backbone'</span>));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-4">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Finally, as a browser global.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">else</span>
+    factory(_, Backbone);
+
+}(<span class="function"><span class="keyword">function</span> <span class="params">(_, Backbone)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-5">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <h2 id="backbone-stickit-namespace">Backbone.Stickit Namespace</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-6">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Backbone.Stickit = {
+
+    _handlers: [],
+
+    addHandler: <span class="function"><span class="keyword">function</span><span class="params">(handlers)</span> {</span></pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-7">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Fill-in default values.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      handlers = _.map(_.flatten([handlers]), <span class="function"><span class="keyword">function</span><span class="params">(handler)</span> {</span>
+        <span class="keyword">return</span> _.extend({
+          updateModel: <span class="literal">true</span>,
+          updateView: <span class="literal">true</span>,
+          updateMethod: <span class="string">'text'</span>
+        }, handler);
+      });
+      <span class="keyword">this</span>._handlers = <span class="keyword">this</span>._handlers.concat(handlers);
+    }
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-8">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <h2 id="backbone-view-mixins">Backbone.View Mixins</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-9">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  _.extend(Backbone.View.prototype, {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-10">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-10">&#182;</a>
+              </div>
+              <p>Collection of model event bindings.
+  [{model,event,fn}, ...]</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    _modelBindings: <span class="literal">null</span>,</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-11">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-11">&#182;</a>
+              </div>
+              <p>Unbind the model and event bindings from <code>this._modelBindings</code> and
 <code>this.$el</code>. If the optional <code>model</code> parameter is defined, then only
-delete bindings for the given <code>model</code> and its corresponding view events.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">unstickit</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">model</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_modelBindings</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">binding</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">model</span> <span class="o">&amp;&amp;</span> <span class="nx">binding</span><span class="p">.</span><span class="nx">model</span> <span class="o">!==</span> <span class="nx">model</span><span class="p">)</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-        <span class="nx">binding</span><span class="p">.</span><span class="nx">model</span><span class="p">.</span><span class="nx">off</span><span class="p">(</span><span class="nx">binding</span><span class="p">.</span><span class="nx">event</span><span class="p">,</span> <span class="nx">binding</span><span class="p">.</span><span class="nx">fn</span><span class="p">);</span>
-        <span class="k">delete</span> <span class="k">this</span><span class="p">.</span><span class="nx">_modelBindings</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
-      <span class="p">},</span> <span class="k">this</span><span class="p">));</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">_modelBindings</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">compact</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_modelBindings</span><span class="p">);</span>
+delete bindings for the given <code>model</code> and its corresponding view events.</p>
 
-      <span class="k">this</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">off</span><span class="p">(</span><span class="s1">&#39;.stickit&#39;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">model</span> <span class="o">?</span> <span class="s1">&#39;.&#39;</span> <span class="o">+</span> <span class="nx">model</span><span class="p">.</span><span class="nx">cid</span> <span class="o">:</span> <span class="s1">&#39;&#39;</span><span class="p">));</span>
-    <span class="p">},</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Using <code>this.bindings</code> configuration or the <code>optionalBindingsConfig</code>, binds <code>this.model</code>
-or the <code>optionalModel</code> to elements in the view.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">stickit</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">optionalModel</span><span class="p">,</span> <span class="nx">optionalBindingsConfig</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">self</span> <span class="o">=</span> <span class="k">this</span><span class="p">,</span>
-        <span class="nx">model</span> <span class="o">=</span> <span class="nx">optionalModel</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">model</span><span class="p">,</span>
-        <span class="nx">namespace</span> <span class="o">=</span> <span class="s1">&#39;.stickit.&#39;</span> <span class="o">+</span> <span class="nx">model</span><span class="p">.</span><span class="nx">cid</span><span class="p">,</span>
-        <span class="nx">bindings</span> <span class="o">=</span> <span class="nx">optionalBindingsConfig</span> <span class="o">||</span> <span class="k">this</span><span class="p">.</span><span class="nx">bindings</span> <span class="o">||</span> <span class="p">{};</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    unstickit: <span class="function"><span class="keyword">function</span><span class="params">(model)</span> {</span>
+      <span class="keyword">var</span> models = [];
+      _.each(<span class="keyword">this</span>._modelBindings, <span class="function"><span class="keyword">function</span><span class="params">(binding, i)</span> {</span>
+        <span class="keyword">if</span> (model &amp;&amp; binding.model !== model) <span class="keyword">return</span> <span class="literal">false</span>;
+        binding.model.off(binding.event, binding.fn);
+        models.push(binding.model);
+        <span class="keyword">delete</span> <span class="keyword">this</span>._modelBindings[i];
+      }, <span class="keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-12">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-12">&#182;</a>
+              </div>
+              <p>Trigger an event for each model that was unbound.</p>
 
-      <span class="k">this</span><span class="p">.</span><span class="nx">_modelBindings</span> <span class="o">||</span> <span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">_modelBindings</span> <span class="o">=</span> <span class="p">[]);</span>
-      <span class="k">this</span><span class="p">.</span><span class="nx">unstickit</span><span class="p">(</span><span class="nx">model</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Iterate through the selectors in the bindings configuration and configure
-the various options for each field.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">bindings</span><span class="p">),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">selector</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="nx">modelAttr</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span>
-          <span class="nx">binding</span> <span class="o">=</span> <span class="nx">bindings</span><span class="p">[</span><span class="nx">selector</span><span class="p">]</span> <span class="o">||</span> <span class="p">{},</span>
-          <span class="nx">bindKey</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span><span class="p">();</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Support ':el' selector - special case selector for the view managed delegate.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="k">if</span> <span class="p">(</span><span class="nx">selector</span> <span class="o">!=</span> <span class="s1">&#39;:el&#39;</span><span class="p">)</span> <span class="nx">$el</span> <span class="o">=</span> <span class="nx">self</span><span class="p">.</span><span class="nx">$</span><span class="p">(</span><span class="nx">selector</span><span class="p">);</span>
-        <span class="k">else</span> <span class="p">{</span>
-          <span class="nx">$el</span> <span class="o">=</span> <span class="nx">self</span><span class="p">.</span><span class="nx">$el</span><span class="p">;</span>
-          <span class="nx">selector</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span>
-        <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Fail fast if the selector didn't match an element.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">$el</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>Allow shorthand setting of model attributes - <code>'selector':'observe'</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">binding</span><span class="p">))</span> <span class="nx">binding</span> <span class="o">=</span> <span class="p">{</span><span class="nx">observe</span><span class="o">:</span><span class="nx">binding</span><span class="p">};</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      _.invoke(_.uniq(models), <span class="string">'trigger'</span>, <span class="string">'stickit:unstuck'</span>, <span class="keyword">this</span>.cid);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-13">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-13">&#182;</a>
+              </div>
+              <p>Cleanup the null values.</p>
 
-        <span class="nx">config</span> <span class="o">=</span> <span class="nx">getConfiguration</span><span class="p">(</span><span class="nx">$el</span><span class="p">,</span> <span class="nx">binding</span><span class="p">);</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">this</span>._modelBindings = _.compact(<span class="keyword">this</span>._modelBindings);
 
-        <span class="nx">modelAttr</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">observe</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>Create the model set options with a unique <code>bindKey</code> so that we
-can avoid double-binding in the <code>change:attribute</code> event handler.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">options</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span><span class="nx">bindKey</span><span class="o">:</span><span class="nx">bindKey</span><span class="p">},</span> <span class="nx">config</span><span class="p">.</span><span class="nx">setOptions</span> <span class="o">||</span> <span class="p">{});</span>
+      <span class="keyword">this</span>.$el.off(<span class="string">'.stickit'</span> + (model ? <span class="string">'.'</span> + model.cid : <span class="string">''</span>));
+    },</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-14">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-14">&#182;</a>
+              </div>
+              <p>Using <code>this.bindings</code> configuration or the <code>optionalBindingsConfig</code>, binds <code>this.model</code>
+or the <code>optionalModel</code> to elements in the view.</p>
 
-        <span class="nx">initializeAttributes</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">modelAttr</span><span class="p">);</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    stickit: <span class="function"><span class="keyword">function</span><span class="params">(optionalModel, optionalBindingsConfig)</span> {</span>
+      <span class="keyword">var</span> model = optionalModel || <span class="keyword">this</span>.model,
+        namespace = <span class="string">'.stickit.'</span> + model.cid,
+        bindings = optionalBindingsConfig || _.result(<span class="keyword">this</span>, <span class="string">"bindings"</span>) || {};
 
-        <span class="nx">initializeVisible</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">modelAttr</span><span class="p">);</span>
+      <span class="keyword">this</span>._modelBindings || (<span class="keyword">this</span>._modelBindings = []);
+      <span class="keyword">this</span>.unstickit(model);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-15">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-15">&#182;</a>
+              </div>
+              <p>Iterate through the selectors in the bindings configuration and configure
+the various options for each field.</p>
 
-        <span class="k">if</span> <span class="p">(</span><span class="nx">modelAttr</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-13">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-13">&#182;</a>               </div>               <p>Setup one-way, form element to model, bindings.</p>             </td>             <td class="code">               <div class="highlight"><pre>          <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">events</span> <span class="o">||</span> <span class="p">[],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">event</span> <span class="o">=</span> <span class="nx">type</span> <span class="o">+</span> <span class="nx">namespace</span><span class="p">;</span>
-            <span class="kd">var</span> <span class="nx">method</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
-              <span class="kd">var</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">getVal</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">event</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-14">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-14">&#182;</a>               </div>               <p>Don't update the model if false is returned from the <code>updateModel</code> configuration.</p>             </td>             <td class="code">               <div class="highlight"><pre>              <span class="k">if</span> <span class="p">(</span><span class="nx">evaluateBoolean</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">updateModel</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">config</span><span class="p">))</span>
-                <span class="nx">setAttr</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">modelAttr</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="nx">self</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span>
-            <span class="p">};</span>
-            <span class="k">if</span> <span class="p">(</span><span class="nx">selector</span> <span class="o">===</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="nx">self</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">method</span><span class="p">);</span>
-            <span class="k">else</span> <span class="nx">self</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">selector</span><span class="p">,</span> <span class="nx">method</span><span class="p">);</span>
-          <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-15">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-15">&#182;</a>               </div>               <p>Setup a <code>change:modelAttr</code> observer to keep the view element in sync.
-<code>modelAttr</code> may be an array of attributes or a single string value.</p>             </td>             <td class="code">               <div class="highlight"><pre>          <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">flatten</span><span class="p">([</span><span class="nx">modelAttr</span><span class="p">]),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">attr</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">observeModelEvent</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">self</span><span class="p">,</span> <span class="s1">&#39;change:&#39;</span><span class="o">+</span><span class="nx">attr</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
-              <span class="k">if</span> <span class="p">(</span><span class="nx">options</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="nx">options</span><span class="p">.</span><span class="nx">bindKey</span> <span class="o">!=</span> <span class="nx">bindKey</span><span class="p">)</span>
-                <span class="nx">updateViewBindEl</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">getAttr</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">modelAttr</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">self</span><span class="p">),</span> <span class="nx">model</span><span class="p">);</span>
-            <span class="p">});</span>
-          <span class="p">});</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      _.each(bindings, <span class="function"><span class="keyword">function</span><span class="params">(v, selector)</span> {</span>
+        <span class="keyword">var</span> $el, options, modelAttr, config,
+          binding = bindings[selector] || {},
+          bindId = _.uniqueId();</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-16">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-16">&#182;</a>
+              </div>
+              <p>Support &#39;:el&#39; selector - special case selector for the view managed delegate.</p>
 
-          <span class="nx">updateViewBindEl</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">getAttr</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">modelAttr</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">self</span><span class="p">),</span> <span class="nx">model</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
-        <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-16">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-16">&#182;</a>               </div>               <p>After each binding is setup, call the <code>initialize</code> callback.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">applyViewFn</span><span class="p">(</span><span class="nx">self</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">initialize</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span>
-      <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-17">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-17">&#182;</a>               </div>               <p>Wrap <code>view.remove</code> to unbind stickit model and dom events.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">this</span><span class="p">.</span><span class="nx">remove</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">wrap</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">remove</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">oldRemove</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">self</span><span class="p">.</span><span class="nx">unstickit</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">oldRemove</span><span class="p">)</span> <span class="nx">oldRemove</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">self</span><span class="p">);</span>
-      <span class="p">});</span>
-    <span class="p">}</span>
-  <span class="p">});</span></pre></div>             </td>           </tr>                               <tr id="section-18">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-18">&#182;</a>               </div>               <h2>Helpers</h2>             </td>             <td class="code">               <div class="highlight"><pre></pre></div>             </td>           </tr>                               <tr id="section-19">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-19">&#182;</a>               </div>               <p>Evaluates the given <code>path</code> (in object/dot-notation) relative to the given
-<code>obj</code>. If the path is null/undefined, then the given <code>obj</code> is returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">evaluatePath</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">path</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">parts</span> <span class="o">=</span> <span class="p">(</span><span class="nx">path</span> <span class="o">||</span> <span class="s1">&#39;&#39;</span><span class="p">).</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">);</span>
-    <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="nx">parts</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">memo</span><span class="p">,</span> <span class="nx">i</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">memo</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span> <span class="p">},</span> <span class="nx">obj</span><span class="p">);</span>
-    <span class="k">return</span> <span class="nx">result</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="nx">obj</span> <span class="o">:</span> <span class="nx">result</span><span class="p">;</span>
-  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-20">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-20">&#182;</a>               </div>               <p>If the given <code>fn</code> is a string, then view[fn] is called, otherwise it is
-a function that should be executed.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">applyViewFn</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">fn</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">fn</span><span class="p">)</span> <span class="k">return</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">fn</span><span class="p">)</span> <span class="o">?</span> <span class="nx">view</span><span class="p">[</span><span class="nx">fn</span><span class="p">]</span> <span class="o">:</span> <span class="nx">fn</span><span class="p">).</span><span class="nx">apply</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">toArray</span><span class="p">(</span><span class="nx">arguments</span><span class="p">).</span><span class="nx">slice</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
-  <span class="p">};</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        $el = selector === <span class="string">':el'</span> ? <span class="keyword">this</span>.$el : <span class="keyword">this</span>.$(selector);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-17">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-17">&#182;</a>
+              </div>
+              <p>Fail fast if the selector didn&#39;t match an element.</p>
 
-  <span class="kd">var</span> <span class="nx">getSelectedOption</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$select</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">$select</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;option&#39;</span><span class="p">).</span><span class="nx">not</span><span class="p">(</span><span class="kd">function</span><span class="p">(){</span> <span class="k">return</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">selected</span><span class="p">;</span> <span class="p">});</span> <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-21">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-21">&#182;</a>               </div>               <p>Given a function, string (view function reference), or a boolean
-value, returns the truthy result. Any other types evaluate as false.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">evaluateBoolean</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">reference</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isBoolean</span><span class="p">(</span><span class="nx">reference</span><span class="p">))</span> <span class="k">return</span> <span class="nx">reference</span><span class="p">;</span>
-    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">reference</span><span class="p">)</span> <span class="o">||</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">reference</span><span class="p">))</span>
-      <span class="k">return</span> <span class="nx">applyViewFn</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">_</span><span class="p">.</span><span class="nx">toArray</span><span class="p">(</span><span class="nx">arguments</span><span class="p">));</span>
-    <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
-  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-22">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-22">&#182;</a>               </div>               <p>Setup a model event binding with the given function, and track the event
-in the view's _modelBindings.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">observeModelEvent</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">view</span><span class="p">,</span> <span class="nx">event</span><span class="p">,</span> <span class="nx">fn</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">model</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="nx">event</span><span class="p">,</span> <span class="nx">fn</span><span class="p">,</span> <span class="nx">view</span><span class="p">);</span>
-    <span class="nx">view</span><span class="p">.</span><span class="nx">_modelBindings</span><span class="p">.</span><span class="nx">push</span><span class="p">({</span><span class="nx">model</span><span class="o">:</span><span class="nx">model</span><span class="p">,</span> <span class="nx">event</span><span class="o">:</span><span class="nx">event</span><span class="p">,</span> <span class="nx">fn</span><span class="o">:</span><span class="nx">fn</span><span class="p">});</span>
-  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-23">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-23">&#182;</a>               </div>               <p>Prepares the given <code>val</code>ue and sets it into the <code>model</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">setAttr</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">attr</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">options</span><span class="p">,</span> <span class="nx">context</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">onSet</span><span class="p">)</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">applyViewFn</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">onSet</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span>
-    <span class="nx">model</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">attr</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
-  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-24">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-24">&#182;</a>               </div>               <p>Returns the given <code>attr</code>'s value from the <code>model</code>, escaping and
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> (!$el.length) <span class="keyword">return</span>;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-18">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-18">&#182;</a>
+              </div>
+              <p>Allow shorthand setting of model attributes - <code>&#39;selector&#39;:&#39;observe&#39;</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> (_.isString(binding)) binding = {observe:binding};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-19">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-19">&#182;</a>
+              </div>
+              <p>Handle case where <code>observe</code> is in the form of a function.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> (_.isFunction(binding.observe)) binding.observe = binding.observe.call(<span class="keyword">this</span>);
+
+        config = getConfiguration($el, binding);
+
+        modelAttr = config.observe;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-20">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-20">&#182;</a>
+              </div>
+              <p>Create the model set options with a unique <code>bindId</code> so that we
+can avoid double-binding in the <code>change:attribute</code> event handler.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        config.bindId = bindId;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-21">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-21">&#182;</a>
+              </div>
+              <p>Add a reference to the view for handlers of stickitChange events</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        config.view = <span class="keyword">this</span>;
+        options = _.extend({stickitChange:config}, config.setOptions);
+
+        initializeAttributes(<span class="keyword">this</span>, $el, config, model, modelAttr);
+
+        initializeVisible(<span class="keyword">this</span>, $el, config, model, modelAttr);
+
+        <span class="keyword">if</span> (modelAttr) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-22">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-22">&#182;</a>
+              </div>
+              <p>Setup one-way, form element to model, bindings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          _.each(config.events, <span class="function"><span class="keyword">function</span><span class="params">(type)</span> {</span>
+            <span class="keyword">var</span> event = type + namespace;
+            <span class="keyword">var</span> method = <span class="function"><span class="keyword">function</span><span class="params">(event)</span> {</span>
+              <span class="keyword">var</span> val = config.getVal.call(<span class="keyword">this</span>, $el, event, config, _.rest(arguments));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-23">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-23">&#182;</a>
+              </div>
+              <p>Don&#39;t update the model if false is returned from the <code>updateModel</code> configuration.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>              <span class="keyword">if</span> (evaluateBoolean(<span class="keyword">this</span>, config.updateModel, val, event, config))
+                setAttr(model, modelAttr, val, options, <span class="keyword">this</span>, config);
+            };
+            method = _.bind(method, <span class="keyword">this</span>);
+            <span class="keyword">if</span> (selector === <span class="string">':el'</span>) <span class="keyword">this</span>.$el.on(event, method);
+            <span class="keyword">else</span> <span class="keyword">this</span>.$el.on(event, selector, method);
+          }, <span class="keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-24">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-24">&#182;</a>
+              </div>
+              <p>Setup a <code>change:modelAttr</code> observer to keep the view element in sync.
+<code>modelAttr</code> may be an array of attributes or a single string value.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          _.each(_.flatten([modelAttr]), <span class="function"><span class="keyword">function</span><span class="params">(attr)</span> {</span>
+            observeModelEvent(model, <span class="keyword">this</span>, <span class="string">'change:'</span>+attr, <span class="function"><span class="keyword">function</span><span class="params">(model, val, options)</span> {</span>
+              <span class="keyword">var</span> changeId = options &amp;&amp; options.stickitChange &amp;&amp; options.stickitChange.bindId || <span class="literal">null</span>;
+              <span class="keyword">if</span> (changeId !== bindId)
+                updateViewBindEl(<span class="keyword">this</span>, $el, config, getAttr(model, modelAttr, config, <span class="keyword">this</span>), model);
+            });
+          }, <span class="keyword">this</span>);
+
+          updateViewBindEl(<span class="keyword">this</span>, $el, config, getAttr(model, modelAttr, config, <span class="keyword">this</span>), model, <span class="literal">true</span>);
+        }
+
+        model.once(<span class="string">'stickit:unstuck'</span>, <span class="function"><span class="keyword">function</span><span class="params">(cid)</span> {</span>
+          <span class="keyword">if</span> (cid === <span class="keyword">this</span>.cid) applyViewFn(<span class="keyword">this</span>, config.destroy, $el, model, config);
+        }, <span class="keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-25">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-25">&#182;</a>
+              </div>
+              <p>After each binding is setup, call the <code>initialize</code> callback.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        applyViewFn(<span class="keyword">this</span>, config.initialize, $el, model, config);
+      }, <span class="keyword">this</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-26">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-26">&#182;</a>
+              </div>
+              <p>Wrap <code>view.remove</code> to unbind stickit model and dom events.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">var</span> remove = <span class="keyword">this</span>.remove;
+      <span class="keyword">this</span>.remove = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+        <span class="keyword">var</span> ret = <span class="keyword">this</span>;
+        <span class="keyword">this</span>.unstickit();
+        <span class="keyword">if</span> (remove) ret = remove.apply(<span class="keyword">this</span>, _.rest(arguments));
+        <span class="keyword">return</span> ret;
+      };
+    }
+  });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-27">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-27">&#182;</a>
+              </div>
+              <h2 id="helpers">Helpers</h2>
+
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-28">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-28">&#182;</a>
+              </div>
+              <p>Evaluates the given <code>path</code> (in object/dot-notation) relative to the given
+<code>obj</code>. If the path is null/undefined, then the given <code>obj</code> is returned.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> evaluatePath = <span class="function"><span class="keyword">function</span><span class="params">(obj, path)</span> {</span>
+    <span class="keyword">var</span> parts = (path || <span class="string">''</span>).split(<span class="string">'.'</span>);
+    <span class="keyword">var</span> result = _.reduce(parts, <span class="function"><span class="keyword">function</span><span class="params">(memo, i)</span> {</span> <span class="keyword">return</span> memo[i]; }, obj);
+    <span class="keyword">return</span> result == <span class="literal">null</span> ? obj : result;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-29">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-29">&#182;</a>
+              </div>
+              <p>If the given <code>fn</code> is a string, then view[fn] is called, otherwise it is
+a function that should be executed.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> applyViewFn = <span class="function"><span class="keyword">function</span><span class="params">(view, fn)</span> {</span>
+    <span class="keyword">if</span> (fn) <span class="keyword">return</span> (_.isString(fn) ? evaluatePath(view,fn) : fn).apply(view, _.rest(arguments, <span class="number">2</span>));
+  };
+
+  <span class="keyword">var</span> getSelectedOption = <span class="function"><span class="keyword">function</span><span class="params">($select)</span> {</span> <span class="keyword">return</span> $select.find(<span class="string">'option'</span>).not(<span class="function"><span class="keyword">function</span><span class="params">()</span>{</span> <span class="keyword">return</span> !<span class="keyword">this</span>.selected; }); };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-30">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-30">&#182;</a>
+              </div>
+              <p>Given a function, string (view function reference), or a boolean
+value, returns the truthy result. Any other types evaluate as false.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> evaluateBoolean = <span class="function"><span class="keyword">function</span><span class="params">(view, reference)</span> {</span>
+    <span class="keyword">if</span> (_.isBoolean(reference)) <span class="keyword">return</span> reference;
+    <span class="keyword">else</span> <span class="keyword">if</span> (_.isFunction(reference) || _.isString(reference))
+      <span class="keyword">return</span> applyViewFn.apply(<span class="keyword">this</span>, arguments);
+    <span class="keyword">return</span> <span class="literal">false</span>;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-31">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-31">&#182;</a>
+              </div>
+              <p>Setup a model event binding with the given function, and track the event
+in the view&#39;s _modelBindings.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> observeModelEvent = <span class="function"><span class="keyword">function</span><span class="params">(model, view, event, fn)</span> {</span>
+    model.on(event, fn, view);
+    view._modelBindings.push({model:model, event:event, fn:fn});
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-32">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-32">&#182;</a>
+              </div>
+              <p>Prepares the given <code>val</code>ue and sets it into the <code>model</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> setAttr = <span class="function"><span class="keyword">function</span><span class="params">(model, attr, val, options, context, config)</span> {</span>
+    <span class="keyword">var</span> value = {};
+    <span class="keyword">if</span> (config.onSet)
+      val = applyViewFn(context, config.onSet, val, config);
+
+    <span class="keyword">if</span> (config.set)
+      applyViewFn(context, config.set, attr, val, options, config);
+    <span class="keyword">else</span> {
+      value[attr] = val;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-33">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-33">&#182;</a>
+              </div>
+              <p>If <code>observe</code> is defined as an array and <code>onSet</code> returned
+an array, then map attributes to their values.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span> (_.isArray(attr) &amp;&amp; _.isArray(val)) {
+        value = _.reduce(attr, <span class="function"><span class="keyword">function</span><span class="params">(memo, attribute, index)</span> {</span>
+          memo[attribute] = _.has(val, index) ? val[index] : <span class="literal">null</span>;
+          <span class="keyword">return</span> memo;
+        }, {});
+      }
+      model.set(value, options);
+    }
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-34">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-34">&#182;</a>
+              </div>
+              <p>Returns the given <code>attr</code>&#39;s value from the <code>model</code>, escaping and
 formatting if necessary. If <code>attr</code> is an array, then an array of
-respective values will be returned.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">getAttr</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">attr</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">retrieveVal</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">field</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">retrieved</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">escape</span> <span class="o">?</span> <span class="nx">model</span><span class="p">.</span><span class="nx">escape</span><span class="p">(</span><span class="nx">field</span><span class="p">)</span> <span class="o">:</span> <span class="nx">model</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">field</span><span class="p">);</span>
-      <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span><span class="nx">retrieved</span><span class="p">)</span> <span class="o">?</span> <span class="s1">&#39;&#39;</span> <span class="o">:</span> <span class="nx">retrieved</span><span class="p">;</span>
-    <span class="p">};</span>
-    <span class="nx">val</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">attr</span><span class="p">)</span> <span class="o">?</span> <span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">attr</span><span class="p">,</span> <span class="nx">retrieveVal</span><span class="p">)</span> <span class="o">:</span> <span class="nx">retrieveVal</span><span class="p">(</span><span class="nx">attr</span><span class="p">);</span>
-    <span class="k">return</span> <span class="nx">config</span><span class="p">.</span><span class="nx">onGet</span> <span class="o">?</span> <span class="nx">applyViewFn</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">onGet</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">config</span><span class="p">)</span> <span class="o">:</span> <span class="nx">val</span><span class="p">;</span>
-  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-25">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-25">&#182;</a>               </div>               <p>Find handlers in <code>Backbone.Stickit._handlers</code> with selectors that match
+respective values will be returned.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> getAttr = <span class="function"><span class="keyword">function</span><span class="params">(model, attr, config, context)</span> {</span>
+    <span class="keyword">var</span> val,
+      retrieveVal = <span class="function"><span class="keyword">function</span><span class="params">(field)</span> {</span>
+        <span class="keyword">return</span> model[config.escape ? <span class="string">'escape'</span> : <span class="string">'get'</span>](field);
+      },
+      sanitizeVal = <span class="function"><span class="keyword">function</span><span class="params">(val)</span> {</span>
+        <span class="keyword">return</span> val == <span class="literal">null</span> ? <span class="string">''</span> : val;
+      };
+    val = _.isArray(attr) ? _.map(attr, retrieveVal) : retrieveVal(attr);
+    <span class="keyword">if</span> (config.onGet) val = applyViewFn(context, config.onGet, val, config);
+    <span class="keyword">return</span> _.isArray(val) ? _.map(val, sanitizeVal) : sanitizeVal(val);
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-35">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-35">&#182;</a>
+              </div>
+              <p>Find handlers in <code>Backbone.Stickit._handlers</code> with selectors that match
 <code>$el</code> and generate a configuration by mixing them in the order that they
-were found with the with the givne <code>binding</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">getConfiguration</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">,</span> <span class="nx">binding</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">handlers</span> <span class="o">=</span> <span class="p">[{</span>
-      <span class="nx">updateModel</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
-      <span class="nx">updateView</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
-      <span class="nx">updateMethod</span><span class="o">:</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span>
-      <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">m</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span> <span class="p">{</span> <span class="nx">$el</span><span class="p">[</span><span class="nx">opts</span><span class="p">.</span><span class="nx">updateMethod</span><span class="p">](</span><span class="nx">val</span><span class="p">);</span> <span class="p">},</span>
-      <span class="nx">getVal</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">,</span> <span class="nx">e</span><span class="p">,</span> <span class="nx">opts</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">$el</span><span class="p">[</span><span class="nx">opts</span><span class="p">.</span><span class="nx">updateMethod</span><span class="p">]();</span> <span class="p">}</span>
-    <span class="p">}];</span>
-    <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Stickit</span><span class="p">.</span><span class="nx">_handlers</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">handler</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="nx">handler</span><span class="p">.</span><span class="nx">selector</span><span class="p">))</span> <span class="nx">handlers</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">handler</span><span class="p">);</span>
-    <span class="p">});</span>
-    <span class="nx">handlers</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">binding</span><span class="p">);</span>
-    <span class="kd">var</span> <span class="nx">config</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">_</span><span class="p">,</span> <span class="nx">handlers</span><span class="p">);</span>
-    <span class="k">delete</span> <span class="nx">config</span><span class="p">.</span><span class="nx">selector</span><span class="p">;</span>
-    <span class="k">return</span> <span class="nx">config</span><span class="p">;</span>
-  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-26">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-26">&#182;</a>               </div>               <p>Setup the attributes configuration - a list that maps an attribute or
+were found with the given <code>binding</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> getConfiguration = Backbone.Stickit.getConfiguration = <span class="function"><span class="keyword">function</span><span class="params">($el, binding)</span> {</span>
+    <span class="keyword">var</span> handlers = [{
+      updateModel: <span class="literal">false</span>,
+      updateMethod: <span class="string">'text'</span>,
+      update: <span class="function"><span class="keyword">function</span><span class="params">($el, val, m, opts)</span> {</span> <span class="keyword">if</span> ($el[opts.updateMethod]) $el[opts.updateMethod](val); },
+      getVal: <span class="function"><span class="keyword">function</span><span class="params">($el, e, opts)</span> {</span> <span class="keyword">return</span> $el[opts.updateMethod](); }
+    }];
+    handlers = handlers.concat(_.filter(Backbone.Stickit._handlers, <span class="function"><span class="keyword">function</span><span class="params">(handler)</span> {</span>
+      <span class="keyword">return</span> $el.is(handler.selector);
+    }));
+    handlers.push(binding);
+    <span class="keyword">var</span> config = _.extend.apply(_, handlers);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-36">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-36">&#182;</a>
+              </div>
+              <p><code>updateView</code> is defaulted to false for configutrations with
+<code>visible</code>; otherwise, <code>updateView</code> is defaulted to true.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>    <span class="keyword">if</span> (config.visible &amp;&amp; !_.has(config, <span class="string">'updateView'</span>)) config.updateView = <span class="literal">false</span>;
+    <span class="keyword">else</span> <span class="keyword">if</span> (!_.has(config, <span class="string">'updateView'</span>)) config.updateView = <span class="literal">true</span>;
+    <span class="keyword">delete</span> config.selector;
+    <span class="keyword">return</span> config;
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-37">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-37">&#182;</a>
+              </div>
+              <p>Setup the attributes configuration - a list that maps an attribute or
 property <code>name</code>, to an <code>observe</code>d model attribute, using an optional
 <code>onGet</code> formatter.</p>
-
 <pre><code>attributes: [{
-  name: 'attributeOrPropertyName',
-  observe: 'modelAttrName'
+  name: &#39;attributeOrPropertyName&#39;,
+  observe: &#39;modelAttrName&#39;
   onGet: function(modelAttrVal, modelAttrName) { ... }
-}, ...]
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">initializeAttributes</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">modelAttr</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">props</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;autofocus&#39;</span><span class="p">,</span> <span class="s1">&#39;autoplay&#39;</span><span class="p">,</span> <span class="s1">&#39;async&#39;</span><span class="p">,</span> <span class="s1">&#39;checked&#39;</span><span class="p">,</span> <span class="s1">&#39;controls&#39;</span><span class="p">,</span> <span class="s1">&#39;defer&#39;</span><span class="p">,</span> <span class="s1">&#39;disabled&#39;</span><span class="p">,</span> <span class="s1">&#39;hidden&#39;</span><span class="p">,</span> <span class="s1">&#39;loop&#39;</span><span class="p">,</span> <span class="s1">&#39;multiple&#39;</span><span class="p">,</span> <span class="s1">&#39;open&#39;</span><span class="p">,</span> <span class="s1">&#39;readonly&#39;</span><span class="p">,</span> <span class="s1">&#39;required&#39;</span><span class="p">,</span> <span class="s1">&#39;scoped&#39;</span><span class="p">,</span> <span class="s1">&#39;selected&#39;</span><span class="p">];</span>
+}, ...]</code></pre>
 
-    <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">attributes</span> <span class="o">||</span> <span class="p">[],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">attrConfig</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">lastClass</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
-        <span class="nx">observed</span> <span class="o">=</span> <span class="nx">attrConfig</span><span class="p">.</span><span class="nx">observe</span> <span class="o">||</span> <span class="p">(</span><span class="nx">attrConfig</span><span class="p">.</span><span class="nx">observe</span> <span class="o">=</span> <span class="nx">modelAttr</span><span class="p">),</span>
-        <span class="nx">updateAttr</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-          <span class="kd">var</span> <span class="nx">updateType</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">props</span><span class="p">,</span> <span class="nx">attrConfig</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="kc">true</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="o">?</span> <span class="s1">&#39;prop&#39;</span> <span class="o">:</span> <span class="s1">&#39;attr&#39;</span><span class="p">,</span>
-            <span class="nx">val</span> <span class="o">=</span> <span class="nx">getAttr</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">observed</span><span class="p">,</span> <span class="nx">attrConfig</span><span class="p">,</span> <span class="nx">view</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-27">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-27">&#182;</a>               </div>               <p>If it is a class then we need to remove the last value and add the new.</p>             </td>             <td class="code">               <div class="highlight"><pre>          <span class="k">if</span> <span class="p">(</span><span class="nx">attrConfig</span><span class="p">.</span><span class="nx">name</span> <span class="o">==</span> <span class="s1">&#39;class&#39;</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">$el</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="nx">lastClass</span><span class="p">).</span><span class="nx">addClass</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
-            <span class="nx">lastClass</span> <span class="o">=</span> <span class="nx">val</span><span class="p">;</span>
-          <span class="p">}</span>
-          <span class="k">else</span> <span class="nx">$el</span><span class="p">[</span><span class="nx">updateType</span><span class="p">](</span><span class="nx">attrConfig</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">val</span><span class="p">);</span>
-        <span class="p">};</span>
-      <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">flatten</span><span class="p">([</span><span class="nx">observed</span><span class="p">]),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">attr</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">observeModelEvent</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">view</span><span class="p">,</span> <span class="s1">&#39;change:&#39;</span> <span class="o">+</span> <span class="nx">attr</span><span class="p">,</span> <span class="nx">updateAttr</span><span class="p">);</span>
-      <span class="p">});</span>
-      <span class="nx">updateAttr</span><span class="p">();</span>
-    <span class="p">});</span>
-  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-28">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-28">&#182;</a>               </div>               <p>If <code>visible</code> is configured, then the view element will be shown/hidden
-based on the truthiness of the modelattr's value or the result of the
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> initializeAttributes = <span class="function"><span class="keyword">function</span><span class="params">(view, $el, config, model, modelAttr)</span> {</span>
+    <span class="keyword">var</span> props = [<span class="string">'autofocus'</span>, <span class="string">'autoplay'</span>, <span class="string">'async'</span>, <span class="string">'checked'</span>, <span class="string">'controls'</span>, <span class="string">'defer'</span>, <span class="string">'disabled'</span>, <span class="string">'hidden'</span>, <span class="string">'indeterminate'</span>, <span class="string">'loop'</span>, <span class="string">'multiple'</span>, <span class="string">'open'</span>, <span class="string">'readonly'</span>, <span class="string">'required'</span>, <span class="string">'scoped'</span>, <span class="string">'selected'</span>];
+
+    _.each(config.attributes || [], <span class="function"><span class="keyword">function</span><span class="params">(attrConfig)</span> {</span>
+      <span class="keyword">var</span> lastClass = <span class="string">''</span>, observed, updateAttr;
+      attrConfig = _.clone(attrConfig);
+      observed = attrConfig.observe || (attrConfig.observe = modelAttr),
+      updateAttr = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+        <span class="keyword">var</span> updateType = _.indexOf(props, attrConfig.name, <span class="literal">true</span>) &gt; -<span class="number">1</span> ? <span class="string">'prop'</span> : <span class="string">'attr'</span>,
+          val = getAttr(model, observed, attrConfig, view);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-38">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-38">&#182;</a>
+              </div>
+              <p>If it is a class then we need to remove the last value and add the new.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">if</span> (attrConfig.name === <span class="string">'class'</span>) {
+          $el.removeClass(lastClass).addClass(val);
+          lastClass = val;
+        }
+        <span class="keyword">else</span> $el[updateType](attrConfig.name, val);
+      };
+      _.each(_.flatten([observed]), <span class="function"><span class="keyword">function</span><span class="params">(attr)</span> {</span>
+        observeModelEvent(model, view, <span class="string">'change:'</span> + attr, updateAttr);
+      });
+      updateAttr();
+    });
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-39">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-39">&#182;</a>
+              </div>
+              <p>If <code>visible</code> is configured, then the view element will be shown/hidden
+based on the truthiness of the modelattr&#39;s value or the result of the
 given callback. If a <code>visibleFn</code> is also supplied, then that callback
 will be executed to manually handle showing/hiding the view element.</p>
-
-<pre><code>observe: 'isRight',
+<pre><code>observe: &#39;isRight&#39;,
 visible: true, // or function(val, options) {}
-visibleFn: function($el, isVisible, options) {} // optional handler
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">initializeVisible</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">modelAttr</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="nx">config</span><span class="p">.</span><span class="nx">visible</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">visibleCb</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">visible</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">visible</span><span class="p">,</span>
-          <span class="nx">visibleFn</span> <span class="o">=</span> <span class="nx">config</span><span class="p">.</span><span class="nx">visibleFn</span><span class="p">,</span>
-          <span class="nx">val</span> <span class="o">=</span> <span class="nx">getAttr</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">modelAttr</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">view</span><span class="p">),</span>
-          <span class="nx">isVisible</span> <span class="o">=</span> <span class="o">!!</span><span class="nx">val</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-29">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-29">&#182;</a>               </div>               <p>If <code>visible</code> is a function then it should return a boolean result to show/hide.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">visible</span><span class="p">)</span> <span class="o">||</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">visible</span><span class="p">))</span> <span class="nx">isVisible</span> <span class="o">=</span> <span class="nx">applyViewFn</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">visible</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-30">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-30">&#182;</a>               </div>               <p>Either use the custom <code>visibleFn</code>, if provided, or execute the standard show/hide.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">if</span> <span class="p">(</span><span class="nx">visibleFn</span><span class="p">)</span> <span class="nx">applyViewFn</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">visibleFn</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">isVisible</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span>
-      <span class="k">else</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">isVisible</span><span class="p">)</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">show</span><span class="p">();</span>
-        <span class="k">else</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">hide</span><span class="p">();</span>
-      <span class="p">}</span>
-    <span class="p">};</span>
-    <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">flatten</span><span class="p">([</span><span class="nx">modelAttr</span><span class="p">]),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">attr</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">observeModelEvent</span><span class="p">(</span><span class="nx">model</span><span class="p">,</span> <span class="nx">view</span><span class="p">,</span> <span class="s1">&#39;change:&#39;</span> <span class="o">+</span> <span class="nx">attr</span><span class="p">,</span> <span class="nx">visibleCb</span><span class="p">);</span>
-    <span class="p">});</span>
-    <span class="nx">visibleCb</span><span class="p">();</span>
-  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-31">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-31">&#182;</a>               </div>               <p>Update the value of <code>$el</code> using the given configuration and trigger the
-<code>afterUpdate</code> callback. This action may be blocked by <code>config.updateView</code>.</p>
+visibleFn: function($el, isVisible, options) {} // optional handler</code></pre>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> initializeVisible = <span class="function"><span class="keyword">function</span><span class="params">(view, $el, config, model, modelAttr)</span> {</span>
+    <span class="keyword">if</span> (config.visible == <span class="literal">null</span>) <span class="keyword">return</span>;
+    <span class="keyword">var</span> visibleCb = <span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+      <span class="keyword">var</span> visible = config.visible,
+          visibleFn = config.visibleFn,
+          val = getAttr(model, modelAttr, config, view),
+          isVisible = !!val;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-40">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-40">&#182;</a>
+              </div>
+              <p>If <code>visible</code> is a function then it should return a boolean result to show/hide.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span> (_.isFunction(visible) || _.isString(visible)) isVisible = !!applyViewFn(view, visible, val, config);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-41">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-41">&#182;</a>
+              </div>
+              <p>Either use the custom <code>visibleFn</code>, if provided, or execute the standard show/hide.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span> (visibleFn) applyViewFn(view, visibleFn, $el, isVisible, config);
+      <span class="keyword">else</span> {
+        $el.toggle(isVisible);
+      }
+    };
+    _.each(_.flatten([modelAttr]), <span class="function"><span class="keyword">function</span><span class="params">(attr)</span> {</span>
+      observeModelEvent(model, view, <span class="string">'change:'</span> + attr, visibleCb);
+    });
+    visibleCb();
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-42">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-42">&#182;</a>
+              </div>
+              <p>Update the value of <code>$el</code> using the given configuration and trigger the
+<code>afterUpdate</code> callback. This action may be blocked by <code>config.updateView</code>.</p>
 <pre><code>update: function($el, val, model, options) {},  // handler for updating
 updateView: true, // defaults to true
-afterUpdate: function($el, val, options) {} // optional callback
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">updateViewBindEl</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">config</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">isInitializing</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">evaluateBoolean</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">updateView</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">config</span><span class="p">))</span> <span class="k">return</span><span class="p">;</span>
-    <span class="nx">config</span><span class="p">.</span><span class="nx">update</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span>
-    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isInitializing</span><span class="p">)</span> <span class="nx">applyViewFn</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">config</span><span class="p">.</span><span class="nx">afterUpdate</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">config</span><span class="p">);</span>
-  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-32">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-32">&#182;</a>               </div>               <h2>Default Handlers</h2>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Stickit</span><span class="p">.</span><span class="nx">addHandler</span><span class="p">([{</span>
-    <span class="nx">selector</span><span class="o">:</span> <span class="s1">&#39;[contenteditable=&quot;true&quot;]&#39;</span><span class="p">,</span>
-    <span class="nx">updateMethod</span><span class="o">:</span> <span class="s1">&#39;html&#39;</span><span class="p">,</span>
-    <span class="nx">events</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;keyup&#39;</span><span class="p">,</span> <span class="s1">&#39;change&#39;</span><span class="p">,</span> <span class="s1">&#39;paste&#39;</span><span class="p">,</span> <span class="s1">&#39;cut&#39;</span><span class="p">]</span>
-  <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">selector</span><span class="o">:</span> <span class="s1">&#39;input&#39;</span><span class="p">,</span>
-    <span class="nx">events</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;keyup&#39;</span><span class="p">,</span> <span class="s1">&#39;change&#39;</span><span class="p">,</span> <span class="s1">&#39;paste&#39;</span><span class="p">,</span> <span class="s1">&#39;cut&#39;</span><span class="p">],</span>
-    <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="p">{</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span> <span class="p">},</span>
-    <span class="nx">getVal</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">val</span><span class="p">();</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">is</span><span class="p">(</span><span class="s1">&#39;[type=&quot;number&quot;]&#39;</span><span class="p">))</span> <span class="k">return</span> <span class="nx">val</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">?</span> <span class="nx">val</span> <span class="o">:</span> <span class="nb">Number</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span>
-      <span class="k">else</span> <span class="k">return</span> <span class="nx">val</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">selector</span><span class="o">:</span> <span class="s1">&#39;textarea&#39;</span><span class="p">,</span>
-    <span class="nx">events</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;keyup&#39;</span><span class="p">,</span> <span class="s1">&#39;change&#39;</span><span class="p">,</span> <span class="s1">&#39;paste&#39;</span><span class="p">,</span> <span class="s1">&#39;cut&#39;</span><span class="p">],</span>
-    <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="p">{</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">val</span><span class="p">);</span> <span class="p">},</span>
-    <span class="nx">getVal</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">val</span><span class="p">();</span> <span class="p">}</span>
-  <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">selector</span><span class="o">:</span> <span class="s1">&#39;input[type=&quot;radio&quot;]&#39;</span><span class="p">,</span>
-    <span class="nx">events</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;change&#39;</span><span class="p">],</span>
-    <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
-      <span class="nx">$el</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="s1">&#39;[value=&quot;&#39;</span><span class="o">+</span><span class="nx">val</span><span class="o">+</span><span class="s1">&#39;&quot;]&#39;</span><span class="p">).</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;checked&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
-    <span class="p">},</span>
-    <span class="nx">getVal</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">return</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">filter</span><span class="p">(</span><span class="s1">&#39;:checked&#39;</span><span class="p">).</span><span class="nx">val</span><span class="p">();</span>
-    <span class="p">}</span>
-  <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">selector</span><span class="o">:</span> <span class="s1">&#39;input[type=&quot;checkbox&quot;]&#39;</span><span class="p">,</span>
-    <span class="nx">events</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;change&#39;</span><span class="p">],</span>
-    <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-33">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-33">&#182;</a>               </div>               <p>There are multiple checkboxes so we need to go through them and check
-any that have value attributes that match what's in the array of <code>val</code>s.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">val</span> <span class="o">||</span> <span class="p">(</span><span class="nx">val</span> <span class="o">=</span> <span class="p">[]);</span>
-        <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">$el</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">el</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="nx">$</span><span class="p">(</span><span class="nx">el</span><span class="p">).</span><span class="nx">val</span><span class="p">())</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="nx">$</span><span class="p">(</span><span class="nx">el</span><span class="p">).</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;checked&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
-          <span class="k">else</span> <span class="nx">$</span><span class="p">(</span><span class="nx">el</span><span class="p">).</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;checked&#39;</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
-        <span class="p">});</span>
-      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isBoolean</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;checked&#39;</span><span class="p">,</span> <span class="nx">val</span><span class="p">);</span>
-        <span class="k">else</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;checked&#39;</span><span class="p">,</span> <span class="nx">val</span> <span class="o">==</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">val</span><span class="p">());</span>
-      <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="nx">getVal</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">val</span><span class="p">;</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">val</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">reduce</span><span class="p">(</span><span class="nx">$el</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">memo</span><span class="p">,</span> <span class="nx">el</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">if</span> <span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">el</span><span class="p">).</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;checked&#39;</span><span class="p">))</span> <span class="nx">memo</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">el</span><span class="p">).</span><span class="nx">val</span><span class="p">());</span>
-          <span class="k">return</span> <span class="nx">memo</span><span class="p">;</span>
-        <span class="p">},</span> <span class="p">[]);</span>
-      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nx">val</span> <span class="o">=</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;checked&#39;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-34">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-34">&#182;</a>               </div>               <p>If the checkbox has a value attribute defined, then
-use that value. Most browsers use "on" as a default.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="kd">var</span> <span class="nx">boxval</span> <span class="o">=</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">val</span><span class="p">();</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">boxval</span> <span class="o">!=</span> <span class="s1">&#39;on&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">boxval</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">if</span> <span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">val</span><span class="p">();</span>
-          <span class="k">else</span> <span class="nx">val</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-        <span class="p">}</span>
-      <span class="p">}</span>
-      <span class="k">return</span> <span class="nx">val</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">},</span> <span class="p">{</span>
-    <span class="nx">selector</span><span class="o">:</span> <span class="s1">&#39;select&#39;</span><span class="p">,</span>
-    <span class="nx">events</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;change&#39;</span><span class="p">],</span>
-    <span class="nx">update</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">,</span> <span class="nx">val</span><span class="p">,</span> <span class="nx">model</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">optList</span><span class="p">,</span>
-        <span class="nx">selectConfig</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">selectOptions</span><span class="p">,</span>
-        <span class="nx">list</span> <span class="o">=</span> <span class="nx">selectConfig</span> <span class="o">&amp;&amp;</span> <span class="nx">selectConfig</span><span class="p">.</span><span class="nx">collection</span> <span class="o">||</span> <span class="kc">undefined</span><span class="p">,</span>
-        <span class="nx">isMultiple</span> <span class="o">=</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;multiple&#39;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-35">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-35">&#182;</a>               </div>               <p>If there are no <code>selectOptions</code> then we assume that the <code>&lt;select&gt;</code>
-is pre-rendered and that we need to generate the collection.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">selectConfig</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">selectConfig</span> <span class="o">=</span> <span class="p">{};</span>
-        <span class="kd">var</span> <span class="nx">getList</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">)</span> <span class="p">{</span>
-          <span class="k">return</span> <span class="nx">$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;option&#39;</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">return</span> <span class="p">{</span><span class="nx">value</span><span class="o">:</span><span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="p">,</span> <span class="nx">label</span><span class="o">:</span><span class="k">this</span><span class="p">.</span><span class="nx">text</span><span class="p">};</span>
-          <span class="p">}).</span><span class="nx">get</span><span class="p">();</span>
-        <span class="p">};</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;optgroup&#39;</span><span class="p">).</span><span class="nx">length</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">list</span> <span class="o">=</span> <span class="p">{</span><span class="nx">opt_labels</span><span class="o">:</span><span class="p">[]};</span>
-          <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">find</span><span class="p">(</span><span class="s1">&#39;optgroup&#39;</span><span class="p">),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">el</span><span class="p">)</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">label</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">el</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">);</span>
-            <span class="nx">list</span><span class="p">.</span><span class="nx">opt_labels</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span><span class="nx">label</span><span class="p">);</span>
-            <span class="nx">list</span><span class="p">[</span><span class="nx">label</span><span class="p">]</span> <span class="o">=</span> <span class="nx">getList</span><span class="p">(</span><span class="nx">$</span><span class="p">(</span><span class="nx">el</span><span class="p">));</span>
-          <span class="p">});</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-          <span class="nx">list</span> <span class="o">=</span> <span class="nx">getList</span><span class="p">(</span><span class="nx">$el</span><span class="p">);</span>
-        <span class="p">}</span>
-      <span class="p">}</span></pre></div>             </td>           </tr>                               <tr id="section-36">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-36">&#182;</a>               </div>               <p>Fill in default label and path values.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">selectConfig</span><span class="p">.</span><span class="nx">valuePath</span> <span class="o">=</span> <span class="nx">selectConfig</span><span class="p">.</span><span class="nx">valuePath</span> <span class="o">||</span> <span class="s1">&#39;value&#39;</span><span class="p">;</span>
-      <span class="nx">selectConfig</span><span class="p">.</span><span class="nx">labelPath</span> <span class="o">=</span> <span class="nx">selectConfig</span><span class="p">.</span><span class="nx">labelPath</span> <span class="o">||</span> <span class="s1">&#39;label&#39;</span><span class="p">;</span>
+afterUpdate: function($el, val, options) {} // optional callback</code></pre>
 
-      <span class="kd">var</span> <span class="nx">addSelectOptions</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">optList</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">fieldVal</span><span class="p">)</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-37">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-37">&#182;</a>               </div>               <p>Add a flag for default option at the beginning of the list.</p>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="k">if</span> <span class="p">(</span><span class="nx">selectConfig</span><span class="p">.</span><span class="nx">defaultOption</span><span class="p">)</span> <span class="p">{</span>
-          <span class="nx">optList</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">clone</span><span class="p">(</span><span class="nx">optList</span><span class="p">);</span>
-          <span class="nx">optList</span><span class="p">.</span><span class="nx">unshift</span><span class="p">(</span><span class="s1">&#39;__default__&#39;</span><span class="p">);</span>
-        <span class="p">}</span>
-        <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">optList</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
-          <span class="kd">var</span> <span class="nx">option</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;option/&gt;&#39;</span><span class="p">),</span> <span class="nx">optionVal</span> <span class="o">=</span> <span class="nx">obj</span><span class="p">;</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  <span class="keyword">var</span> updateViewBindEl = <span class="function"><span class="keyword">function</span><span class="params">(view, $el, config, val, model, isInitializing)</span> {</span>
+    <span class="keyword">if</span> (!evaluateBoolean(view, config.updateView, val, config)) <span class="keyword">return</span>;
+    applyViewFn(view, config.update, $el, val, model, config);
+    <span class="keyword">if</span> (!isInitializing) applyViewFn(view, config.afterUpdate, $el, val, config);
+  };</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-43">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-43">&#182;</a>
+              </div>
+              <h2 id="default-handlers">Default Handlers</h2>
 
-          <span class="kd">var</span> <span class="nx">fillOption</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">text</span><span class="p">,</span> <span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nx">option</span><span class="p">.</span><span class="nx">text</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
-            <span class="nx">optionVal</span> <span class="o">=</span> <span class="nx">val</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-38">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-38">&#182;</a>               </div>               <p>Save the option value as data so that we can reference it later.</p>             </td>             <td class="code">               <div class="highlight"><pre>            <span class="nx">option</span><span class="p">.</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;stickit_bind_val&#39;</span><span class="p">,</span> <span class="nx">optionVal</span><span class="p">);</span>
-            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">optionVal</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">optionVal</span><span class="p">))</span> <span class="nx">option</span><span class="p">.</span><span class="nx">val</span><span class="p">(</span><span class="nx">optionVal</span><span class="p">);</span>
-          <span class="p">};</span>
+            </div>
+            
+        </li>
+        
+        
+        <li id="section-44">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-44">&#182;</a>
+              </div>
+              
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>  Backbone.Stickit.addHandler([{
+    selector: <span class="string">'[contenteditable="true"]'</span>,
+    updateMethod: <span class="string">'html'</span>,
+    events: [<span class="string">'input'</span>, <span class="string">'change'</span>]
+  }, {
+    selector: <span class="string">'input'</span>,
+    events: [<span class="string">'propertychange'</span>, <span class="string">'input'</span>, <span class="string">'change'</span>],
+    update: <span class="function"><span class="keyword">function</span><span class="params">($el, val)</span> {</span> $el.val(val); },
+    getVal: <span class="function"><span class="keyword">function</span><span class="params">($el)</span> {</span>
+      <span class="keyword">return</span> $el.val();
+    }
+  }, {
+    selector: <span class="string">'textarea'</span>,
+    events: [<span class="string">'propertychange'</span>, <span class="string">'input'</span>, <span class="string">'change'</span>],
+    update: <span class="function"><span class="keyword">function</span><span class="params">($el, val)</span> {</span> $el.val(val); },
+    getVal: <span class="function"><span class="keyword">function</span><span class="params">($el)</span> {</span> <span class="keyword">return</span> $el.val(); }
+  }, {
+    selector: <span class="string">'input[type="radio"]'</span>,
+    events: [<span class="string">'change'</span>],
+    update: <span class="function"><span class="keyword">function</span><span class="params">($el, val)</span> {</span>
+      $el.filter(<span class="string">'[value="'</span>+val+<span class="string">'"]'</span>).prop(<span class="string">'checked'</span>, <span class="literal">true</span>);
+    },
+    getVal: <span class="function"><span class="keyword">function</span><span class="params">($el)</span> {</span>
+      <span class="keyword">return</span> $el.filter(<span class="string">':checked'</span>).val();
+    }
+  }, {
+    selector: <span class="string">'input[type="checkbox"]'</span>,
+    events: [<span class="string">'change'</span>],
+    update: <span class="function"><span class="keyword">function</span><span class="params">($el, val, model, options)</span> {</span>
+      <span class="keyword">if</span> ($el.length &gt; <span class="number">1</span>) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-45">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-45">&#182;</a>
+              </div>
+              <p>There are multiple checkboxes so we need to go through them and check
+any that have value attributes that match what&#39;s in the array of <code>val</code>s.</p>
 
-          <span class="k">if</span> <span class="p">(</span><span class="nx">obj</span> <span class="o">===</span> <span class="s1">&#39;__default__&#39;</span><span class="p">)</span>
-            <span class="nx">fillOption</span><span class="p">(</span><span class="nx">selectConfig</span><span class="p">.</span><span class="nx">defaultOption</span><span class="p">.</span><span class="nx">label</span><span class="p">,</span> <span class="nx">selectConfig</span><span class="p">.</span><span class="nx">defaultOption</span><span class="p">.</span><span class="nx">value</span><span class="p">);</span>
-          <span class="k">else</span>
-            <span class="nx">fillOption</span><span class="p">(</span><span class="nx">evaluatePath</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">selectConfig</span><span class="p">.</span><span class="nx">labelPath</span><span class="p">),</span> <span class="nx">evaluatePath</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">selectConfig</span><span class="p">.</span><span class="nx">valuePath</span><span class="p">));</span></pre></div>             </td>           </tr>                               <tr id="section-39">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-39">&#182;</a>               </div>               <p>Determine if this option is selected.</p>             </td>             <td class="code">               <div class="highlight"><pre>          <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">isMultiple</span> <span class="o">&amp;&amp;</span> <span class="nx">optionVal</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">fieldVal</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="nx">optionVal</span> <span class="o">==</span> <span class="nx">fieldVal</span> <span class="o">||</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">fieldVal</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isEqual</span><span class="p">(</span><span class="nx">optionVal</span><span class="p">,</span> <span class="nx">fieldVal</span><span class="p">)))</span>
-            <span class="nx">option</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;selected&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
-          <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">isMultiple</span> <span class="o">&amp;&amp;</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">fieldVal</span><span class="p">))</span> <span class="p">{</span>
-            <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">fieldVal</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="p">{</span>
-              <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">val</span><span class="p">))</span> <span class="nx">val</span> <span class="o">=</span> <span class="nx">evaluatePath</span><span class="p">(</span><span class="nx">val</span><span class="p">,</span> <span class="nx">selectConfig</span><span class="p">.</span><span class="nx">valuePath</span><span class="p">);</span>
-              <span class="k">if</span> <span class="p">(</span><span class="nx">val</span> <span class="o">==</span> <span class="nx">optionVal</span> <span class="o">||</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">val</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isEqual</span><span class="p">(</span><span class="nx">optionVal</span><span class="p">,</span> <span class="nx">val</span><span class="p">)))</span>
-                <span class="nx">option</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;selected&#39;</span><span class="p">,</span> <span class="kc">true</span><span class="p">);</span>
-            <span class="p">});</span>
-          <span class="p">}</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        val || (val = []);
+        $el.each(<span class="function"><span class="keyword">function</span><span class="params">(i, el)</span> {</span>
+          <span class="keyword">var</span> checkbox = Backbone.$(el);
+          <span class="keyword">var</span> checked = _.indexOf(val, checkbox.val()) &gt; -<span class="number">1</span>;
+          checkbox.prop(<span class="string">'checked'</span>, checked);
+        });
+      } <span class="keyword">else</span> {
+        <span class="keyword">var</span> checked = _.isBoolean(val) ? val : val === $el.val();
+        $el.prop(<span class="string">'checked'</span>, checked);
+      }
+    },
+    getVal: <span class="function"><span class="keyword">function</span><span class="params">($el)</span> {</span>
+      <span class="keyword">var</span> val;
+      <span class="keyword">if</span> ($el.length &gt; <span class="number">1</span>) {
+        val = _.reduce($el, <span class="function"><span class="keyword">function</span><span class="params">(memo, el)</span> {</span>
+          <span class="keyword">var</span> checkbox = Backbone.$(el);
+          <span class="keyword">if</span> (checkbox.prop(<span class="string">'checked'</span>)) memo.push(checkbox.val());
+          <span class="keyword">return</span> memo;
+        }, []);
+      } <span class="keyword">else</span> {
+        val = $el.prop(<span class="string">'checked'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-46">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-46">&#182;</a>
+              </div>
+              <p>If the checkbox has a value attribute defined, then
+use that value. Most browsers use &quot;on&quot; as a default.</p>
 
-          <span class="nx">$el</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">option</span><span class="p">);</span>
-        <span class="p">});</span>
-      <span class="p">};</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        <span class="keyword">var</span> boxval = $el.val();
+        <span class="keyword">if</span> (boxval !== <span class="string">'on'</span> &amp;&amp; boxval != <span class="literal">null</span>) {
+          val = val ? $el.val() : <span class="literal">null</span>;
+        }
+      }
+      <span class="keyword">return</span> val;
+    }
+  }, {
+    selector: <span class="string">'select'</span>,
+    events: [<span class="string">'change'</span>],
+    update: <span class="function"><span class="keyword">function</span><span class="params">($el, val, model, options)</span> {</span>
+      <span class="keyword">var</span> optList,
+        selectConfig = options.selectOptions,
+        list = selectConfig &amp;&amp; selectConfig.collection || <span class="literal">undefined</span>,
+        isMultiple = $el.prop(<span class="string">'multiple'</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-47">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-47">&#182;</a>
+              </div>
+              <p>If there are no <code>selectOptions</code> then we assume that the <code>&lt;select&gt;</code>
+is pre-rendered and that we need to generate the collection.</p>
 
-      <span class="nx">$el</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-40">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-40">&#182;</a>               </div>               <p>The <code>list</code> configuration is a function that returns the options list or a string
-which represents the path to the list relative to <code>window</code> or the view/<code>this</code>.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="kd">var</span> <span class="nx">evaluate</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">view</span><span class="p">,</span> <span class="nx">list</span><span class="p">)</span> <span class="p">{</span>
-        <span class="kd">var</span> <span class="nx">context</span> <span class="o">=</span> <span class="nb">window</span><span class="p">;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">list</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span><span class="s1">&#39;this.&#39;</span><span class="p">)</span> <span class="o">===</span> <span class="mi">0</span><span class="p">)</span> <span class="nx">context</span> <span class="o">=</span> <span class="nx">view</span><span class="p">;</span>
-        <span class="nx">list</span> <span class="o">=</span> <span class="nx">list</span><span class="p">.</span><span class="nx">replace</span><span class="p">(</span><span class="sr">/^[a-z]*\.(.+)$/</span><span class="p">,</span> <span class="s1">&#39;$1&#39;</span><span class="p">);</span>
-        <span class="k">return</span> <span class="nx">evaluatePath</span><span class="p">(</span><span class="nx">context</span><span class="p">,</span> <span class="nx">list</span><span class="p">);</span>
-      <span class="p">};</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">list</span><span class="p">))</span> <span class="nx">optList</span> <span class="o">=</span> <span class="nx">evaluate</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">list</span><span class="p">);</span>
-      <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">list</span><span class="p">))</span> <span class="nx">optList</span> <span class="o">=</span> <span class="nx">applyViewFn</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">list</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
-      <span class="k">else</span> <span class="nx">optList</span> <span class="o">=</span> <span class="nx">list</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-41">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-41">&#182;</a>               </div>               <p>Support Backbone.Collection and deserialize.</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="k">if</span> <span class="p">(</span><span class="nx">optList</span> <span class="k">instanceof</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">)</span> <span class="nx">optList</span> <span class="o">=</span> <span class="nx">optList</span><span class="p">.</span><span class="nx">toJSON</span><span class="p">();</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span> (!selectConfig) {
+        selectConfig = {};
+        <span class="keyword">var</span> getList = <span class="function"><span class="keyword">function</span><span class="params">($el)</span> {</span>
+          <span class="keyword">return</span> $el.map(<span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+            <span class="keyword">return</span> {value:<span class="keyword">this</span>.value, label:<span class="keyword">this</span>.text};
+          }).get();
+        };
+        <span class="keyword">if</span> ($el.find(<span class="string">'optgroup'</span>).length) {
+          list = {opt_labels:[]};</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-48">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-48">&#182;</a>
+              </div>
+              <p>Search for options without optgroup</p>
 
-      <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">optList</span><span class="p">))</span> <span class="p">{</span>
-        <span class="nx">addSelectOptions</span><span class="p">(</span><span class="nx">optList</span><span class="p">,</span> <span class="nx">$el</span><span class="p">,</span> <span class="nx">val</span><span class="p">);</span>
-      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-42">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-42">&#182;</a>               </div>               <p>If the optList is an object, then it should be used to define an optgroup. An
-optgroup object configuration looks like the following:</p>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="keyword">if</span> ($el.find(<span class="string">'&gt; option'</span>).length) {
+            list.opt_labels.push(<span class="literal">undefined</span>);
+            _.each($el.find(<span class="string">'&gt; option'</span>), <span class="function"><span class="keyword">function</span><span class="params">(el)</span> {</span>
+              list[<span class="literal">undefined</span>] = getList(Backbone.$(el));
+            });
+          }
+          _.each($el.find(<span class="string">'optgroup'</span>), <span class="function"><span class="keyword">function</span><span class="params">(el)</span> {</span>
+            <span class="keyword">var</span> label = Backbone.$(el).attr(<span class="string">'label'</span>);
+            list.opt_labels.push(label);
+            list[label] = getList(Backbone.$(el).find(<span class="string">'option'</span>));
+          });
+        } <span class="keyword">else</span> {
+          list = getList($el.find(<span class="string">'option'</span>));
+        }
+      }</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-49">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-49">&#182;</a>
+              </div>
+              <p>Fill in default label and path values.</p>
 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      selectConfig.valuePath = selectConfig.valuePath || <span class="string">'value'</span>;
+      selectConfig.labelPath = selectConfig.labelPath || <span class="string">'label'</span>;
+
+      <span class="keyword">var</span> addSelectOptions = <span class="function"><span class="keyword">function</span><span class="params">(optList, $el, fieldVal)</span> {</span>
+        _.each(optList, <span class="function"><span class="keyword">function</span><span class="params">(obj)</span> {</span>
+          <span class="keyword">var</span> option = Backbone.$(<span class="string">'&lt;option/&gt;'</span>), optionVal = obj;
+
+          <span class="keyword">var</span> fillOption = <span class="function"><span class="keyword">function</span><span class="params">(text, val)</span> {</span>
+            option.text(text);
+            optionVal = val;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-50">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-50">&#182;</a>
+              </div>
+              <p>Save the option value as data so that we can reference it later.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>            option.data(<span class="string">'stickit_bind_val'</span>, optionVal);
+            <span class="keyword">if</span> (!_.isArray(optionVal) &amp;&amp; !_.isObject(optionVal)) option.val(optionVal);
+          };
+
+          <span class="keyword">if</span> (obj === <span class="string">'__default__'</span>)
+            fillOption(selectConfig.defaultOption.label, selectConfig.defaultOption.value);
+          <span class="keyword">else</span>
+            fillOption(evaluatePath(obj, selectConfig.labelPath), evaluatePath(obj, selectConfig.valuePath));</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-51">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-51">&#182;</a>
+              </div>
+              <p>Determine if this option is selected.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>          <span class="keyword">if</span> (!isMultiple &amp;&amp; optionVal != <span class="literal">null</span> &amp;&amp; fieldVal != <span class="literal">null</span> &amp;&amp; optionVal === fieldVal || (_.isObject(fieldVal) &amp;&amp; _.isEqual(optionVal, fieldVal)))
+            option.prop(<span class="string">'selected'</span>, <span class="literal">true</span>);
+          <span class="keyword">else</span> <span class="keyword">if</span> (isMultiple &amp;&amp; _.isArray(fieldVal)) {
+            _.each(fieldVal, <span class="function"><span class="keyword">function</span><span class="params">(val)</span> {</span>
+              <span class="keyword">if</span> (_.isObject(val)) val = evaluatePath(val, selectConfig.valuePath);
+              <span class="keyword">if</span> (val === optionVal || (_.isObject(val) &amp;&amp; _.isEqual(optionVal, val)))
+                option.prop(<span class="string">'selected'</span>, <span class="literal">true</span>);
+            });
+          }
+
+          $el.append(option);
+        });
+      };
+
+      $el.html(<span class="string">''</span>);</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-52">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-52">&#182;</a>
+              </div>
+              <p>The <code>list</code> configuration is a function that returns the options list or a string
+which represents the path to the list relative to <code>window</code> or the view/<code>this</code>.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">var</span> evaluate = <span class="function"><span class="keyword">function</span><span class="params">(view, list)</span> {</span>
+        <span class="keyword">var</span> context = window;
+        <span class="keyword">if</span> (list.indexOf(<span class="string">'this.'</span>) === <span class="number">0</span>) context = view;
+        list = list.replace(<span class="regexp">/^[a-z]*\.(.+)$/</span>, <span class="string">'$1'</span>);
+        <span class="keyword">return</span> evaluatePath(context, list);
+      };
+      <span class="keyword">if</span> (_.isString(list)) optList = evaluate(<span class="keyword">this</span>, list);
+      <span class="keyword">else</span> <span class="keyword">if</span> (_.isFunction(list)) optList = applyViewFn(<span class="keyword">this</span>, list, $el, options);
+      <span class="keyword">else</span> optList = list;</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-53">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-53">&#182;</a>
+              </div>
+              <p>Support Backbone.Collection and deserialize.</p>
+
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      <span class="keyword">if</span> (optList <span class="keyword">instanceof</span> Backbone.Collection) optList = optList.toJSON();
+
+      <span class="keyword">if</span> (selectConfig.defaultOption) {
+        addSelectOptions([<span class="string">"__default__"</span>], $el);
+      }
+
+      <span class="keyword">if</span> (_.isArray(optList)) {
+        addSelectOptions(optList, $el, val);
+      } <span class="keyword">else</span> <span class="keyword">if</span> (optList.opt_labels) {</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-54">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-54">&#182;</a>
+              </div>
+              <p>To define a select with optgroups, format selectOptions.collection as an object
+with an &#39;opt_labels&#39; property, as in the following:</p>
 <pre><code>{
-  'opt_labels': ['Looney Tunes', 'Three Stooges'],
-  'Looney Tunes': [{id: 1, name: 'Bugs Bunny'}, {id: 2, name: 'Donald Duck'}],
-  'Three Stooges': [{id: 3, name : 'moe'}, {id: 4, name : 'larry'}, {id: 5, name : 'curly'}]
-}
-</code></pre>             </td>             <td class="code">               <div class="highlight"><pre>        <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="nx">optList</span><span class="p">.</span><span class="nx">opt_labels</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">label</span><span class="p">)</span> <span class="p">{</span>
-          <span class="kd">var</span> <span class="nx">$group</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;&lt;optgroup/&gt;&#39;</span><span class="p">).</span><span class="nx">attr</span><span class="p">(</span><span class="s1">&#39;label&#39;</span><span class="p">,</span> <span class="nx">label</span><span class="p">);</span>
-          <span class="nx">addSelectOptions</span><span class="p">(</span><span class="nx">optList</span><span class="p">[</span><span class="nx">label</span><span class="p">],</span> <span class="nx">$group</span><span class="p">,</span> <span class="nx">val</span><span class="p">);</span>
-          <span class="nx">$el</span><span class="p">.</span><span class="nx">append</span><span class="p">(</span><span class="nx">$group</span><span class="p">);</span>
-        <span class="p">});</span>
-      <span class="p">}</span>
-    <span class="p">},</span>
-    <span class="nx">getVal</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">$el</span><span class="p">)</span> <span class="p">{</span>
-      <span class="kd">var</span> <span class="nx">val</span><span class="p">;</span>
-      <span class="k">if</span> <span class="p">(</span><span class="nx">$el</span><span class="p">.</span><span class="nx">prop</span><span class="p">(</span><span class="s1">&#39;multiple&#39;</span><span class="p">))</span> <span class="p">{</span>
-        <span class="nx">val</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="nx">getSelectedOption</span><span class="p">(</span><span class="nx">$el</span><span class="p">).</span><span class="nx">map</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-          <span class="k">return</span> <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;stickit_bind_val&#39;</span><span class="p">);</span>
-        <span class="p">})).</span><span class="nx">get</span><span class="p">();</span>
-      <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-        <span class="nx">val</span> <span class="o">=</span> <span class="nx">getSelectedOption</span><span class="p">(</span><span class="nx">$el</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;stickit_bind_val&#39;</span><span class="p">);</span>
-      <span class="p">}</span>
-      <span class="k">return</span> <span class="nx">val</span><span class="p">;</span>
-    <span class="p">}</span>
-  <span class="p">}]);</span>
+  &#39;opt_labels&#39;: [&#39;Looney Tunes&#39;, &#39;Three Stooges&#39;],
+  &#39;Looney Tunes&#39;: [{id: 1, name: &#39;Bugs Bunny&#39;}, {id: 2, name: &#39;Donald Duck&#39;}],
+  &#39;Three Stooges&#39;: [{id: 3, name : &#39;moe&#39;}, {id: 4, name : &#39;larry&#39;}, {id: 5, name : &#39;curly&#39;}]
+}</code></pre>
 
-<span class="p">})(</span><span class="nb">window</span><span class="p">.</span><span class="nx">jQuery</span> <span class="o">||</span> <span class="nb">window</span><span class="p">.</span><span class="nx">Zepto</span><span class="p">);</span>
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>        _.each(optList.opt_labels, <span class="function"><span class="keyword">function</span><span class="params">(label)</span> {</span>
+          <span class="keyword">var</span> $group = Backbone.$(<span class="string">'&lt;optgroup/&gt;'</span>).attr(<span class="string">'label'</span>, label);
+          addSelectOptions(optList[label], $group, val);
+          $el.append($group);
+        });</pre></div></div>
+            
+        </li>
+        
+        
+        <li id="section-55">
+            <div class="annotation">
+              
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-55">&#182;</a>
+              </div>
+              <p>With no &#39;opt_labels&#39; parameter, the object is assumed to be a simple value-label map.
+Pass a selectOptions.comparator to override the default order of alphabetical by label.</p>
 
-</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
+            </div>
+            
+            <div class="content"><div class='highlight'><pre>      } <span class="keyword">else</span> {
+        <span class="keyword">var</span> opts = [], opt;
+        <span class="keyword">for</span> (<span class="keyword">var</span> i <span class="keyword">in</span> optList) {
+          opt = {};
+          opt[selectConfig.valuePath] = i;
+          opt[selectConfig.labelPath] = optList[i];
+          opts.push(opt);
+        }
+        addSelectOptions(_.sortBy(opts, selectConfig.comparator || selectConfig.labelPath), $el, val);
+      }
+    },
+    getVal: <span class="function"><span class="keyword">function</span><span class="params">($el)</span> {</span>
+      <span class="keyword">var</span> val;
+      <span class="keyword">if</span> ($el.prop(<span class="string">'multiple'</span>)) {
+        val = Backbone.$(getSelectedOption($el).map(<span class="function"><span class="keyword">function</span><span class="params">()</span> {</span>
+          <span class="keyword">return</span> Backbone.$(<span class="keyword">this</span>).data(<span class="string">'stickit_bind_val'</span>);
+        })).get();
+      } <span class="keyword">else</span> {
+        val = getSelectedOption($el).data(<span class="string">'stickit_bind_val'</span>);
+      }
+      <span class="keyword">return</span> val;
+    }
+  }]);
+
+}));</pre></div></div>
+            
+        </li>
+        
+    </ul>
+  </div>
+</body>
+</html>
