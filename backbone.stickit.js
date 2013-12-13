@@ -64,14 +64,15 @@
     },
 
     // Using `this.bindings` configuration or the `optionalBindingsConfig`, binds `this.model`
-    // or the `optionalModel` to elements in the view.
-    stickit: function(optionalModel, optionalBindingsConfig) {
+    // or the `optionalModel` to elements in the view. Pass `keepOld` as true
+    // to preserve old bindings
+    stickit: function(optionalModel, optionalBindingsConfig, keepOld) {
       var model = optionalModel || this.model,
         namespace = '.stickit.' + model.cid,
         bindings = optionalBindingsConfig || _.result(this, "bindings") || {};
 
       this._modelBindings || (this._modelBindings = []);
-      this.unstickit(model);
+      if (!keepOld) this.unstickit(model);
 
       // Iterate through the selectors in the bindings configuration and configure
       // the various options for each field.
@@ -96,9 +97,17 @@
 
         modelAttr = config.observe;
 
+        // Fail fast if we're keeping old bindings and it's already in our bindings
+        var exists = _.some(this._modelBindings, function(b) {
+          return b.config.selector === selector && b.config.view === this;
+        }, this);
+        if (keepOld && exists) return;
+
         // Create the model set options with a unique `bindId` so that we
         // can avoid double-binding in the `change:attribute` event handler.
         config.bindId = bindId;
+        // Keep a reference to the selector for multiple bindings
+        config.selector = selector;
         // Add a reference to the view for handlers of stickitChange events
         config.view = this;
         options = _.extend({stickitChange:config}, config.setOptions);
@@ -129,7 +138,7 @@
               var changeId = options && options.stickitChange && options.stickitChange.bindId || null;
               if (changeId !== bindId)
                 updateViewBindEl(this, $el, config, getAttr(model, modelAttr, config, this), model);
-            });
+            }, config);
           }, this);
 
           updateViewBindEl(this, $el, config, getAttr(model, modelAttr, config, this), model, true);
@@ -184,9 +193,9 @@
 
   // Setup a model event binding with the given function, and track the event
   // in the view's _modelBindings.
-  var observeModelEvent = function(model, view, event, fn) {
+  var observeModelEvent = function(model, view, event, fn, config) {
     model.on(event, fn, view);
-    view._modelBindings.push({model:model, event:event, fn:fn});
+    view._modelBindings.push({model:model, event:event, fn:fn, config:config});
   };
 
   // Prepares the given `val`ue and sets it into the `model`.
