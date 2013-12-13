@@ -82,11 +82,12 @@ module.exports = function(grunt) {
     compress: {
       gz: {
         options: {
-          archive: 'dist/backbone.stickit.gz'
+          mode: 'gzip'
         },
-        files: [
-          {src: 'dist/backbone.stickit.min.js'}
-        ]
+        expand: true,
+        cwd: 'dist/',
+        src: ['backbone.stickit.min.js'],
+        dest: 'dist/'
       },
       zip: {
         options: {
@@ -112,7 +113,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-compress');
 
-  grunt.registerTask('build', ['jshint', 'clean:build', 'uglify:nasty', 'concat', 'docco', 'compress:gz', 'cp-docs', 'compress:zip']);
+  grunt.registerTask('build', ['jshint', 'clean:build', 'uglify:nasty', 'concat', 'compress:gz', 'cp-docs', 'compress:zip']);
 
   grunt.registerTask('cp-docs', function() {
     grunt.file.copy('docs/docco.css', 'dist/docs/annotated/docco.css');

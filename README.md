@@ -1,4 +1,4 @@
-[-> **Documentation for current/stable release: 0.6.3**](http://nytimes.github.com/backbone.stickit/)
+[-> **Documentation for current/stable release: 0.7.0**](http://nytimes.github.com/backbone.stickit/)
 
 **The following is documentation for the code in master/edge version...**
 
@@ -10,7 +10,7 @@ Stickit is a Backbone data binding plugin that binds Model attributes to View el
 
 ## Download + Source
 
-[download v0.6.3](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.6.3.zip)
+[download v0.7.0](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.7.0.zip)
 
 [download master/edge](https://raw.github.com/NYTimes/backbone.stickit/master/backbone.stickit.js)
 
@@ -640,7 +640,7 @@ If you are writing a custom frontend, then you're going to need to write custom 
 
 ### Dependencies
 
- Backbone 0.9, underscore.js, and jQuery or Zepto (with data module; see `selectOptions`)
+ Backbone 1.0, underscore.js, and jQuery or Zepto (with data module; see `selectOptions`)
 
 ### License
 
@@ -648,16 +648,16 @@ MIT
 
 ## Change Log
 
-#### Master
+#### 0.7.0
 
 - **Breaking Change**: the `bindKey` that was passed into the Backbone `change:attr` (undocumented) options was changed to `stickitChange` which is assigned the binding options which have a unique `bindId`.
 - **Breaking Change**: the default events for input, textarea, and contenteditable form elements changed from [`keyup`, `cut`, `paste`, `change`] to [`propertychange`, `input`, `change`].
 - **Breaking Change**: removed support for `input[type="number"]`. Instead, use `onSet` to format Number values, if needed.
+- **Breaking Change**: The `updateModel` method parameters changed so the `event` is now passed as the second parameter. `updateModel(val, options)` -> `updateModel(val, event, options)`
 - Stickit will now load using the UMD pattern so it is compatible with AMD, Node.js, and CommonJS.
 - A view's `bindings` configuration can be defined as a function.
 - When observing an array, if `onSet` or `getVal` return an array of values, Stickit will match the values to their respective attributes defined in `observe` and set them in the model. If you don't desire this change, then you can override this behavior with the following change:
 - Added a `set` callback which by default calls `model#set`
-- **Breaking Change**: The `updateModel` method parameters changed so the `event` is now passed as the second parameter. `updateModel(val, options)` -> `updateModel(val, event, options)`
 - Added the `destroy` binding callback to compliment `initialize`.
 - Trigger `stickit:unstick` for each model that is unbound in `unstickit` (or `view.remove`).
 - Added handling for `observe` in function form.
