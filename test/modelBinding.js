@@ -120,7 +120,7 @@ $(document).ready(function() {
           this.stickit(null, null, true);
           equal(this._modelBindings.length, 2);
 
-          this.stickit(null, this.otherBindings, true);
+          this.stickit(null, this.otherBindings, {keepOld: true});
           equal(this._modelBindings.length, 4);
 
           this.stickit(null, this.moreBindings);

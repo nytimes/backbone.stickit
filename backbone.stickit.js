@@ -66,8 +66,9 @@
     // Using `this.bindings` configuration or the `optionalBindingsConfig`, binds `this.model`
     // or the `optionalModel` to elements in the view. Pass `keepOld` as true
     // to preserve old bindings
-    stickit: function(optionalModel, optionalBindingsConfig, keepOld) {
+    stickit: function(optionalModel, optionalBindingsConfig, options) {
       var model = optionalModel || this.model,
+        keepOld = options && options.keepOld,
         namespace = '.stickit.' + model.cid,
         bindings = optionalBindingsConfig || _.result(this, "bindings") || {};
 
