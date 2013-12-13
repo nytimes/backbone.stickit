@@ -287,7 +287,7 @@
         else $el[updateType](attrConfig.name, val);
       };
       _.each(_.flatten([observed]), function(attr) {
-        observeModelEvent(model, view, 'change:' + attr, updateAttr);
+        observeModelEvent(model, view, 'change:' + attr, updateAttr, config);
       });
       updateAttr();
     });
@@ -318,7 +318,7 @@
       }
     };
     _.each(_.flatten([modelAttr]), function(attr) {
-      observeModelEvent(model, view, 'change:' + attr, visibleCb);
+      observeModelEvent(model, view, 'change:' + attr, visibleCb, config);
     });
     visibleCb();
   };
