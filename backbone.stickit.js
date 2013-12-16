@@ -89,8 +89,9 @@
     },
 
     // Add a single model binding to the view
-    addBinding: function(model, selector, binding) {
+    addBinding: function(optionalModel, selector, binding) {
       var $el, options, modelAttr, config,
+          model = optionalModel || this.model,
           namespace = '.stickit.' + model.cid,
           binding = binding || {},
           bindId = _.uniqueId();
