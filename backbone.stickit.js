@@ -87,22 +87,23 @@
     },
 
     // Add a single model binding to the view
-    addBinding: function(optionalModel, selector, binding) {
+    addBinding: function(optionalModel, second, binding) {
+      var $el, options, modelAttr, config, selector,
+        model = optionalModel || this.model,
+        namespace = '.stickit.' + model.cid,
+        binding = binding || {},
+        bindId = _.uniqueId();
 
-      // Allow {key: val} form of bindings
-      if (!_.isString(selector)) {
-        var bindings = selector;
+      // Allow jQuery-style {key: val} event maps
+      if (_.isString(second)) {
+        selector = second;
+      } else {
+        var bindings = second;
         _.each(bindings, function(v, selector) {
-          this.addBinding(optionalModel, selector, bindings[selector]);
+          this.addBinding(model, selector, bindings[selector]);
         }, this);
         return;
       }
-
-      var $el, options, modelAttr, config,
-          model = optionalModel || this.model,
-          namespace = '.stickit.' + model.cid,
-          binding = binding || {},
-          bindId = _.uniqueId();
 
       // Support ':el' selector - special case selector for the view managed delegate.
       $el = selector === ':el' ? this.$el : this.$(selector);
