@@ -81,6 +81,27 @@ $(document).ready(function() {
     equal(view._modelBindings.length, 0);
   });
 
+  test('addBinding', 1, function() {
+    view = new (Backbone.View.extend({
+      initialize: function() {
+        this.model = model;
+      },
+      bindings: {
+        '.test12-1': 'one',
+        '.test12-2': 'two'
+      },
+      render: function() {
+        var html = document.getElementById('jst12').innerHTML;
+        this.$el.html(_.template(html)());
+        this.stickit();
+        this.addBinding(null, '.test12-3', 'three');
+        this.addBinding(null, {'.test12-4': 'four'});
+        return this;
+      }
+    }))().render();
+    equal(view._modelBindings.length, 4);
+  });
+
   test('stickit:unstuck event', 1, function() {
 
     model.set({'water':'fountain'});
