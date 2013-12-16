@@ -28,6 +28,27 @@ $(document).ready(function() {
     equal(_.keys(view.model._events).length, 0);
   });
 
+  test('unstickit is only called once on remove with multiple stickits', function() {
+    view.model = model;
+    view.render = function() {
+      this.stickit();
+      this.stickit();
+      return this;
+    }
+    view.render();
+
+    var unstickit = view.unstickit, counter = 0;
+    view.unstickit = function() {
+      counter++;
+      unstickit.apply(this, arguments);
+    }
+
+    view.remove();
+
+    equal(counter, 1);
+    view.unstickit = unstickit;
+  });
+
   test('unstickit (multiple models)', function() {
 
     var model1, model2, view, model3;
