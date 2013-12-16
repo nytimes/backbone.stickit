@@ -74,9 +74,7 @@
 
       // Iterate through the selectors in the bindings configuration and configure
       // the various options for each field.
-      _.each(bindings, function(v, selector) {
-        this.addBinding(model, selector, bindings[selector]);
-      }, this);
+      this.addBinding(model, bindings);
 
       // Wrap `view.remove` to unbind stickit model and dom events.
       var remove = this.remove;
@@ -90,6 +88,16 @@
 
     // Add a single model binding to the view
     addBinding: function(optionalModel, selector, binding) {
+
+      // Allow {key: val} form of bindings
+      if (!_.isString(selector)) {
+        var bindings = selector;
+        _.each(bindings, function(v, selector) {
+          this.addBinding(optionalModel, selector, bindings[selector]);
+        }, this);
+        return;
+      }
+
       var $el, options, modelAttr, config,
           model = optionalModel || this.model,
           namespace = '.stickit.' + model.cid,
