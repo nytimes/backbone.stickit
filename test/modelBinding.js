@@ -117,4 +117,38 @@ $(document).ready(function() {
     model.on('stickit:unstuck', function() { ok(true); });
     view.unstickit();
   });
+
+  test('calling stickit multiple times', 4, function() {
+      view = new (Backbone.View.extend({
+        bindings: {
+          '.test12-1': 'one',
+          '.test12-2': 'two'
+        },
+        otherBindings: {
+          '.test12-3': 'three',
+          '.test12-4': 'four'
+        },
+        moreBindings: {
+          '.test12-5': 'five',
+          '.test12-6': 'six'
+        },
+        render: function() {
+          var html = document.getElementById('jst12').innerHTML;
+          this.$el.html(_.template(html)());
+          this.stickit();
+          equal(this._modelBindings.length, 2);
+
+          this.stickit(null, null, true);
+          equal(this._modelBindings.length, 2);
+
+          this.stickit(null, this.otherBindings, {keepOld: true});
+          equal(this._modelBindings.length, 4);
+
+          this.stickit(null, this.moreBindings);
+          equal(this._modelBindings.length, 2);
+
+          return this;
+        }
+      }))({model: model}).render();
+  });
 });
