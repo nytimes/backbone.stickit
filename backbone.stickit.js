@@ -149,7 +149,7 @@
         this.remove = function() {
           var ret = this;
           this.unstickit();
-          if (remove) ret = remove.apply(this, _.rest(arguments));
+          if (remove) ret = remove.apply(this, arguments);
           return ret;
         };
       this.remove.stickitWrapped = true;
