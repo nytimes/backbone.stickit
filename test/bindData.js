@@ -1613,6 +1613,7 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     view.bindings = {
       '#test1': {
         observe: 'water',
+        events: ['change', 'input', 'keyup'],
         destroy: function($el, model, options) {
           equal($el.val(), 'fountain');
           equal(model.get('water'), 'fountain');

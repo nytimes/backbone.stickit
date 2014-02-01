@@ -40,16 +40,18 @@
   _.extend(Backbone.View.prototype, {
 
     // Collection of model event bindings.
-    //   [{model,event,fn}, ...]
+    //   [{model,event,fn,config}, ...]
     _modelBindings: null,
 
     // Unbind the model and event bindings from `this._modelBindings` and
     // `this.$el`. If the optional `model` parameter is defined, then only
     // delete bindings for the given `model` and its corresponding view events.
-    unstickit: function(model) {
-      var models = [];
+    unstickit: function(model, bindingSelector) {
+      var models = [], destroyFns = [];
       _.each(this._modelBindings, function(binding, i) {
         if (model && binding.model !== model) return false;
+        if (bindingSelector && binding.config.selector != bindingSelector) return false;
+        destroyFns.push(binding.config._destroy);
         binding.model.off(binding.event, binding.fn);
         models.push(binding.model);
         delete this._modelBindings[i];
@@ -57,6 +59,8 @@
 
       // Trigger an event for each model that was unbound.
       _.invoke(_.uniq(models), 'trigger', 'stickit:unstuck', this.cid);
+      // Call `_destroy` on a unique list of the binding callbacks.
+      _.each(_.uniq(destroyFns), function(fn) { fn.call(this); }, this);
       // Cleanup the null values.
       this._modelBindings = _.compact(this._modelBindings);
 
@@ -110,6 +114,8 @@
       // Support ':el' selector - special case selector for the view managed delegate.
       $el = selector === ':el' ? this.$el : this.$(selector);
 
+      this.unstickit(model, selector);
+
       // Fail fast if the selector didn't match an element.
       if (!$el.length) return;
 
@@ -120,15 +126,22 @@
       if (_.isFunction(binding.observe)) binding.observe = binding.observe.call(this);
 
       config = getConfiguration($el, binding);
-
+      config.selector = selector;
       modelAttr = config.observe;
 
       // Create the model set options with a unique `bindId` so that we
       // can avoid double-binding in the `change:attribute` event handler.
       config.bindId = bindId;
+      
       // Add a reference to the view for handlers of stickitChange events
       config.view = this;
       options = _.extend({stickitChange:config}, config.setOptions);
+      
+      // Add a `_destroy` callback to the configuration, in case `destroy`
+      // is a named function and we need a unique function when unsticking.
+      config._destroy = function() {
+        applyViewFn(this, config.destroy, $el, model, config);
+      };
 
       initializeAttributes(this, $el, config, model, modelAttr);
 
@@ -152,7 +165,7 @@
         // Setup a `change:modelAttr` observer to keep the view element in sync.
         // `modelAttr` may be an array of attributes or a single string value.
         _.each(_.flatten([modelAttr]), function(attr) {
-          observeModelEvent(model, this, 'change:'+attr, function(model, val, options) {
+          observeModelEvent(model, this, 'change:'+attr, config, function(model, val, options) {
             var changeId = options && options.stickitChange && options.stickitChange.bindId || null;
             if (changeId !== bindId)
               updateViewBindEl(this, $el, config, getAttr(model, modelAttr, config, this), model);
@@ -161,10 +174,6 @@
 
         updateViewBindEl(this, $el, config, getAttr(model, modelAttr, config, this), model, true);
       }
-
-      model.once('stickit:unstuck', function(cid) {
-        if (cid === this.cid) applyViewFn(this, config.destroy, $el, model, config);
-      }, this);
 
       // After each binding is setup, call the `initialize` callback.
       applyViewFn(this, config.initialize, $el, model, config);
@@ -201,9 +210,9 @@
 
   // Setup a model event binding with the given function, and track the event
   // in the view's _modelBindings.
-  var observeModelEvent = function(model, view, event, fn) {
+  var observeModelEvent = function(model, view, event, config, fn) {
     model.on(event, fn, view);
-    view._modelBindings.push({model:model, event:event, fn:fn});
+    view._modelBindings.push({model:model, event:event, fn:fn, config:config});
   };
 
   // Prepares the given `val`ue and sets it into the `model`.
@@ -263,7 +272,6 @@
     // `visible`; otherwise, `updateView` is defaulted to true.
     if (config.visible && !_.has(config, 'updateView')) config.updateView = false;
     else if (!_.has(config, 'updateView')) config.updateView = true;
-    delete config.selector;
     return config;
   };
 
@@ -295,7 +303,7 @@
         else $el[updateType](attrConfig.name, val);
       };
       _.each(_.flatten([observed]), function(attr) {
-        observeModelEvent(model, view, 'change:' + attr, updateAttr);
+        observeModelEvent(model, view, 'change:' + attr, config, updateAttr);
       });
       updateAttr();
     });
@@ -326,7 +334,7 @@
       }
     };
     _.each(_.flatten([modelAttr]), function(attr) {
-      observeModelEvent(model, view, 'change:' + attr, visibleCb);
+      observeModelEvent(model, view, 'change:' + attr, config, visibleCb);
     });
     visibleCb();
   };

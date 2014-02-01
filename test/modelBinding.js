@@ -21,7 +21,7 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(_.keys(view.model._events).length, 4);
+    equal(_.keys(view.model._events).length, 3);
 
     view.unstickit();
 
@@ -83,15 +83,15 @@ $(document).ready(function() {
       }
     }))().render();
 
-    equal(_.keys(model1._events).length, 3);
-    equal(_.keys(model2._events).length, 3);
-    equal(_.keys(model3._events).length, 3);
+    equal(_.keys(model1._events).length, 2);
+    equal(_.keys(model2._events).length, 2);
+    equal(_.keys(model3._events).length, 2);
     equal(view._modelBindings.length, 6);
 
     view.unstickit(model3);
 
-    equal(_.keys(model1._events).length, 3);
-    equal(_.keys(model2._events).length, 3);
+    equal(_.keys(model1._events).length, 2);
+    equal(_.keys(model2._events).length, 2);
     equal(_.keys(model3._events).length, 0);
     equal(view._modelBindings.length, 4);
 
@@ -102,13 +102,18 @@ $(document).ready(function() {
     equal(view._modelBindings.length, 0);
   });
 
-  test('addBinding', 1, function() {
+  test('addBinding', 2, function() {
     view = new (Backbone.View.extend({
       initialize: function() {
         this.model = model;
       },
       bindings: {
-        '.test12-1': 'one',
+        '.test12-1': {
+          observe: 'one',
+          destroy: function() {
+            ok(true);
+          }
+        },
         '.test12-2': 'two'
       },
       render: function() {
@@ -117,9 +122,11 @@ $(document).ready(function() {
         this.stickit();
         this.addBinding(null, '.test12-3', 'three');
         this.addBinding(null, {'.test12-4': 'four'});
+        this.addBinding(null, {'.test12-1': 'one'});
         return this;
       }
     }))().render();
+
     equal(view._modelBindings.length, 4);
   });
 
@@ -136,6 +143,7 @@ $(document).ready(function() {
     $('#qunit-fixture').html(view.render().el);
 
     model.on('stickit:unstuck', function() { ok(true); });
+    view.unstickit();
     view.unstickit();
   });
 });
