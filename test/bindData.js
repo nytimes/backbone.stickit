@@ -1666,4 +1666,22 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     view.$('#test1').val('dasina').trigger('change');
   });
 
+  test('view.remove should be called and unbind events', 4, function() {
+
+    model.set({'water':null});
+    view.model = model;
+    view.templateId = 'jst1';
+    view.bindings = {
+      '#test1': 'water'
+    };
+    view.remove = function(option) {
+      ok(true);
+      ok(!!option);
+    };
+    $('#qunit-fixture').html(view.render().el);
+    equal(view._modelBindings.length, 1);
+    view.remove('test');
+    equal(view._modelBindings.length, 0);
+  });
+
 });
