@@ -43,7 +43,7 @@ On the initial call, stickit will initialize the innerHTML of `view.$('#title')`
 ### stickit
 `view.stickit(optionalModel, optionalBindingsConfig)`
 
-Uses `view.bindings` and `view.model` to setup bindings. Optionally, you can pass in a model and bindings hash. Note: you can only bind to a model once, any subsequent attempts to bind a previously bound model will unbind all stickit events, then rebind it (this gives you flexibility to re-render).
+Uses `view.bindings` and `view.model` to setup bindings. Optionally, you can pass in a model and bindings hash. Note, it is safe to re-render or call stickit multiple times, as stickit will match any previously bound selectors and their associated models and unbind them before reinitializing.
 
 ```javascript  
   render: function() {
@@ -55,12 +55,30 @@ Uses `view.bindings` and `view.model` to setup bindings. Optionally, you can pas
   }
 ```
 
+### addBinding
+`view.addBinding(optionalModel, selector, configuration)`
+
+Adds a single binding to the view, using the given model, or `view.model`, and the given `selector` and `configuration`. It's also possible to pass in a bindings hash as the second parameter.
+
+```javascript
+  // Short-form selector.
+  this.addBinding(null, '#author', 'author');
+  // With configuration.
+  this.addBinding(null, '#author', {observe:'author', onGet: function() {/* ... */}});
+  // Or, with a bindings hash.
+  this.addBindings(null, {
+    '#author': {
+      observe: 'author',
+      onGet: function() {/* ... */}
+  });
+```
+
 ### unstickit
-`view.unstickit(optionalModel)`
+`view.unstickit(optionalModel, optionalSelector)`
 
-Removes event bindings from all models. Optionally, a model can be passed in which will remove events for the given model and its corresponding bindings configuration only. Unbinding will be taken care of automatically in `view.remove()`, but if you want to unbind early, use this.
+Removes event bindings from all models. Optionally, a model can be passed in which will remove events for the given model and its corresponding bindings configuration only. Another option is to pass in a binding selector or bindings hash to granularly remove any bindings that are associated with `this.model` or the given model. Note, Stickit is setup to automatically unbind all bindings associated with a view on `view.remove()`.
 
-For each model that is unbound a `stickit:unstuck` event will be triggered.
+For each model that is unbound, a `stickit:unstuck` event will be triggered, and for each binding that is unbound the `destroy` callback will be executed.
 
 ## Bindings
 
@@ -647,6 +665,12 @@ If you are writing a custom frontend, then you're going to need to write custom 
 MIT
 
 ## Change Log
+
+#### Master
+
+- **Breaking Change**: Calling `view#stickit` a second time with the same model, will no longer unbind all previously bound bindings associated with that model; instead, it will unbind any duplicate bindings (selectors) found in the given bindings hash (or whatever's in `view.bindings`) before initializing.
+- Added an `view#addBinding` which will initiate a single, or hash, of bindings.
+- `view#unstickit` now takes a second, optional, parameter which gives you the control to granularly remove a single, or hash, of bindings.
 
 #### 0.7.0
 
