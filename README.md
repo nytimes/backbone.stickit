@@ -102,11 +102,6 @@ Notes on binding to an array of attributes: when binding from model->view, this 
       observe: 'title'
     },
 
-    // As a function
-    'body': function() {
-      return 'body';
-    },
-
     // Bind to multiple model attributes
     '#header': {
       observe: ['title', 'author'],
@@ -118,6 +113,15 @@ Notes on binding to an array of attributes: when binding from model->view, this 
         return value.split('-');
       }
     }
+  }
+
+  // Defined bindings as a function.
+  bindings: function() {
+    return {
+      '#title': {
+        observe: 'title'
+      }
+    };
   }
  ```
 
