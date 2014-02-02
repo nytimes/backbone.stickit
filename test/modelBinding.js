@@ -28,6 +28,26 @@ $(document).ready(function() {
     equal(_.keys(view.model._events).length, 0);
   });
 
+  test('unstickit with selector parameter', 3, function() {
+
+    model.set({'water':'fountain', 'candy':'skittles', 'album':'rival-dealer'});
+    view.model = model;
+    view.templateId = 'jst14';
+    view.bindings = {
+      '#test14-1': 'water',
+      '#test14-2': 'candy',
+      '#test14-3': 'album'
+    };
+    $('#qunit-fixture').html(view.render().el);
+    equal(_.keys(view.model._events).length, 3);
+    
+    view.unstickit(null, '#test14-1');
+    equal(_.keys(view.model._events).length, 2);
+
+    view.unstickit(null, view.bindings);
+    equal(_.keys(view.model._events).length, 0);  
+  });
+
   test('unstickit is only called once on remove with multiple stickits', function() {
     view.model = model;
     view.render = function() {

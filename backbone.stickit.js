@@ -47,6 +47,13 @@
     // `this.$el`. If the optional `model` parameter is defined, then only
     // delete bindings for the given `model` and its corresponding view events.
     unstickit: function(model, bindingSelector) {
+      // Support bindings hash in place of selector.
+      if (_.isObject(bindingSelector)) {
+        _.each(_.keys(bindingSelector), function(selector) {
+          this.unstickit(model, selector);
+        }, this);
+      }
+
       var models = [], destroyFns = [];
       _.each(this._modelBindings, function(binding, i) {
         if (model && binding.model !== model) return false;
@@ -74,7 +81,6 @@
           bindings = optionalBindingsConfig || _.result(this, "bindings") || {};
 
       this._modelBindings || (this._modelBindings = []);
-      this.unstickit(model);
 
       // Iterate through the selectors in the bindings configuration and configure
       // the various options for each field.
