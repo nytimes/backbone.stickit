@@ -71,7 +71,7 @@
       // Cleanup the null values.
       this._modelBindings = _.compact(this._modelBindings);
 
-      this.$el.off('.stickit' + (model ? '.' + model.cid : ''));
+      this.$el.off('.stickit' + (model ? '.' + model.cid : ''), bindingSelector);
     },
 
     // Using `this.bindings` configuration or the `optionalBindingsConfig`, binds `this.model`

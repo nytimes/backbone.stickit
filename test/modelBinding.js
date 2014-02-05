@@ -28,21 +28,25 @@ $(document).ready(function() {
     equal(_.keys(view.model._events).length, 0);
   });
 
-  test('unstickit with selector parameter', 3, function() {
+  test('unstickit with selector parameter', 4, function() {
 
-    model.set({'water':'fountain', 'candy':'skittles', 'album':'rival-dealer'});
+    model.set({'water':'fountain', 'candy':'skittles', 'album':'rival-dealer', 'state': 'liquid'});
     view.model = model;
     view.templateId = 'jst14';
     view.bindings = {
       '#test14-1': 'water',
       '#test14-2': 'candy',
-      '#test14-3': 'album'
+      '#test14-3': 'album',
+      '#test14-6': 'state'
     };
     $('#qunit-fixture').html(view.render().el);
-    equal(_.keys(view.model._events).length, 3);
+    equal(_.keys(view.model._events).length, 4);
     
     view.unstickit(null, '#test14-1');
-    equal(_.keys(view.model._events).length, 2);
+    equal(_.keys(view.model._events).length, 3);
+
+    view.$('#test14-6').val('solid').change();
+    equal(model.get('state'), 'solid');
 
     view.unstickit(null, view.bindings);
     equal(_.keys(view.model._events).length, 0);  
