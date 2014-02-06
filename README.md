@@ -58,7 +58,7 @@ Uses `view.bindings` and `view.model` to setup bindings. Optionally, you can pas
 ### addBinding
 `view.addBinding(optionalModel, selector, configuration)`
 
-Adds a single binding to the view, using the given model, or `view.model`, and the given `selector` and `configuration`. It's also possible to pass in a bindings hash as the second parameter.
+Adds a single binding to the view, using the given model, or `view.model`, and the given `selector` and `configuration`. It's also possible to pass in a bindings hash as the second parameter. If you use a selector that was already used for a binding, then the old binding will be destroyed before initializing the new binding. 
 
 ```javascript
   // Short-form selector.
