@@ -9,7 +9,7 @@
   },
   "main": "backbone.stickit.js",
   "dependencies": {
-    "backbone": "~0.9.0"
+    "backbone": ">= 0.9.0"
   },
   "devDependencies": {
     "grunt-contrib": "~0.4.0",
