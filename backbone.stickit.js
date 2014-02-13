@@ -1,3 +1,6 @@
+// Backbone.Stickit v0.7.0, MIT Licensed
+// Copyright (c) 2012 The New York Times, CMS Group, Matthew DeLambo <delambo@gmail.com>
+
 (function (factory) {
 
   // Set up Stickit appropriately for the environment. Start with AMD.
