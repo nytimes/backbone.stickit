@@ -174,11 +174,11 @@
           observeModelEvent(model, this, 'change:'+attr, config, function(model, val, options) {
             var changeId = options && options.stickitChange && options.stickitChange.bindId || null;
             if (changeId !== bindId)
-              updateViewBindEl(this, $el, config, getAttr(model, modelAttr, config, this), model);
+              updateViewBindEl(this, $el, config, getAttr(model, modelAttr, config, this), model, false, options);
           });
         }, this);
 
-        updateViewBindEl(this, $el, config, getAttr(model, modelAttr, config, this), model, true);
+        updateViewBindEl(this, $el, config, getAttr(model, modelAttr, config, this), model, true, options);
       }
 
       // After each binding is setup, call the `initialize` callback.
@@ -352,10 +352,10 @@
   //     updateView: true, // defaults to true
   //     afterUpdate: function($el, val, options) {} // optional callback
   //
-  var updateViewBindEl = function(view, $el, config, val, model, isInitializing) {
+  var updateViewBindEl = function(view, $el, config, val, model, isInitializing, modelChangeOptions) {
     if (!evaluateBoolean(view, config.updateView, val, config)) return;
-    applyViewFn(view, config.update, $el, val, model, config);
-    if (!isInitializing) applyViewFn(view, config.afterUpdate, $el, val, config);
+    applyViewFn(view, config.update, $el, val, model, config, modelChangeOptions);
+    if (!isInitializing) applyViewFn(view, config.afterUpdate, $el, val, config, modelChangeOptions);
   };
 
   // Default Handlers
