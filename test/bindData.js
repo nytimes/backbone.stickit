@@ -1587,6 +1587,24 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     equal(view.$('#test1').val(), 'test-dasina');
   });
 
+  test('update: passes through model options', 1, function() {
+    model.set({ 'water':'fountain'});
+    view.model = model;
+    view.templateId = 'jst1';
+    view.bindings = {
+      '#test1': {
+        observe: 'water',
+        setOptions: {
+          ui: true
+        },
+        update: function($el, val, model, options, modelOptions) {
+          equal(modelOptions.ui, true);
+        }
+      }
+    }
+    $('#qunit-fixture').html(view.render().el);
+  });
+
   test('initialize', 3, function() {
 
     model.set({'water':'fountain'});
