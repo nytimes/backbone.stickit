@@ -22,10 +22,13 @@ $(document).ready(function() {
     $('#qunit-fixture').html(view.render().el);
 
     equal(_.keys(view.model._events).length, 3);
+    var events = $._data(view.$el[0], 'events');
+    ok(events.input.length && events.propertychange.length && events.change.length);
 
     view.unstickit();
-
     equal(_.keys(view.model._events).length, 0);
+    events = $._data(view.$el[0], 'events');
+    ok(!events);
   });
 
   test('unstickit with selector parameter', 4, function() {
@@ -107,6 +110,9 @@ $(document).ready(function() {
       }
     }))().render();
 
+    var events = $._data(view.$el[0], 'events');
+    ok(events.input.length == 6 && events.propertychange.length == 6 && events.change.length == 6);
+
     equal(_.keys(model1._events).length, 2);
     equal(_.keys(model2._events).length, 2);
     equal(_.keys(model3._events).length, 2);
@@ -114,12 +120,18 @@ $(document).ready(function() {
 
     view.unstickit(model3);
 
+    events = $._data(view.$el[0], 'events');
+    ok(events.input.length == 4 && events.propertychange.length == 4 && events.change.length == 4);
+
     equal(_.keys(model1._events).length, 2);
     equal(_.keys(model2._events).length, 2);
     equal(_.keys(model3._events).length, 0);
     equal(view._modelBindings.length, 4);
 
     view.unstickit();
+
+    events = $._data(view.$el[0], 'events');
+    ok(!events);
 
     equal(_.keys(model1._events).length, 0);
     equal(_.keys(model2._events).length, 0);

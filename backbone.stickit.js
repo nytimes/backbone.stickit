@@ -55,6 +55,7 @@
         _.each(_.keys(bindingSelector), function(selector) {
           this.unstickit(model, selector);
         }, this);
+        return;
       }
 
       var models = [], destroyFns = [];
@@ -102,11 +103,11 @@
     },
 
     // Add a single model binding to the view
-    addBinding: function(optionalModel, second, binding) {
+    addBinding: function(optionalModel, second, _binding) {
       var $el, options, modelAttr, config, selector,
         model = optionalModel || this.model,
         namespace = '.stickit.' + model.cid,
-        binding = binding || {},
+        binding = _binding || {},
         bindId = _.uniqueId();
 
       // Allow jQuery-style {key: val} event maps
@@ -141,11 +142,11 @@
       // Create the model set options with a unique `bindId` so that we
       // can avoid double-binding in the `change:attribute` event handler.
       config.bindId = bindId;
-      
+
       // Add a reference to the view for handlers of stickitChange events
       config.view = this;
       options = _.extend({stickitChange:config}, config.setOptions);
-      
+
       // Add a `_destroy` callback to the configuration, in case `destroy`
       // is a named function and we need a unique function when unsticking.
       config._destroy = function() {
@@ -499,7 +500,7 @@
         });
       };
 
-      $el.html('');
+      $el.find('*').remove();
 
       // The `list` configuration is a function that returns the options list or a string
       // which represents the path to the list relative to `window` or the view/`this`.

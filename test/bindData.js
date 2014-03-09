@@ -233,6 +233,8 @@ $(document).ready(function() {
 
     equal(model1.get('candy'), 'kit kat');
     equal(model2.get('candy'), 'butterfinger');
+
+    testView.remove();
   });
 
   test('stickit (existing events property as hash with multiple models and bindings)', function() {
@@ -312,15 +314,15 @@ $(document).ready(function() {
       },
 
       events: function() {
-
         var self = this;
 
         return {
-          click: function() {
-            self.clickHandled = true;
-          }
+          click: self.clickHandled
         };
+      },
 
+      clickHandled: function() {
+        this.clickHandled = true;
       },
 
       bindings: {
@@ -353,6 +355,7 @@ $(document).ready(function() {
 
     equal(testView.clickHandled, true);
 
+    testView.remove();
   });
 
   test('bindings:setOptions', function() {
@@ -1416,6 +1419,8 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
 
     testView.$('#test1').val('dasina').trigger('change');
     equal(model.get('water'), 'dasina');
+
+    testView.remove();
   });
 
   test('bindings:updateView', 9, function() {
