@@ -4,23 +4,26 @@
 (function (factory) {
 
   // Set up Stickit appropriately for the environment. Start with AMD.
-  if (typeof define === 'function' && define.amd)
+  if (typeof define === 'function' && define.amd) {
     define(['underscore', 'backbone'], factory);
+  }
 
   // Next for Node.js or CommonJS.
-  else if (typeof exports === 'object')
+  else if (typeof exports === 'object') {
     factory(require('underscore'), require('backbone'));
+  }
 
   // Finally, as a browser global.
-  else
+  else {
     factory(_, Backbone);
+  }
 
 }(function (_, Backbone) {
 
-  // Backbone.Stickit Namespace
+  // Stickit Namespace
   // --------------------------
 
-  Backbone.Stickit = {
+  var Stickit = {
 
     _handlers: [],
 
@@ -60,7 +63,7 @@
 
       var models = [], destroyFns = [];
       _.each(this._modelBindings, function(binding, i) {
-        if (model && binding.model !== model) return;
+        if (model && binding.model !== model) { return };
         if (bindingSelector && binding.config.selector != bindingSelector) return;
         destroyFns.push(binding.config._destroy);
         binding.model.off(binding.event, binding.fn);
@@ -266,14 +269,14 @@
   // Find handlers in `Backbone.Stickit._handlers` with selectors that match
   // `$el` and generate a configuration by mixing them in the order that they
   // were found with the given `binding`.
-  var getConfiguration = Backbone.Stickit.getConfiguration = function($el, binding) {
+  var getConfiguration = Stickit.getConfiguration = function($el, binding) {
     var handlers = [{
       updateModel: false,
       updateMethod: 'text',
       update: function($el, val, m, opts) { if ($el[opts.updateMethod]) $el[opts.updateMethod](val); },
       getVal: function($el, e, opts) { return $el[opts.updateMethod](); }
     }];
-    handlers = handlers.concat(_.filter(Backbone.Stickit._handlers, function(handler) {
+    handlers = handlers.concat(_.filter(Stickit._handlers, function(handler) {
       return $el.is(handler.selector);
     }));
     handlers.push(binding);
@@ -365,7 +368,7 @@
   // Default Handlers
   // ----------------
 
-  Backbone.Stickit.addHandler([{
+  Stickit.addHandler([{
     selector: '[contenteditable="true"]',
     updateMethod: 'html',
     events: ['input', 'change']
@@ -563,5 +566,16 @@
       return val;
     }
   }]);
+
+  /**
+   * Exports
+   */
+
+  Backbone.Stickit = Stickit;
+
+  //For use in NodeJS
+  if (typeof module != 'undefined') module.exports = Stickit;
+
+  return Backbone.Stickit;
 
 }));
