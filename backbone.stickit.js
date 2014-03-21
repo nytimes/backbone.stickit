@@ -43,7 +43,7 @@
   // Backbone.View Mixins
   // --------------------
 
-  _.extend(Backbone.View.prototype, {
+  Stickit.ViewMixin = {
 
     // Collection of model event bindings.
     //   [{model,event,fn,config}, ...]
@@ -191,7 +191,9 @@
       // After each binding is setup, call the `initialize` callback.
       applyViewFn(this, config.initialize, $el, model, config);
     }
-  });
+  };
+
+  _.extend(Backbone.View.prototype, Stickit.ViewMixin);
 
   // Helpers
   // -------
@@ -567,14 +569,12 @@
     }
   }]);
 
-  /**
-   * Exports
-   */
 
+  // Exports
   Backbone.Stickit = Stickit;
 
   //For use in NodeJS
-  if (typeof module != 'undefined') module.exports = Stickit;
+  if (typeof module !== 'undefined') module.exports = Stickit;
 
   return Backbone.Stickit;
 
