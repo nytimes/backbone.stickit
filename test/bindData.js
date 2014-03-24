@@ -125,6 +125,24 @@ $(document).ready(function() {
     equal(view.$('#test5').text(), 'evian');
   });
 
+  test('span', function() {
+
+    model.set({'water':'fountain'});
+    view.model = model;
+    view.templateId = 'jst26';
+    view.bindings = {
+      '#test26': {
+        observe: 'water'
+      }
+    };
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(view.$('#test26').text(), 'fountain');
+
+    model.set('water', 'evian');
+    equal(view.$('#test26').text(), 'evian');
+  });
+  
   test(':el selector', function() {
 
     model.set({'water':'fountain'});
