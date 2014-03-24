@@ -276,7 +276,8 @@
       updateModel: false,
       updateMethod: 'text',
       update: function($el, val, m, opts) { if ($el[opts.updateMethod]) $el[opts.updateMethod](val); },
-      getVal: function($el, e, opts) { return $el[opts.updateMethod](); }
+      getVal: function($el, e, opts) { return $el[opts.updateMethod](); },
+      events: []
     }];
     handlers = handlers.concat(_.filter(Stickit._handlers, function(handler) {
       return $el.is(handler.selector);
