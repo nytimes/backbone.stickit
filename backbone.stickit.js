@@ -5,39 +5,36 @@
 
   // Set up Stickit appropriately for the environment. Start with AMD.
   if (typeof define === 'function' && define.amd) {
-    define(['underscore', 'backbone'], factory);
+    define(['underscore', 'backbone', 'exports'], factory);
   }
 
   // Next for Node.js or CommonJS.
   else if (typeof exports === 'object') {
-    factory(require('underscore'), require('backbone'));
+    factory(require('underscore'), require('backbone'), exports);
   }
 
   // Finally, as a browser global.
   else {
-    factory(_, Backbone);
+    factory(_, Backbone, {});
   }
 
-}(function (_, Backbone) {
+}(function (_, Backbone, Stickit) {
 
   // Stickit Namespace
   // --------------------------
 
-  var Stickit = {
+  Stickit._handlers = [];
 
-    _handlers: [],
-
-    addHandler: function(handlers) {
-      // Fill-in default values.
-      handlers = _.map(_.flatten([handlers]), function(handler) {
-        return _.extend({
-          updateModel: true,
-          updateView: true,
-          updateMethod: 'text'
-        }, handler);
-      });
-      this._handlers = this._handlers.concat(handlers);
-    }
+  Stickit.addHandler = function(handlers) {
+    // Fill-in default values.
+    handlers = _.map(_.flatten([handlers]), function(handler) {
+      return _.extend({
+        updateModel: true,
+        updateView: true,
+        updateMethod: 'text'
+      }, handler);
+    });
+    this._handlers = this._handlers.concat(handlers);
   };
 
   // Backbone.View Mixins
@@ -570,11 +567,8 @@
   }]);
 
 
-  // Exports
+  // Export onto Backbone object
   Backbone.Stickit = Stickit;
-
-  //For use in NodeJS
-  if (typeof module !== 'undefined') module.exports = Stickit;
 
   return Backbone.Stickit;
 
