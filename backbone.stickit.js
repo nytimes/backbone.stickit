@@ -92,13 +92,14 @@
 
       // Wrap `view.remove` to unbind stickit model and dom events.
       var remove = this.remove;
-      if (!remove.stickitWrapped)
+      if (!remove.stickitWrapped) {
         this.remove = function() {
           var ret = this;
           this.unstickit();
           if (remove) ret = remove.apply(this, arguments);
           return ret;
         };
+      }
       this.remove.stickitWrapped = true;
     },
 
@@ -402,7 +403,7 @@
         val || (val = []);
         $el.each(function(i, el) {
           var checkbox = Backbone.$(el);
-          var checked = _.indexOf(val, checkbox.val()) > -1;
+          var checked = _.contains(val, checkbox.val());
           checkbox.prop('checked', checked);
         });
       } else {
