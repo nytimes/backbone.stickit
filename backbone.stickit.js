@@ -63,8 +63,9 @@
       _.each(bindings, function(binding, i) {
         if (model && binding.model !== model) return;
         if (bindingSelector && binding.config.selector != bindingSelector) return;
-        destroyFns.push(binding.config._destroy);
+
         binding.model.off(binding.event, binding.fn);
+        destroyFns.push(binding.config._destroy);
         models.push(binding.model);
         delete this._modelBindings[i];
       }, this);
@@ -156,39 +157,37 @@
         applyViewFn.call(this, config.destroy, $el, model, config);
       };
 
-      initializeAttributes.call(this, $el, config, model, modelAttr);
-
-      initializeVisible.call(this, $el, config, model, modelAttr);
+      initializeAttributes($el, config, model, modelAttr);
+      initializeVisible($el, config, model, modelAttr);
 
       if (modelAttr) {
         // Setup one-way, form element to model, bindings.
         _.each(config.events, function(type) {
           var event = type + namespace;
-          var method = function(evt) {
-            var val = config.getVal.call(this, $el, event, config, slice.call(arguments, 1));
+          var listener = function(evt) {
+            var val = config.getVal.call(this, $el, evt, config, slice.call(arguments, 1));
             // Don't update the model if false is returned from the `updateModel` configuration.
-            var currentVal = evaluateBoolean.call(this, config.updateModel, val, evt, config);
-            if (currentVal) setAttr.call(this, model, modelAttr, val, options, config);
+            var currentVal = evaluateBoolean(config.updateModel, val, config, evt);
+            if (currentVal) setAttr(model, modelAttr, val, options, config);
           };
-          method = _.bind(method, this);
-          if (selector === ':el') this.$el.on(event, method);
-          else this.$el.on(event, selector, method);
+          var sel = selector === ':el'? '' : selector;
+          this.$el.on(event, sel, _.bind(listener, this));
         }, this);
 
         // Setup a `change:modelAttr` observer to keep the view element in sync.
         // `modelAttr` may be an array of attributes or a single string value.
         _.each(_.flatten([modelAttr]), function(attr) {
-          observeModelEvent.call(this, model, 'change:' + attr, config, function(model, val, options) {
+          observeModelEvent(model, 'change:' + attr, config, function(model, val, options) {
             var changeId = options && options.stickitChange && options.stickitChange.bindId;
             if (changeId !== bindId) {
-              var currentVal = getAttr.call(this, model, modelAttr, config);
-              updateViewBindEl.call(this, $el, config, currentVal, model);
+              var currentVal = getAttr(model, modelAttr, config);
+              updateViewBindEl($el, config, currentVal, model);
             }
           });
         }, this);
 
-        var currentVal = getAttr.call(this, model, modelAttr, config, this);
-        updateViewBindEl.call(this, $el, config, currentVal, model, true);
+        var currentVal = getAttr(model, modelAttr, config, this);
+        updateViewBindEl($el, config, currentVal, model, true);
       }
 
       // After each binding is setup, call the `initialize` callback.
@@ -220,11 +219,11 @@
 
   // Given a function, string (view function reference), or a boolean
   // value, returns the truthy result. Any other types evaluate as false.
-  var evaluateBoolean = function(reference) {
+  var evaluateBoolean = function(reference, val, config) {
     if (_.isBoolean(reference)) {
       return reference;
     } else if (_.isFunction(reference) || _.isString(reference)) {
-      return applyViewFn.apply(this, arguments);
+      return applyViewFn.apply(config.view, arguments);
     }
     return false;
   };
@@ -232,19 +231,20 @@
   // Setup a model event binding with the given function, and track the event
   // in the view's _modelBindings.
   var observeModelEvent = function(model, event, config, fn) {
-    model.on(event, fn, this);
-    this._modelBindings.push({model:model, event:event, fn:fn, config:config});
+    var view = config.view;
+    model.on(event, fn, view);
+    view._modelBindings.push({model:model, event:event, fn:fn, config:config});
   };
 
   // Prepares the given `val`ue and sets it into the `model`.
   var setAttr = function(model, attr, val, options, config) {
-    var value = {};
+    var value = {}, view = config.view;
     if (config.onSet) {
-      val = applyViewFn.call(this, config.onSet, val, config);
+      val = applyViewFn.call(view, config.onSet, val, config);
     }
 
     if (config.set) {
-      applyViewFn.call(this, config.set, attr, val, options, config);
+      applyViewFn.call(view, config.set, attr, val, options, config);
     } else {
       value[attr] = val;
       // If `observe` is defined as an array and `onSet` returned
@@ -263,6 +263,7 @@
   // formatting if necessary. If `attr` is an array, then an array of
   // respective values will be returned.
   var getAttr = function(model, attr, config) {
+    var view = config.view;
     var retrieveVal = function(field) {
       return model[config.escape ? 'escape' : 'get'](field);
     };
@@ -270,7 +271,7 @@
       return val == null ? '' : val;
     };
     var val = _.isArray(attr) ? _.map(attr, retrieveVal) : retrieveVal(attr);
-    if (config.onGet) val = applyViewFn.call(this, config.onGet, val, config);
+    if (config.onGet) val = applyViewFn.call(view, config.onGet, val, config);
     return _.isArray(val) ? _.map(val, sanitizeVal) : sanitizeVal(val);
   };
 
@@ -311,6 +312,8 @@
       'defer', 'disabled', 'hidden', 'indeterminate', 'loop', 'multiple',
       'open', 'readonly', 'required', 'scoped', 'selected'];
 
+    var view = config.view;
+
     _.each(config.attributes || [], function(attrConfig) {
       attrConfig = _.clone(attrConfig);
 
@@ -318,7 +321,7 @@
       var observed = attrConfig.observe || (attrConfig.observe = modelAttr);
       var updateAttr = function() {
         var updateType = _.contains(props, attrConfig.name) ? 'prop' : 'attr',
-          val = getAttr.call(this, model, observed, attrConfig);
+            val = getAttr(model, observed, attrConfig);
 
         // If it is a class then we need to remove the last value and add the new.
         if (attrConfig.name === 'class') {
@@ -330,11 +333,11 @@
       };
 
       _.each(_.flatten([observed]), function(attr) {
-        observeModelEvent.call(this, model, 'change:' + attr, config, updateAttr);
-      }, this);
+        observeModelEvent(model, 'change:' + attr, config, updateAttr);
+      });
 
-      updateAttr.call(this);
-    }, this);
+      updateAttr();
+    });
   };
 
   // If `visible` is configured, then the view element will be shown/hidden
@@ -348,28 +351,30 @@
   //
   var initializeVisible = function($el, config, model, modelAttr) {
     if (config.visible == null) return;
+    var view = config.view;
+
     var visibleCb = function() {
       var visible = config.visible,
           visibleFn = config.visibleFn,
-          val = getAttr.call(this, model, modelAttr, config),
+          val = getAttr(model, modelAttr, config),
           isVisible = !!val;
 
       // If `visible` is a function then it should return a boolean result to show/hide.
       if (_.isFunction(visible) || _.isString(visible)) {
-        isVisible = !!applyViewFn.call(this, visible, val, config);
+        isVisible = !!applyViewFn.call(view, visible, val, config);
       }
 
       // Either use the custom `visibleFn`, if provided, or execute the standard show/hide.
       if (visibleFn) {
-        applyViewFn.call(this, visibleFn, $el, isVisible, config);
+        applyViewFn.call(view, visibleFn, $el, isVisible, config);
       } else {
         $el.toggle(isVisible);
       }
     };
 
     _.each(_.flatten([modelAttr]), function(attr) {
-      observeModelEvent.call(this, model, 'change:' + attr, config, visibleCb);
-    }, this);
+      observeModelEvent(model, 'change:' + attr, config, visibleCb);
+    });
 
     visibleCb();
   };
@@ -382,9 +387,10 @@
   //     afterUpdate: function($el, val, options) {} // optional callback
   //
   var updateViewBindEl = function($el, config, val, model, isInitializing) {
-    if (!evaluateBoolean.call(this, config.updateView, val, config)) return;
-    applyViewFn.call(this, config.update, $el, val, model, config);
-    if (!isInitializing) applyViewFn.call(this, config.afterUpdate, $el, val, config);
+    var view = config.view;
+    if (!evaluateBoolean(config.updateView, val, config)) return;
+    applyViewFn.call(view, config.update, $el, val, model, config);
+    if (!isInitializing) applyViewFn.call(view, config.afterUpdate, $el, val, config);
   };
 
   // Default Handlers
@@ -587,7 +593,8 @@
           opt[selectConfig.labelPath] = optList[i];
           opts.push(opt);
         }
-        addSelectOptions(_.sortBy(opts, selectConfig.comparator || selectConfig.labelPath), $el, val);
+        opts = _.sortBy(opts, selectConfig.comparator || selectConfig.labelPath);
+        addSelectOptions(opts, $el, val);
       }
     },
     getVal: function($el) {
