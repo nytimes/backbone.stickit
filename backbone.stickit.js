@@ -1,4 +1,4 @@
-// Backbone.Stickit v0.7.0, MIT Licensed
+// Backbone.Stickit v0.8.0, MIT Licensed
 // Copyright (c) 2012 The New York Times, CMS Group, Matthew DeLambo <delambo@gmail.com>
 
 (function (factory) {
@@ -60,7 +60,7 @@
 
       var models = [], destroyFns = [];
       _.each(this._modelBindings, function(binding, i) {
-        if (model && binding.model !== model) { return };
+        if (model && binding.model !== model) { return; }
         if (bindingSelector && binding.config.selector != bindingSelector) return;
         destroyFns.push(binding.config._destroy);
         binding.model.off(binding.event, binding.fn);

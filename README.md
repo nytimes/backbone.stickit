@@ -1,4 +1,4 @@
-[-> **Documentation for current/stable release: 0.7.0**](http://nytimes.github.com/backbone.stickit/)
+[-> **Documentation for current/stable release: 0.8.0**](http://nytimes.github.com/backbone.stickit/)
 
 **The following is documentation for the code in master/edge version...**
 
@@ -10,7 +10,7 @@ Stickit is a Backbone data binding plugin that binds Model attributes to View el
 
 ## Download + Source
 
-[download v0.7.0](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.7.0.zip)
+[download v0.8.0](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.8.0.zip)
 
 [download master/edge](https://raw.github.com/NYTimes/backbone.stickit/master/backbone.stickit.js)
 
@@ -670,7 +670,7 @@ MIT
 
 ## Change Log
 
-#### Master
+#### 0.8.0
 
 - **Breaking Change**: Calling `view#stickit` a second time with the same model, will no longer unbind all previously bound bindings associated with that model; instead, it will unbind any duplicate bindings (selectors) found in the given bindings hash (or whatever's in `view.bindings`) before initializing.
 - Added an `view#addBinding` which will initiate a single, or hash, of bindings.
