@@ -291,10 +291,10 @@
     }));
     handlers.push(binding);
     var config = _.extend.apply(_, handlers);
+
     // `updateView` is defaulted to false for configutrations with
     // `visible`; otherwise, `updateView` is defaulted to true.
-    if (config.visible && !_.has(config, 'updateView')) config.updateView = false;
-    else if (!_.has(config, 'updateView')) config.updateView = true;
+    if (!_.has(config, 'updateView')) config.updateView = !config.visible;
     return config;
   };
 
