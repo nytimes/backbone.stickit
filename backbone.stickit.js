@@ -164,10 +164,10 @@
         // Setup one-way, form element to model, bindings.
         _.each(config.events, function(type) {
           var event = type + namespace;
-          var method = function(event) {
-            var val = config.getVal.call(this, $el, event, config, _.rest(arguments));
+          var method = function(evt) {
+            var val = config.getVal.call(this, $el, event, config, slice.call(arguments, 1));
             // Don't update the model if false is returned from the `updateModel` configuration.
-            var currentVal = evaluateBoolean.call(this, config.updateModel, val, event, config);
+            var currentVal = evaluateBoolean.call(this, config.updateModel, val, evt, config);
             if (currentVal) setAttr.call(this, model, modelAttr, val, options, config);
           };
           method = _.bind(method, this);
@@ -307,7 +307,9 @@
   //     }, ...]
   //
   var initializeAttributes = function($el, config, model, modelAttr) {
-    var props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'indeterminate', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'];
+    var props = ['autofocus', 'autoplay', 'async', 'checked', 'controls',
+      'defer', 'disabled', 'hidden', 'indeterminate', 'loop', 'multiple',
+      'open', 'readonly', 'required', 'scoped', 'selected'];
 
     _.each(config.attributes || [], function(attrConfig) {
       attrConfig = _.clone(attrConfig);
@@ -315,7 +317,7 @@
       var lastClass = '';
       var observed = attrConfig.observe || (attrConfig.observe = modelAttr);
       var updateAttr = function() {
-        var updateType = _.indexOf(props, attrConfig.name, true) > -1 ? 'prop' : 'attr',
+        var updateType = _.contains(props, attrConfig.name) ? 'prop' : 'attr',
           val = getAttr.call(this, model, observed, attrConfig);
 
         // If it is a class then we need to remove the last value and add the new.
@@ -326,9 +328,11 @@
           $el[updateType](attrConfig.name, val);
         }
       };
+
       _.each(_.flatten([observed]), function(attr) {
         observeModelEvent.call(this, model, 'change:' + attr, config, updateAttr);
       }, this);
+
       updateAttr.call(this);
     }, this);
   };
@@ -349,8 +353,12 @@
           visibleFn = config.visibleFn,
           val = getAttr.call(this, model, modelAttr, config),
           isVisible = !!val;
+
       // If `visible` is a function then it should return a boolean result to show/hide.
-      if (_.isFunction(visible) || _.isString(visible)) isVisible = !!applyViewFn.call(this, visible, val, config);
+      if (_.isFunction(visible) || _.isString(visible)) {
+        isVisible = !!applyViewFn.call(this, visible, val, config);
+      }
+
       // Either use the custom `visibleFn`, if provided, or execute the standard show/hide.
       if (visibleFn) {
         applyViewFn.call(this, visibleFn, $el, isVisible, config);
@@ -358,9 +366,11 @@
         $el.toggle(isVisible);
       }
     };
+
     _.each(_.flatten([modelAttr]), function(attr) {
       observeModelEvent.call(this, model, 'change:' + attr, config, visibleCb);
     }, this);
+
     visibleCb();
   };
 
