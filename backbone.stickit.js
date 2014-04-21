@@ -28,11 +28,11 @@
   Stickit.addHandler = function(handlers) {
     // Fill-in default values.
     handlers = _.map(_.flatten([handlers]), function(handler) {
-      return _.extend({
+      return _.defaults(handler, {
         updateModel: true,
         updateView: true,
         updateMethod: 'text'
-      }, handler);
+      });
     });
     this._handlers = this._handlers.concat(handlers);
   };
