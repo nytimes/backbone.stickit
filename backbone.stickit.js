@@ -584,10 +584,9 @@
       var selected = $el.find('option:selected');
 
       if ($el.prop('multiple')) {
-        var vals = _.map(selected, function(el) {
+        return _.map(selected, function(el) {
           return Backbone.$(el).data('stickit_bind_val');
         });
-        return Backbone.$(vals).get();
       } else {
         return selected.data('stickit_bind_val');
       }
