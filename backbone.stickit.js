@@ -58,9 +58,9 @@
         return;
       }
 
-      var models = [], destroyFns = [];
-      _.each(this._modelBindings, function(binding, i) {
-        if (model && binding.model !== model) { return; }
+      var models = [], destroyFns = [], bindings = _.clone(this._modelBindings);
+      _.each(bindings, function(binding, i) {
+        if (model && binding.model !== model) return;
         if (bindingSelector && binding.config.selector != bindingSelector) return;
         destroyFns.push(binding.config._destroy);
         binding.model.off(binding.event, binding.fn);
