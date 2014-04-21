@@ -163,15 +163,16 @@
       if (modelAttr) {
         // Setup one-way, form element to model, bindings.
         _.each(config.events, function(type) {
-          var event = type + namespace;
-          var listener = function(evt) {
-            var val = config.getVal.call(this, $el, evt, config, slice.call(arguments, 1));
+          var eventName = type + namespace;
+          var listener = function(event) {
+            var val = applyViewFn.call(this, config.getVal, $el, event, config, slice.call(arguments, 1));
+
             // Don't update the model if false is returned from the `updateModel` configuration.
-            var currentVal = evaluateBoolean(config.updateModel, val, config, evt);
+            var currentVal = evaluateBoolean(config.updateModel, val, config, event);
             if (currentVal) setAttr(model, modelAttr, val, options, config);
           };
           var sel = selector === ':el'? '' : selector;
-          this.$el.on(event, sel, _.bind(listener, this));
+          this.$el.on(eventName, sel, _.bind(listener, this));
         }, this);
 
         // Setup a `change:modelAttr` observer to keep the view element in sync.
