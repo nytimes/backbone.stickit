@@ -51,7 +51,7 @@
     // delete bindings for the given `model` and its corresponding view events.
     unstickit: function(model, bindingSelector) {
 
-      // Support bindings hash in place of selector.
+      // Support passing a bindings hash in place of bindingSelector.
       if (_.isObject(bindingSelector)) {
         _.each(bindingSelector, function(v, selector) {
           this.unstickit(model, selector);
@@ -82,16 +82,16 @@
       this.$el.off('.stickit' + (model ? '.' + model.cid : ''), bindingSelector);
     },
 
-    // Using `this.bindings` configuration or the `optionalBindingsConfig`, binds `this.model`
-    // or the `optionalModel` to elements in the view.
+    // Initilize Stickit bindings for the view. Subsequent binding additions
+    // can either call `stickit` with the new bindings, or add them directly
+    // with `addBinding`. Both arguments to `stickit` are optional.
     stickit: function(optionalModel, optionalBindingsConfig) {
       var model = optionalModel || this.model,
           bindings = optionalBindingsConfig || _.result(this, "bindings") || {};
 
       this._modelBindings || (this._modelBindings = []);
 
-      // Iterate through the selectors in the bindings configuration and configure
-      // the various options for each field.
+      // Add bindings in bulk using `addBinding`.
       this.addBinding(model, bindings);
 
       // Wrap `view.remove` to unbind stickit model and dom events.
@@ -108,15 +108,14 @@
       return this;
     },
 
-    // Add a single model binding to the view
+    // Add a single Stickit binding or a hash of bindings to the model. If
+    // `optionalModel` is ommitted, will default to the view's `model` property.
     addBinding: function(optionalModel, selector, binding) {
-      var $el, options, modelAttr, config,
-        model = optionalModel || this.model,
-        namespace = '.stickit.' + model.cid,
-        binding = binding || {},
-        bindId = _.uniqueId();
+      var model = optionalModel || this.model,
+          namespace = '.stickit.' + model.cid,
+          binding = binding || {};
 
-      // Allow jQuery-style {key: val} event maps
+      // Support jQuery-style {key: val} event maps.
       if (_.isObject(selector)) {
         var bindings = selector;
         _.each(bindings, function(val, key) {
@@ -125,9 +124,10 @@
         return;
       }
 
-      // Support ':el' selector - special case selector for the view managed delegate.
-      $el = selector === ':el' ? this.$el : this.$(selector);
+      // Special case the ':el' selector to use the view's this.$el.
+      var $el = selector === ':el' ? this.$el : this.$(selector);
 
+      // Clear any previous matching bindings.
       this.unstickit(model, selector);
 
       // Fail fast if the selector didn't match an element.
@@ -139,17 +139,23 @@
       // Handle case where `observe` is in the form of a function.
       if (_.isFunction(binding.observe)) binding.observe = binding.observe.call(this);
 
-      config = getConfiguration($el, binding);
+      // Find all matching Stickit handlers that could apply to this element
+      // and store in a config object.
+      var config = getConfiguration($el, binding);
+
+      // The attribute we're observing in our config.
+      var modelAttr = config.observe;
+
+      // Store needed properties for later.
       config.selector = selector;
-      modelAttr = config.observe;
+      config.view = this;
 
       // Create the model set options with a unique `bindId` so that we
       // can avoid double-binding in the `change:attribute` event handler.
-      config.bindId = bindId;
+      var bindId = config.bindId = _.uniqueId();
 
       // Add a reference to the view for handlers of stickitChange events
-      config.view = this;
-      options = _.extend({stickitChange: config}, config.setOptions);
+      var options = _.extend({stickitChange: config}, config.setOptions);
 
       // Add a `_destroy` callback to the configuration, in case `destroy`
       // is a named function and we need a unique function when unsticking.
@@ -161,7 +167,7 @@
       initializeVisible($el, config, model, modelAttr);
 
       if (modelAttr) {
-        // Setup one-way, form element to model, bindings.
+        // Setup one-way (input element -> model) bindings.
         _.each(config.events, function(type) {
           var eventName = type + namespace;
           var listener = function(event) {
@@ -185,9 +191,9 @@
               updateViewBindEl($el, config, currentVal, model);
             }
           });
-        }, this);
+        });
 
-        var currentVal = getAttr(model, modelAttr, config, this);
+        var currentVal = getAttr(model, modelAttr, config);
         updateViewBindEl($el, config, currentVal, model, true);
       }
 
@@ -290,6 +296,8 @@
       return $el.is(handler.selector);
     }));
     handlers.push(binding);
+
+    // Merge handlers into a single config object. Last props in wins.
     var config = _.extend.apply(_, handlers);
 
     // `updateView` is defaulted to false for configutrations with
@@ -337,6 +345,7 @@
         observeModelEvent(model, 'change:' + attr, config, updateAttr);
       });
 
+      // Initialize the matched element's state.
       updateAttr();
     });
   };
