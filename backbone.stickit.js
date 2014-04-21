@@ -101,6 +101,7 @@
         };
       }
       this.remove.stickitWrapped = true;
+      return this;
     },
 
     // Add a single model binding to the view
