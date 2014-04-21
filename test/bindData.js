@@ -314,10 +314,8 @@ $(document).ready(function() {
       },
 
       events: function() {
-        var self = this;
-
         return {
-          click: self.clickHandled
+          click: this.clickHandled
         };
       },
 
