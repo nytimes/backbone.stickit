@@ -559,15 +559,16 @@
 
       // The `list` configuration is a function that returns the options list or a string
       // which represents the path to the list relative to `window` or the view/`this`.
-      var evaluate = function(view, list) {
+      if (_.isString(list)) {
         var context = window;
-        if (list.indexOf('this.') === 0) context = view;
+        if (list.indexOf('this.') === 0) context = this;
         list = list.replace(/^[a-z]*\.(.+)$/, '$1');
-        return evaluatePath(context, list);
-      };
-      if (_.isString(list)) optList = evaluate(this, list);
-      else if (_.isFunction(list)) optList = applyViewFn.call(this, list, $el, options);
-      else optList = list;
+        optList = evaluatePath(context, list);
+      } else if (_.isFunction(list)) {
+        optList = applyViewFn.call(this, list, $el, options);
+      } else {
+        optList = list;
+      }
 
       // Support Backbone.Collection and deserialize.
       if (optList instanceof Backbone.Collection) optList = optList.toJSON();
