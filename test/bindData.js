@@ -1147,9 +1147,9 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
 
     model.set({'water':'fountain'});
     view.model = model;
-    view.templateId = 'jst9';
+    view.templateId = 'jst9-1';
     view.bindings = {
-      '#test9': {
+      '#test9-1': {
         observe: 'water',
         attributes: [{
           name: 'class'
@@ -1159,10 +1159,32 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    ok(view.$('#test9').hasClass('test') && view.$('#test9').hasClass('fountain'));
+    ok(view.$('#test9-1').hasClass('test') && view.$('#test9-1').hasClass('fountain'));
 
     model.set('water', 'evian');
-    ok(view.$('#test9').hasClass('test') && view.$('#test9').hasClass('evian'));
+    ok(view.$('#test9-1').hasClass('test') && view.$('#test9-1').hasClass('evian'));
+  });
+
+  test('bindings:attributes:name:class:unstickit', function() {
+
+    model.set({'dom':'messy'});
+    view.model = model;
+    view.templateId = 'jst9-2';
+    view.bindings = {
+      '#test9-2': {
+        observe: 'dom',
+        attributes: [{
+          name: 'class'
+        }]
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    ok(view.$('#test9-2').hasClass('test') && view.$('#test9-2').hasClass('messy'));
+
+    view.unstickit();
+    ok(view.$('#test9-2').hasClass('test') && !view.$('#test9-2').hasClass('messy'));
   });
 
   test('bindings:attributes:onGet', function() {
