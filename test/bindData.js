@@ -1272,9 +1272,9 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     view.templateId = 'jst5';
     view.bindings = {
       '#test5': {
-        classes: [{
+        classes: {
           testClass: 'water'
-        }]
+        }
       }
     };
 
@@ -1292,7 +1292,7 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     view.templateId = 'jst5';
     view.bindings = {
       '#test5': {
-        classes: [{
+        classes: {
           'col-md-2': {
             observe:'truthy'
           },
@@ -1302,7 +1302,7 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
               return !val;
             }
           }
-        }]
+        }
       }
     };
 

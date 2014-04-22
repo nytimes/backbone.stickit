@@ -327,20 +327,18 @@
   };
 
   var initializeClasses = function(view, $el, config, model, modelAttr) {
-    _.each(config.classes || [], function(classConfigs) {
-      _.each(classConfigs, function(classConfig, name){
-        var observed, updateClass;
-        observed = classConfig.observe || classConfig;
-        updateClass = function() {
-          var val = getAttr(model, observed, classConfig, view);
-          $el.toggleClass(name, !!val);
-        };
+    _.each(config.classes || [], function(classConfig, name) {
+      var observed, updateClass;
+      observed = classConfig.observe || classConfig;
+      updateClass = function() {
+        var val = getAttr(model, observed, classConfig, view);
+        $el.toggleClass(name, !!val);
+      };
 
-        _.each(_.flatten([observed]), function(attr) {
-          observeModelEvent(model, view, 'change:' + attr, config, updateClass);
-        });
-        updateClass();
+      _.each(_.flatten([observed]), function(attr) {
+        observeModelEvent(model, view, 'change:' + attr, config, updateClass);
       });
+      updateClass();
     });
   };
 
