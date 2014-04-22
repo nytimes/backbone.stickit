@@ -177,10 +177,10 @@
         // Setup a `change:modelAttr` observer to keep the view element in sync.
         // `modelAttr` may be an array of attributes or a single string value.
         _.each(_.flatten([modelAttr]), function(attr) {
-          observeModelEvent(model, this, 'change:'+attr, config, function(model, val, options) {
+          observeModelEvent(model, this, attr, config, function(m, val, options) {
             var changeId = options && options.stickitChange && options.stickitChange.bindId || null;
             if (changeId !== bindId)
-              updateViewBindEl(this, $el, config, getAttr(model, modelAttr, config, this), model);
+              updateViewBindEl(this, $el, config, getAttr(model, modelAttr, config, this), m);
           });
         }, this);
 
@@ -224,7 +224,11 @@
 
   // Setup a model event binding with the given function, and track the event
   // in the view's _modelBindings.
-  var observeModelEvent = function(model, view, event, config, fn) {
+  var observeModelEvent = function(model, view, attr, config, fn) {
+    // Detect attr type for Backbone Collections
+    var event = (model.get(attr) instanceof Backbone.Collection) ?
+      'add:'+attr+' remove:'+attr+' reset:'+attr+' change:'+attr+'[*]' :
+      'change:'+attr;
     model.on(event, fn, view);
     view._modelBindings.push({model:model, event:event, fn:fn, config:config});
   };
@@ -317,7 +321,7 @@
         else $el[updateType](attrConfig.name, val);
       };
       _.each(_.flatten([observed]), function(attr) {
-        observeModelEvent(model, view, 'change:' + attr, config, updateAttr);
+        observeModelEvent(model, view, attr, config, updateAttr);
       });
       updateAttr();
     });
@@ -348,7 +352,7 @@
       }
     };
     _.each(_.flatten([modelAttr]), function(attr) {
-      observeModelEvent(model, view, 'change:' + attr, config, visibleCb);
+      observeModelEvent(model, view, attr, config, visibleCb);
     });
     visibleCb();
   };
