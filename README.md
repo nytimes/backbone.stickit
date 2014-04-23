@@ -29,7 +29,7 @@ Similar to `view.events`, you can define `view.bindings` to map selectors to bin
 
 When the view's html is rendered, usually the last call will be to stickit. By convention, and in the following example, stickit will use `view.model` and the `view.bindings` configuration to initialize:
 
-```javascript  
+```javascript
   render: function() {
     this.$el.html('<div id="title"/> <input id="author" type="text">');
     this.stickit();
@@ -45,7 +45,7 @@ On the initial call, stickit will initialize the innerHTML of `view.$('#title')`
 
 Uses `view.bindings` and `view.model` to setup bindings. Optionally, you can pass in a model and bindings hash. Note, it is safe to re-render or call stickit multiple times, as stickit will match any previously bound selectors and their associated models and unbind them before reinitializing.
 
-```javascript  
+```javascript
   render: function() {
     this.$el.html(/* ... */);
     // Initialize stickit with view.bindings and view.model
@@ -58,7 +58,7 @@ Uses `view.bindings` and `view.model` to setup bindings. Optionally, you can pas
 ### addBinding
 `view.addBinding(optionalModel, selector, configuration)`
 
-Adds a single binding to the view, using the given model, or `view.model`, and the given `selector` and `configuration`. It's also possible to pass in a bindings hash as the second parameter. If you use a selector that was already used for a binding, then the old binding will be destroyed before initializing the new binding. 
+Adds a single binding to the view, using the given model, or `view.model`, and the given `selector` and `configuration`. It's also possible to pass in a bindings hash as the second parameter. If you use a selector that was already used for a binding, then the old binding will be destroyed before initializing the new binding.
 
 ```javascript
   // Short-form selector.
@@ -90,9 +90,9 @@ Once you are familiarized with the bindings callbacks, use [this reference](#bin
 
 A string, function, or array which is used to map a model attribute to a view element. If binding to `observe` is the only configuration needed, then it can be written in short form where the attribute name is the value of the whole binding configuration.
 
-Notes on binding to an array of attributes: when binding from model->view, this configuration should be paired with an `onGet` callback that can unpack/format the values. When binding from view->model, then `onSet` or `getVal` should be defined and should return an array of values that stickit will set into the model. 
+Notes on binding to an array of attributes: when binding from model->view, this configuration should be paired with an `onGet` callback that can unpack/format the values. When binding from view->model, then `onSet` or `getVal` should be defined and should return an array of values that stickit will set into the model.
 
-```javascript  
+```javascript
   bindings: {
     // Short form binding
     '#author': 'author',
@@ -129,7 +129,7 @@ Notes on binding to an array of attributes: when binding from model->view, this 
 
 A special selector value that binds to the view delegate (view.$el).
 
-```javascript  
+```javascript
   tagName: 'form',
   bindings: {
     ':el': {
@@ -143,7 +143,7 @@ A special selector value that binds to the view delegate (view.$el).
 
 A callback which returns a formatted version of the model attribute value that is passed in before setting it in the bound view element.
 
-```javascript  
+```javascript
   bindings: {
     '#header': {
       observe: 'headerName',
@@ -159,7 +159,7 @@ A callback which returns a formatted version of the model attribute value that i
 
 A callback which prepares a formatted version of the view value before setting it in the model.
 
-```javascript  
+```javascript
   bindings: {
     '#author': {
       observe: 'author',
@@ -175,7 +175,7 @@ A callback which prepares a formatted version of the view value before setting i
 
 A callback which overrides stickit's default handling for retrieving the value from the bound view element. Use `onSet` to format values - this is better used in [handlers](#custom-handlers) or when extra/different dom operations need to be handled.
 
-```javascript  
+```javascript
   bindings: {
     '#author': {
       observe: 'author',
@@ -188,7 +188,7 @@ A callback which overrides stickit's default handling for retrieving the value f
 
 A callback which overrides stickit's default handling for updating the value of a bound view element. Use `onGet` to format model values - this is better used in [handlers](#custom-handlers) or when extra/different dom operations need to be handled .
 
-```javascript  
+```javascript
   bindings: {
     '#author': {
       observe: 'author',
@@ -201,7 +201,7 @@ A callback which overrides stickit's default handling for updating the value of 
 
 A boolean value or a function that returns a boolean value which controls whether or not the model gets changes/updates from the view (model<-view). This is only relevant to form elements, as they have two-way bindings with changes that can be reflected into the model. Defaults to true.
 
-```javascript  
+```javascript
   bindings: {
     '#title': {
       observe: 'title',
@@ -218,7 +218,7 @@ A boolean value or a function that returns a boolean value which controls whethe
 
 A boolean value or a function that returns a boolean value which controls whether or not the bound view element gets changes/updates from the model (view<-model). Defaults to true.
 
-```javascript  
+```javascript
 bindings: {
   '#title': {
     observe: 'title',
@@ -232,7 +232,7 @@ bindings: {
 
 Called after a value is updated in the dom.
 
-```javascript  
+```javascript
   bindings: {
     '#warning': {
       observe: 'warningMessage',
@@ -248,7 +248,7 @@ Called after a value is updated in the dom.
 
 Method used to update the inner value of the view element. Defaults to 'text', but 'html' may also be used to update the dom element's innerHTML.
 
-```javascript  
+```javascript
   bindings: {
     '#header': {
       observe: 'headerName',
@@ -262,7 +262,7 @@ Method used to update the inner value of the view element. Defaults to 'text', b
 
 A boolean which when true escapes the model before setting it in the view - internally, gets the attribute value by calling `model.escape('attribute')`. This is only useful when `updateMethod` is "html".
 
-```javascript  
+```javascript
   bindings: {
     '#header': {
       observe: 'headerName',
@@ -276,7 +276,7 @@ A boolean which when true escapes the model before setting it in the view - inte
 
 Called for each binding after it is configured in the initial call to `stickit()`. Useful for setting up third-party plugins, see the handlers section for examples.
 
-```javascript  
+```javascript
   bindings: {
     '#album': {
       observe: 'exai',
@@ -291,7 +291,7 @@ Called for each binding after it is configured in the initial call to `stickit()
 
 Called for each binding after it is unstuck from the model and view. Useful for tearing down third-party plugins or events that were configured in `initialze`.
 
-```javascript  
+```javascript
   bindings: {
     '#album': {
       observe: 'Tomorrow\'s Harvest',
@@ -307,9 +307,9 @@ Called for each binding after it is unstuck from the model and view. Useful for 
 When true, `visible` shows or hides the view element based on the model attribute's truthiness. `visible` may also be defined with a callback which should return a truthy value.
 The `updateView` option defaults to `false` when using `visible`. You must opt-in to `updateView` in order to have both view element visibility and value changes bound to the observed attribute.
 
-If more than the standard jQuery show/hide is required, then you can manually take control by defining `visibleFn` with a callback. 
+If more than the standard jQuery show/hide is required, then you can manually take control by defining `visibleFn` with a callback.
 
-```javascript  
+```javascript
   bindings: {
     '#author': {
       observe: 'isDeleuze',
@@ -318,7 +318,7 @@ If more than the standard jQuery show/hide is required, then you can manually ta
   }
 ```
 
-```javascript  
+```javascript
   bindings: {
     '#title': {
       observe: 'title',
@@ -328,7 +328,7 @@ If more than the standard jQuery show/hide is required, then you can manually ta
   }
 ```
 
-```javascript  
+```javascript
   bindings: {
     '#body': {
       observe: 'isWithoutOrgans',
@@ -346,7 +346,7 @@ If more than the standard jQuery show/hide is required, then you can manually ta
 
 By default, form and contenteditable elements will be configured with two-way bindings, syncing changes in the view elements with model attributes. Optionally, one-way bindings can be configured with `updateView` or `updateModel`. With the `events`, you can specify a different set of events to use for reflecting changes to the model.
 
-The following is a list of the supported form elements, their binding details, and the default events used for binding:  
+The following is a list of the supported form elements, their binding details, and the default events used for binding:
 
  - input, textarea, and contenteditable
    - element value synced with model attribute value
@@ -365,12 +365,12 @@ The following is a list of the supported form elements, their binding details, a
 
 Specify a list of events which will override stickit's default events for a form element. Bound events control when the model is updated with changes in the view element.
 
-```javascript  
+```javascript
   bindings: {
     'input#title': {
       observe: 'title',
       // Normally, stickit would bind `keyup`, `change`, `cut`, and `paste` events
-      // to an input:text element. The following will override these events and only 
+      // to an input:text element. The following will override these events and only
       // update/set the model after the input#title element is blur'ed.
       events: ['blur']
     }
@@ -390,13 +390,13 @@ When bindings are initialized, Stickit will build the `<select>` element with th
 
 **Note:** if you are using Zepto and referencing object values for your select options, like in the second example, then you will need to also include the Zepto data module. Also, `<select>` bindings are two-way bindings only - `updateView:false` will be ignored.
 
-The following example references a collection of stooges at `window.app.stooges` and uses the `age` attribute for labels and the `name` attribute for option values:  
+The following example references a collection of stooges at `window.app.stooges` and uses the `age` attribute for labels and the `name` attribute for option values:
 
-```javascript  
+```javascript
   window.app.stooges = [{name:'moe', age:40}, {name:'larry', age:50}, {name:'curly', age:60}];
 ```
 
-```javascript  
+```javascript
   bindings: {
     'select#stooges': {
       observe: 'stooge',
@@ -439,8 +439,8 @@ The following is an example where a collection is returned by callback and the c
           return [{id:1, data:{name:'OH'}}, {id:2, data:{name:'IN'}}];
         },
         labelPath: 'data.name'
-        // Leaving `valuePath` undefined so that the collection objects are used 
-        // as option values. For example, if the "OH" option was selected, then the 
+        // Leaving `valuePath` undefined so that the collection objects are used
+        // as option values. For example, if the "OH" option was selected, then the
         // following value would be set into the model: `model.set('state', {id:1, data:{name:'OH'}});`
     }
   }
@@ -514,7 +514,7 @@ bindings: {
 
 An object which is used as the set options when setting values in the model. This is only used when binding to form elements, as their changes would update the model.
 
-```javascript  
+```javascript
   bindings: {
     'input#name': {
       observe: 'name',
@@ -548,7 +548,7 @@ Binds element attributes and properties with observed model attributes, using th
  - `observe`: observes the given model attribute. If left undefined, then the main configuration `observe` is observed.
  - `onGet`: formats the observed model attribute value before it is set in the matched element.
 
-```javascript  
+```javascript
   bindings: {
     '#header': {
       attributes: [{
@@ -571,7 +571,7 @@ Binds element attributes and properties with observed model attributes, using th
 ### addHandler
 `Backbone.Stickit.addHandler(handler_s)`
 
-Adds the given handler or array of handlers to Stickit. A handler is a binding configuration, with an additional `selector` key, that is used to customize or override any of Stickit's default binding handling. To derive a binding configuration, the `selector`s are used to match against a bound element, and any matching handlers  are mixed/extended in the order that they were added. 
+Adds the given handler or array of handlers to Stickit. A handler is a binding configuration, with an additional `selector` key, that is used to customize or override any of Stickit's default binding handling. To derive a binding configuration, the `selector`s are used to match against a bound element, and any matching handlers  are mixed/extended in the order that they were added.
 
 Internally, Stickit uses `addHandler` to add configuration for its default handling. For example, the following is the internal handler that matches against `textarea` elements:
 
@@ -656,7 +656,7 @@ The following image demonstrates the order in which bindings callbacks are calle
 
 ### Why Stickit?
 
-JavaScript frameworks seem to be headed in the wrong direction - controller callbacks/directives, configuration, and special tags are being forced into the template/presentation layer. Who wants to program and debug templates? 
+JavaScript frameworks seem to be headed in the wrong direction - controller callbacks/directives, configuration, and special tags are being forced into the template/presentation layer. Who wants to program and debug templates?
 
 If you are writing a custom frontend, then you're going to need to write custom JavaScript. Backbone helps you organize with a strong focus on the model, but stays the hell out of your presentation. Configuration and callbacks should only be in one place - the View/JavaScript.
 
@@ -669,6 +669,9 @@ If you are writing a custom frontend, then you're going to need to write custom 
 MIT
 
 ## Change Log
+
+#### Master
+- **Breaking Change**: Classes are now treated separately from other attribute bindings. Use the new `classes` hash to bind element classes to your attributes.
 
 #### 0.8.0
 
@@ -698,7 +701,7 @@ MIT
 
 #### 0.6.3
 
-- Added `Backbone.Stickit.addHandler()`, useful for defining a custom configuration for any bindings that match the `handler.selector`. 
+- Added `Backbone.Stickit.addHandler()`, useful for defining a custom configuration for any bindings that match the `handler.selector`.
 - **Breaking Change**: `eventsOverride` was changed to `events`.
 - **Breaking Change**: removed the third param (original value) from the `afterUpdate` parameters.
 - **Breaking Change**: replaced `unstickModel` with `unstickit`.
@@ -709,27 +712,27 @@ MIT
 - Added `initialize` to the bindings api which is called for each binding after it is initialized.
 - Fixed a bug introduced in 0.6.2 where re-rendering/re-sticking wasn't unbinding view events [#66](https://github.com/NYTimes/backbone.stickit/issues/66).
 - Added `update` to the bindings api which is an override for handling how the View element gets updated with Model changes.
-- Added `getVal` to the bindings api which is an override for retrieving the value of the View element. 
+- Added `getVal` to the bindings api which is an override for retrieving the value of the View element.
 - Added support for passing in Backbone.Collection's into `selectOptions.collection`.
 - Added support for referencing the view's scope with a String `selectOptions.collection` reference. For example: `collection:'this.viewCollection'`.
 
 #### 0.6.2
 
-- **Breaking Change**: Changed the last parameter from the model attribute name to the bindings hash in most of the binding callbacks. Note the model attribute name can still be gleaned from the bindings hash - `options.observe`. The following are the callbacks that were affected and their parameters (`options` are the bindings hash):  
-    `onGet(value, options)`  
-    `onSet(value, options)`  
-    `updateModel(value, options)`  
-    `updateView(value, options)`  
-    `afterUpdate($el, value, originalVal, options)`  
-    `visible(value, options)`  
-    `visibleFn($el, isVisible, options)`  
+- **Breaking Change**: Changed the last parameter from the model attribute name to the bindings hash in most of the binding callbacks. Note the model attribute name can still be gleaned from the bindings hash - `options.observe`. The following are the callbacks that were affected and their parameters (`options` are the bindings hash):
+    `onGet(value, options)`
+    `onSet(value, options)`
+    `updateModel(value, options)`
+    `updateView(value, options)`
+    `afterUpdate($el, value, originalVal, options)`
+    `visible(value, options)`
+    `visibleFn($el, isVisible, options)`
 - Added support for handling multiple checkboxes with one binding/selector and using the `value` attribute, if present, for checkboxes.
 - Added default values for `labelPath` and `valuePath` in selectOptions: `label` and `value` respectively.
 - Refactored event registration to use `$.on` and `$.off` instead of delegating through Backbone which fixed the following bugs:
     - `view.events` selectors and binding selectors that are equal were overriding [#49](https://github.com/NYTimes/backbone.stickit/issues/49)
     - `view.events` declared as a function was not supported [#51](https://github.com/NYTimes/backbone.stickit/pull/51)
 - Fixed some bugs and added support requirements for zepto.js; [#58](https://github.com/NYTimes/backbone.stickit/pull/58).
-- Bug Fixes: [#38](https://github.com/NYTimes/backbone.stickit/pull/38), [#42](https://github.com/NYTimes/backbone.stickit/pull/42), 
+- Bug Fixes: [#38](https://github.com/NYTimes/backbone.stickit/pull/38), [#42](https://github.com/NYTimes/backbone.stickit/pull/42),
 
 #### 0.6.1
 
