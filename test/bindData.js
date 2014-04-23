@@ -1263,6 +1263,56 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     equal(view.$('#test1').prop('readonly'), false);
   });
 
+  test('bindings:classes:name', function() {
+
+    model.set({'water':'fountain'});
+    view.model = model;
+    view.templateId = 'jst5';
+    view.bindings = {
+      '#test5': {
+        classes: {
+          testClass: 'water'
+        }
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+    ok(view.$('#test5').hasClass('testClass'));
+
+    model.set('water', false);
+    ok(!view.$('#test5').hasClass('testClass'));
+  });
+
+  test('bindings:classes:observe', function() {
+
+    model.set({'truthy':false});
+    view.model = model;
+    view.templateId = 'jst5';
+    view.bindings = {
+      '#test5': {
+        classes: {
+          'col-md-2': {
+            observe:'truthy'
+          },
+          'col-md-3': {
+            observe: 'truthy',
+            onGet: function(val) {
+              return !val;
+            }
+          }
+        }
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+    ok(!view.$('#test5').hasClass('col-md-2'));
+    ok(view.$('#test5').hasClass('col-md-3'));
+
+    model.set('truthy', 'string is truthy');
+    ok(view.$('#test5').hasClass('col-md-2'));
+    ok(!view.$('#test5').hasClass('col-md-3'));
+  });
+
   test('input:number', function() {
 
     model.set({'code':1});

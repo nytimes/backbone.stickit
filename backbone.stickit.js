@@ -165,6 +165,7 @@
 
       initializeAttributes($el, config, model, modelAttr);
       initializeVisible($el, config, model, modelAttr);
+      initializeClasses($el, config, model, modelAttr);
 
       if (modelAttr) {
         // Setup one-way (input element -> model) bindings.
@@ -347,6 +348,24 @@
 
       // Initialize the matched element's state.
       updateAttr();
+    });
+  };
+
+  var initializeClasses = function($el, config, model, modelAttr) {
+    _.each(config.classes || [], function(classConfig, name) {
+      if (_.isString(classConfig)) classConfig = {observe: classConfig};
+      classConfig.view = config.view;
+
+      var observed = classConfig.observe;
+      var updateClass = function() {
+        var val = getAttr(model, observed, classConfig);
+        $el.toggleClass(name, !!val);
+      };
+
+      _.each(_.flatten([observed]), function(attr) {
+        observeModelEvent(model, 'change:' + attr, config, updateClass);
+      });
+      updateClass();
     });
   };
 
