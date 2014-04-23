@@ -28,7 +28,7 @@
   Stickit.addHandler = function(handlers) {
     // Fill-in default values.
     handlers = _.map(_.flatten([handlers]), function(handler) {
-      return _.defaults(handler, {
+      return _.defaults({}, handler, {
         updateModel: true,
         updateView: true,
         updateMethod: 'text'
