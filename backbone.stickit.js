@@ -62,6 +62,9 @@
       _.each(this._modelBindings, function(binding, i) {
         if (model && binding.model !== model) { return; }
         if (bindingSelector && binding.config.selector != bindingSelector) return;
+        if (binding.attrConfig && binding.attrConfig.name === 'class' && binding.el) {
+          binding.el.removeClass(binding.attrConfig.lastClass);
+        }
         destroyFns.push(binding.config._destroy);
         binding.model.off(binding.event, binding.fn);
         models.push(binding.model);
@@ -226,9 +229,9 @@
 
   // Setup a model event binding with the given function, and track the event
   // in the view's _modelBindings.
-  var observeModelEvent = function(model, view, event, config, fn) {
+  var observeModelEvent = function(model, view, event, config, fn, attrConfig, $el) {
     model.on(event, fn, view);
-    view._modelBindings.push({model:model, event:event, fn:fn, config:config});
+    view._modelBindings.push({model:model, event:event, fn:fn, config:config, attrConfig:attrConfig, el:$el});
   };
 
   // Prepares the given `val`ue and sets it into the `model`.
@@ -305,21 +308,22 @@
     var props = ['autofocus', 'autoplay', 'async', 'checked', 'controls', 'defer', 'disabled', 'hidden', 'indeterminate', 'loop', 'multiple', 'open', 'readonly', 'required', 'scoped', 'selected'];
 
     _.each(config.attributes || [], function(attrConfig) {
-      var lastClass = '', observed, updateAttr;
+      var observed, updateAttr;
       attrConfig = _.clone(attrConfig);
+      attrConfig.lastClass = '';
       observed = attrConfig.observe || (attrConfig.observe = modelAttr),
       updateAttr = function() {
         var updateType = _.indexOf(props, attrConfig.name, true) > -1 ? 'prop' : 'attr',
           val = getAttr(model, observed, attrConfig, view);
         // If it is a class then we need to remove the last value and add the new.
         if (attrConfig.name === 'class') {
-          $el.removeClass(lastClass).addClass(val);
-          lastClass = val;
+          $el.removeClass(attrConfig.lastClass).addClass(val);
+          attrConfig.lastClass = val;
         }
         else $el[updateType](attrConfig.name, val);
       };
       _.each(_.flatten([observed]), function(attr) {
-        observeModelEvent(model, view, 'change:' + attr, config, updateAttr);
+        observeModelEvent(model, view, 'change:' + attr, config, updateAttr, attrConfig, $el);
       });
       updateAttr();
     });
