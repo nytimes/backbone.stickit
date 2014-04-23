@@ -735,6 +735,33 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     equal(model.get('water'), 'dasina');
   });
 
+  test('bindings:selectOptions (Promise)', function() {
+
+    var collection = new Backbone.Collection([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);
+    var deferred = $.Deferred().resolveWith(this, [collection]);
+
+    model.set({'water':'fountain'});
+    view.model = model;
+    view.templateId = 'jst8';
+    view.bindings = {
+      '#test8': {
+        observe: 'water',
+        selectOptions: {
+          collection: function() { return deferred; },
+          labelPath: 'name',
+          valuePath: 'name'
+        }
+      }
+    };
+    $('#qunit-fixture').html(view.render().el);
+
+    stop();
+    deferred.then(function(){
+      equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), 'fountain');
+      start();
+    });
+  });
+
   test('bindings:selectOptions (collection path relative to `this`)', function() {
 
     view.collection = new Backbone.Collection([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);
