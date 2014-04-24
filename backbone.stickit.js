@@ -175,7 +175,7 @@
             var val = applyViewFn.call(this, config.getVal, $el, event, config, slice.call(arguments, 1));
 
             // Don't update the model if false is returned from the `updateModel` configuration.
-            var currentVal = evaluateBoolean(config.updateModel, val, config, event);
+            var currentVal = evaluateBoolean(config.updateModel, val, event, config);
             if (currentVal) setAttr(model, modelAttr, val, options, config);
           };
           var sel = selector === ':el'? '' : selector;
@@ -227,11 +227,14 @@
 
   // Given a function, string (view function reference), or a boolean
   // value, returns the truthy result. Any other types evaluate as false.
+  // The first argument must be `reference` and the last must be `config`, but
+  // middle arguments can be variadic.
   var evaluateBoolean = function(reference, val, config) {
     if (_.isBoolean(reference)) {
       return reference;
     } else if (_.isFunction(reference) || _.isString(reference)) {
-      return applyViewFn.apply(config.view, arguments);
+      var view = _.last(arguments).view;
+      return applyViewFn.apply(view, arguments);
     }
     return false;
   };

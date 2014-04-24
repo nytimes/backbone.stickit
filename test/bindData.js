@@ -1505,7 +1505,7 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     view.bindings = {
       '#test1': {
         observe: 'water',
-        updateModel: function(val, config, event) {
+        updateModel: function(val, event, config) {
           equal(this.cid, view.cid);
           equal(val, view.$('#test1').val());
           equal(config.observe, 'water');
