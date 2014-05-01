@@ -596,7 +596,7 @@
         addSelectOptions(["__default__"], $el);
       }
 
-      var doAddList = function(listToAdd) {
+      var addList = function(listToAdd) {
         // Support Backbone.Collection and deserialize.
         if (listToAdd instanceof Backbone.Collection) listToAdd = listToAdd.toJSON();
 
@@ -620,24 +620,24 @@
           // With no 'opt_labels' parameter, the object is assumed to be a simple value-label map.
           // Pass a selectOptions.comparator to override the default order of alphabetical by label.
         } else {
-            var opts = [], opt;
-            for (var i in optList) {
-                opt = {};
-                opt[selectConfig.valuePath] = i;
-                opt[selectConfig.labelPath] = optList[i];
-                opts.push(opt);
-            }
-            opts = _.sortBy(opts, selectConfig.comparator || selectConfig.labelPath);
-            addSelectOptions(opts, $el, val);
+          var opts = [], opt;
+          for (var i in optList) {
+            opt = {};
+            opt[selectConfig.valuePath] = i;
+            opt[selectConfig.labelPath] = optList[i];
+            opts.push(opt);
+          }
+          opts = _.sortBy(opts, selectConfig.comparator || selectConfig.labelPath);
+          addSelectOptions(opts, $el, val);
         }
       };
 
       if (_.isFunction(optList.then)) {
-        optList.then.call(this, function(promisedList){
-          doAddList(promisedList);
+        optList.then(function(promisedList){
+          addList(promisedList);
         });
       } else {
-          doAddList(optList);
+        addList(optList);
       }
     },
     getVal: function($el) {
