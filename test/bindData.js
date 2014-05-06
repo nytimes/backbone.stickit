@@ -644,6 +644,42 @@ $(document).ready(function() {
     equal(model.get('water'), 'dasina');
   });
 
+  test('bindings:selectOptions:defaultOption (options is a method)', 8, function() {
+
+    model.set({'water':null});
+    view.model = model;
+    view.templateId = 'jst8';
+    view.bindings = {
+      '#test8': {
+        observe: 'water',
+        selectOptions: {
+          collection: function($el, options) {
+            ok($el.is('select'));
+            equal(options.observe, 'water');
+            return [{id:1,type:{name:'fountain'}}, {id:2,type:{name:'evian'}}, {id:3,type:{name:'dasina'}}];
+          },
+          defaultOption: function(){
+            return {label: 'Choose dynamic...',
+            value: null};
+          },
+          labelPath: 'type.name',
+          valuePath: 'type.name'
+        }
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(view.$('#test8 option').eq(0).text(), 'Choose dynamic...');
+    equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), null);
+
+    model.set('water', 'evian');
+    equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), 'evian');
+
+    view.$('#test8 option').eq(3).prop('selected', true).trigger('change');
+    equal(model.get('water'), 'dasina');
+  });
+
 test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
 
     model.set({'water':null});
