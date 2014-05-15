@@ -1186,6 +1186,30 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     equal(view.$('#test5').attr('data-name'), '_evian_water');
   });
 
+  test('bindings:attributes:onGet (string)', function() {
+
+    model.set({'water':'fountain'});
+    view.model = model;
+    view.templateId = 'jst5';
+    view.onGetByString = function(val, options) { return '_' + val + '_' + options.observe; };
+    view.bindings = {
+      '#test5': {
+        observe: 'water',
+        attributes: [{
+          name: 'data-name',
+          onGet: 'onGetByString'
+        }]
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(view.$('#test5').attr('data-name'), '_fountain_water');
+
+    model.set('water', 'evian');
+    equal(view.$('#test5').attr('data-name'), '_evian_water');
+  });
+
   test('bindings:attributes:observe', function() {
 
     model.set({'water':'fountain', 'candy':'twix'});
