@@ -329,7 +329,7 @@
 
     _.each(config.attributes || [], function(attrConfig) {
       attrConfig = _.clone(attrConfig);
-      attrConfig.view = view
+      attrConfig.view = view;
 
       var lastClass = '';
       var observed = attrConfig.observe || (attrConfig.observe = modelAttr);
