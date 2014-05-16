@@ -593,7 +593,7 @@
       }
 
       // Support Backbone.Collection and deserialize.
-      if (optList instanceof Backbone.Collection){
+      if (optList instanceof Backbone.Collection) {
         // Listen to the collection for all events and trigger an update of the select options.
         optList.once('all', function() {
           var currentVal = getAttr(model, options.observe, options);
