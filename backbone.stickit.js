@@ -556,12 +556,12 @@
           // Determine if this option is selected.
           var isSelected = function() {
             if (!isMultiple && optionVal != null && fieldVal != null && optionVal === fieldVal) {
-              return true
+              return true;
             } else if (_.isObject(fieldVal) && _.isEqual(optionVal, fieldVal)) {
               return true;
             }
             return false;
-          }
+          };
 
           if (isSelected()) {
             option.prop('selected', true);
@@ -593,7 +593,14 @@
       }
 
       // Support Backbone.Collection and deserialize.
-      if (optList instanceof Backbone.Collection) optList = optList.toJSON();
+      if (optList instanceof Backbone.Collection){
+        // Listen to the collection for all events and trigger an update of the select options.
+        optList.once('all', function() {
+          var currentVal = getAttr(model, options.observe, options);
+          applyViewFn.call(this, options.update, $el, currentVal, model, options);
+        }, this);
+        optList = optList.toJSON();
+      }
 
       if (selectConfig.defaultOption) {
         addSelectOptions(["__default__"], $el);
