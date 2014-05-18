@@ -594,11 +594,30 @@
 
       // Support Backbone.Collection and deserialize.
       if (optList instanceof Backbone.Collection) {
-        // Listen to the collection for all events and trigger an update of the select options.
-        optList.once('all', function() {
+        var collection = optList;
+        var refreshSelectOptions = function() {
           var currentVal = getAttr(model, options.observe, options);
           applyViewFn.call(this, options.update, $el, currentVal, model, options);
-        }, this);
+        };
+        // We need to call this function after unstickit and after an update so we don't end up
+        // with multiple listeners doing the same thing
+        var removeCollectionListeners = function() {
+          collection.off('add remove reset sort', refreshSelectOptions);
+        };
+        // Remove previously set event listeners by triggering a custom event
+        collection.trigger('stickit:selectRefresh');
+        collection.once('stickit:selectRefresh', removeCollectionListeners);
+        
+        // Listen to the collection and trigger an update of the select options
+        collection.on('add remove reset sort', refreshSelectOptions, this);
+
+        // Remove the previous model event listener
+        model.trigger('stickit:selectRefresh');
+        model.once('stickit:selectRefresh', function() {
+          model.off('stickit:unstuck', removeCollectionListeners);
+        });
+        // Remove collection event listeners once this binding is unstuck
+        model.once('stickit:unstuck', removeCollectionListeners, this);
         optList = optList.toJSON();
       }
 
