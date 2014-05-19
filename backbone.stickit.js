@@ -604,20 +604,25 @@
         var removeCollectionListeners = function() {
           collection.off('add remove reset sort', refreshSelectOptions);
         };
+        var removeAllListeners = function() {
+          removeCollectionListeners();
+          collection.off('stickit:selectRefresh');
+          model.off('stickit:selectRefresh');
+        }
         // Remove previously set event listeners by triggering a custom event
         collection.trigger('stickit:selectRefresh');
-        collection.once('stickit:selectRefresh', removeCollectionListeners);
-        
+        collection.once('stickit:selectRefresh', removeCollectionListeners, this);
+
         // Listen to the collection and trigger an update of the select options
         collection.on('add remove reset sort', refreshSelectOptions, this);
 
         // Remove the previous model event listener
         model.trigger('stickit:selectRefresh');
         model.once('stickit:selectRefresh', function() {
-          model.off('stickit:unstuck', removeCollectionListeners);
+          model.off('stickit:unstuck', removeAllListeners);
         });
         // Remove collection event listeners once this binding is unstuck
-        model.once('stickit:unstuck', removeCollectionListeners, this);
+        model.once('stickit:unstuck', removeAllListeners, this);
         optList = optList.toJSON();
       }
 
