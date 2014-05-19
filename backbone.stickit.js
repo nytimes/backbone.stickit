@@ -608,7 +608,7 @@
           removeCollectionListeners();
           collection.off('stickit:selectRefresh');
           model.off('stickit:selectRefresh');
-        }
+        };
         // Remove previously set event listeners by triggering a custom event
         collection.trigger('stickit:selectRefresh');
         collection.once('stickit:selectRefresh', removeCollectionListeners, this);
