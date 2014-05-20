@@ -544,7 +544,7 @@
             option.data('stickit_bind_val', optionVal);
             if (!_.isArray(optionVal) && !_.isObject(optionVal)) option.val(optionVal);
             
-            if (disabled) option.prop('disabled', 'disabled');
+            if (disabled === true) option.prop('disabled', 'disabled');
           };
 
           var text, val, disabled;
