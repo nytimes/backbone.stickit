@@ -593,42 +593,52 @@
         optList = list;
       }
 
-      // Support Backbone.Collection and deserialize.
-      if (optList instanceof Backbone.Collection) optList = optList.toJSON();
-
       if (selectConfig.defaultOption) {
         addSelectOptions(["__default__"], $el);
       }
 
-      if (_.isArray(optList)) {
-        addSelectOptions(optList, $el, val);
-      } else if (optList.opt_labels) {
-        // To define a select with optgroups, format selectOptions.collection as an object
-        // with an 'opt_labels' property, as in the following:
-        //
-        //     {
-        //       'opt_labels': ['Looney Tunes', 'Three Stooges'],
-        //       'Looney Tunes': [{id: 1, name: 'Bugs Bunny'}, {id: 2, name: 'Donald Duck'}],
-        //       'Three Stooges': [{id: 3, name : 'moe'}, {id: 4, name : 'larry'}, {id: 5, name : 'curly'}]
-        //     }
-        //
-        _.each(optList.opt_labels, function(label) {
-          var $group = Backbone.$('<optgroup/>').attr('label', label);
-          addSelectOptions(optList[label], $group, val);
-          $el.append($group);
-        });
-        // With no 'opt_labels' parameter, the object is assumed to be a simple value-label map.
-        // Pass a selectOptions.comparator to override the default order of alphabetical by label.
-      } else {
-        var opts = [], opt;
-        for (var i in optList) {
-          opt = {};
-          opt[selectConfig.valuePath] = i;
-          opt[selectConfig.labelPath] = optList[i];
-          opts.push(opt);
+      var addList = function(listToAdd) {
+        // Support Backbone.Collection and deserialize.
+        if (listToAdd instanceof Backbone.Collection) listToAdd = listToAdd.toJSON();
+
+        if (_.isArray(listToAdd)) {
+          addSelectOptions(listToAdd, $el, val);
+        } else if (listToAdd.opt_labels) {
+          // To define a select with optgroups, format selectOptions.collection as an object
+          // with an 'opt_labels' property, as in the following:
+          //
+          //     {
+          //       'opt_labels': ['Looney Tunes', 'Three Stooges'],
+          //       'Looney Tunes': [{id: 1, name: 'Bugs Bunny'}, {id: 2, name: 'Donald Duck'}],
+          //       'Three Stooges': [{id: 3, name : 'moe'}, {id: 4, name : 'larry'}, {id: 5, name : 'curly'}]
+          //     }
+          //
+          _.each(listToAdd.opt_labels, function(label) {
+            var $group = Backbone.$('<optgroup/>').attr('label', label);
+            addSelectOptions(listToAdd[label], $group, val);
+            $el.append($group);
+          });
+          // With no 'opt_labels' parameter, the object is assumed to be a simple value-label map.
+          // Pass a selectOptions.comparator to override the default order of alphabetical by label.
+        } else {
+          var opts = [], opt;
+          for (var i in optList) {
+            opt = {};
+            opt[selectConfig.valuePath] = i;
+            opt[selectConfig.labelPath] = optList[i];
+            opts.push(opt);
+          }
+          opts = _.sortBy(opts, selectConfig.comparator || selectConfig.labelPath);
+          addSelectOptions(opts, $el, val);
         }
-        opts = _.sortBy(opts, selectConfig.comparator || selectConfig.labelPath);
-        addSelectOptions(opts, $el, val);
+      };
+
+      if (_.isFunction(optList.then)) {
+        optList.then(function(promisedList){
+          addList(promisedList);
+        });
+      } else {
+        addList(optList);
       }
     },
     getVal: function($el) {
