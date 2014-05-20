@@ -531,28 +531,32 @@
       // Fill in default label and path values.
       selectConfig.valuePath = selectConfig.valuePath || 'value';
       selectConfig.labelPath = selectConfig.labelPath || 'label';
+      selectConfig.disabledPath = selectConfig.disabledPath || 'disabled';
 
       var addSelectOptions = function(optList, $el, fieldVal) {
         _.each(optList, function(obj) {
           var option = Backbone.$('<option/>'), optionVal = obj;
 
-          var fillOption = function(text, val) {
+          var fillOption = function(text, val, disabled) {
             option.text(text);
             optionVal = val;
             // Save the option value as data so that we can reference it later.
             option.data('stickit_bind_val', optionVal);
             if (!_.isArray(optionVal) && !_.isObject(optionVal)) option.val(optionVal);
+            
+            if (disabled) option.prop('disabled', 'disabled');
           };
 
-          var text, val;
+          var text, val, disabled;
           if (obj === '__default__') {
             text = selectConfig.defaultOption.label,
             val = selectConfig.defaultOption.value;
           } else {
             text = evaluatePath(obj, selectConfig.labelPath),
-            val = evaluatePath(obj, selectConfig.valuePath);
+            val = evaluatePath(obj, selectConfig.valuePath),
+            disabled = evaluatePath(obj, selectConfig.disabledPath);
           }
-          fillOption(text, val);
+          fillOption(text, val, disabled);
 
           // Determine if this option is selected.
           var isSelected = function() {
