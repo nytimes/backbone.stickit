@@ -550,7 +550,8 @@
           var text, val, disabled;
           if (obj === '__default__') {
             text = selectConfig.defaultOption.label,
-            val = selectConfig.defaultOption.value;
+            val = selectConfig.defaultOption.value,
+            disabled = _.isUndefined(selectConfig.defaultOption.disabled) ? true : selectConfig.defaultOption.disabled;
           } else {
             text = evaluatePath(obj, selectConfig.labelPath),
             val = evaluatePath(obj, selectConfig.valuePath),
