@@ -546,8 +546,8 @@
 
           var text, val;
           if (obj === '__default__') {
-            text = selectConfig.defaultOption.label,
-            val = selectConfig.defaultOption.value;
+            text = fieldVal.label,
+            val = fieldVal.value;
           } else {
             text = evaluatePath(obj, selectConfig.labelPath),
             val = evaluatePath(obj, selectConfig.valuePath);
@@ -597,7 +597,10 @@
       if (optList instanceof Backbone.Collection) optList = optList.toJSON();
 
       if (selectConfig.defaultOption) {
-        addSelectOptions(["__default__"], $el);
+        var option = _.isFunction(selectConfig.defaultOption) ?
+          selectConfig.defaultOption.call(this, $el, options) :
+          selectConfig.defaultOption;
+        addSelectOptions(["__default__"], $el, option);
       }
 
       if (_.isArray(optList)) {
