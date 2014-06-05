@@ -4,7 +4,7 @@
   "homepage": "http://nytimes.github.io/backbone.stickit/",
   "main": ["./backbone.stickit.js"],
   "version": "0.8.0",
-  "license": "https://github.com/NYTimes/backbone.stickit/blob/master/LICENSE"
+  "license": "https://github.com/NYTimes/backbone.stickit/blob/master/LICENSE",
   "keywords": ["backbone", "data-binding", "client", "browser"],
   "author": {
     "name": "NYTimes"
