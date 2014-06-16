@@ -769,6 +769,75 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
     equal(model.get('water'), 'dasina');
   });
 
+  test('bindings:selectOptions (Backbone.Collection that changes)', function() {
+
+    var collection = new Backbone.Collection([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);
+    model.set({'water':'fountain'});
+    view.model = model;
+    view.templateId = 'jst8';
+    view.bindings = {
+      '#test8': {
+        observe: 'water',
+        selectOptions: {
+          collection: function() { return collection; },
+          labelPath: 'name',
+          valuePath: 'name'
+        }
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), 'fountain');
+
+    model.set('water', 'evian');
+    equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), 'evian');
+
+    view.$('#test8 option').eq(2).prop('selected', true).trigger('change');
+    equal(model.get('water'), 'dasina');
+
+    // Test that the select options are auto-updated
+    collection.add({id:4,name:'buxton'});
+    equal(view.$('#test8 option').eq(3).data('stickit_bind_val'), 'buxton');
+
+    var modelEvents = ['stickit:unstuck', 'stickit:selectRefresh'];
+    var collectionEvents = ['stickit:selectRefresh', 'add', 'remove', 'reset', 'sort'];
+
+    // Test the number of event listeners set against the model and collection
+    equal(_.filter(model._events, function(event, key) {
+      return (event.length === 1 && _.contains(modelEvents, key));
+    }).length, modelEvents.length);
+
+    equal(_.filter(collection._events, function(event, key) {
+      return (event.length === 1 && _.contains(collectionEvents, key));
+    }).length, collectionEvents.length);
+
+    collection.remove(2);
+    equal(view.$('#test8 option').length, collection.length);
+
+    collection.reset();
+    equal(view.$('#test8 option').length, collection.length);
+
+    // Test the number of event listeners set against the model and collection after changes to the collection
+    equal(_.filter(model._events, function(event, key) {
+      return (event.length === 1 && _.contains(modelEvents, key));
+    }).length, modelEvents.length);
+
+    equal(_.filter(collection._events, function(event, key) {
+      return (event.length === 1 && _.contains(collectionEvents, key));
+    }).length, collectionEvents.length);
+
+    view.unstickit();
+
+    // Test that the select options are no longer updated
+    collection.add([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);
+    notEqual(view.$('#test8 option').length, collection.length);
+
+    // Test that all event listeners have been removed after unstickit
+    ok(_.isEmpty(model._events));
+    ok(_.isEmpty(collection._events));
+  });
+
   test('bindings:selectOptions (collection path relative to `this`)', function() {
 
     view.collection = new Backbone.Collection([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);

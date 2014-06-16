@@ -557,12 +557,12 @@
           // Determine if this option is selected.
           var isSelected = function() {
             if (!isMultiple && optionVal != null && fieldVal != null && optionVal === fieldVal) {
-              return true
+              return true;
             } else if (_.isObject(fieldVal) && _.isEqual(optionVal, fieldVal)) {
               return true;
             }
             return false;
-          }
+          };
 
           if (isSelected()) {
             option.prop('selected', true);
@@ -594,7 +594,38 @@
       }
 
       // Support Backbone.Collection and deserialize.
-      if (optList instanceof Backbone.Collection) optList = optList.toJSON();
+      if (optList instanceof Backbone.Collection) {
+        var collection = optList;
+        var refreshSelectOptions = function() {
+          var currentVal = getAttr(model, options.observe, options);
+          applyViewFn.call(this, options.update, $el, currentVal, model, options);
+        };
+        // We need to call this function after unstickit and after an update so we don't end up
+        // with multiple listeners doing the same thing
+        var removeCollectionListeners = function() {
+          collection.off('add remove reset sort', refreshSelectOptions);
+        };
+        var removeAllListeners = function() {
+          removeCollectionListeners();
+          collection.off('stickit:selectRefresh');
+          model.off('stickit:selectRefresh');
+        };
+        // Remove previously set event listeners by triggering a custom event
+        collection.trigger('stickit:selectRefresh');
+        collection.once('stickit:selectRefresh', removeCollectionListeners, this);
+
+        // Listen to the collection and trigger an update of the select options
+        collection.on('add remove reset sort', refreshSelectOptions, this);
+
+        // Remove the previous model event listener
+        model.trigger('stickit:selectRefresh');
+        model.once('stickit:selectRefresh', function() {
+          model.off('stickit:unstuck', removeAllListeners);
+        });
+        // Remove collection event listeners once this binding is unstuck
+        model.once('stickit:unstuck', removeAllListeners, this);
+        optList = optList.toJSON();
+      }
 
       if (selectConfig.defaultOption) {
         var option = _.isFunction(selectConfig.defaultOption) ?
