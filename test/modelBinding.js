@@ -182,4 +182,22 @@ $(document).ready(function() {
     view.unstickit();
     view.unstickit();
   });
+  
+   test('change with different model', 2, function() {
+	  
+    model.set({'water':'fountain'});
+    view.model = model;
+    view.templateId = 'jst10';
+    view.bindings = {
+      '.test10': {
+        observe: 'water',
+		updateView: function(value, config) {
+			ok(value == 'fountain');
+		}
+      }
+    };
+    $('#qunit-fixture').html(view.render().el);
+	// intentionally pass a wrong model here (this can happen via event bubbling of Backbone.Associations f.e.)
+    model.trigger('change:water', new Backbone.Model({ 'otherProp': 'value' }));
+  });  
 });
