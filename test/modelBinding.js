@@ -44,7 +44,7 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
     equal(_.keys(view.model._events).length, 4);
-    
+
     view.unstickit(null, '#test14-1');
     equal(_.keys(view.model._events).length, 3);
 
@@ -52,7 +52,7 @@ $(document).ready(function() {
     equal(model.get('state'), 'solid');
 
     view.unstickit(null, view.bindings);
-    equal(_.keys(view.model._events).length, 0);  
+    equal(_.keys(view.model._events).length, 0);
   });
 
   test('unstickit is only called once on remove with multiple stickits', function() {
@@ -182,22 +182,22 @@ $(document).ready(function() {
     view.unstickit();
     view.unstickit();
   });
-  
+
    test('change with different model', 2, function() {
-	  
+
     model.set({'water':'fountain'});
     view.model = model;
     view.templateId = 'jst10';
     view.bindings = {
       '.test10': {
         observe: 'water',
-		updateView: function(value, config) {
-			ok(value == 'fountain');
-		}
+        updateView: function(value, config) {
+          ok(value == 'fountain');
+        }
       }
     };
     $('#qunit-fixture').html(view.render().el);
-	// intentionally pass a wrong model here (this can happen via event bubbling of Backbone.Associations f.e.)
+    // intentionally pass a wrong model here (this can happen via event bubbling of Backbone.Associations i.e.)
     model.trigger('change:water', new Backbone.Model({ 'otherProp': 'value' }));
-  });  
+  });
 });

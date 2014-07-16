@@ -185,7 +185,7 @@
         // Setup a `change:modelAttr` observer to keep the view element in sync.
         // `modelAttr` may be an array of attributes or a single string value.
         _.each(_.flatten([modelAttr]), function(attr) {
-          observeModelEvent(model, 'change:' + attr, config, function(modelOfEvent, val, options) {
+          observeModelEvent(model, 'change:' + attr, config, function(m, val, options) {
             var changeId = options && options.stickitChange && options.stickitChange.bindId;
             if (changeId !== bindId) {
               var currentVal = getAttr(model, modelAttr, config);
