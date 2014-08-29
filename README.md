@@ -157,7 +157,7 @@ A callback which returns a formatted version of the model attribute value that i
 
 ### onSet
 
-A callback which prepares a formatted version of the view value before setting it in the model.
+A callback which prepares a formatted version of the view value before setting it in the model. Don't apply `_.debounce` to callback.
 
 ```javascript
   bindings: {
