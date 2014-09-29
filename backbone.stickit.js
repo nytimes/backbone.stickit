@@ -506,7 +506,7 @@
         selectConfig = {};
         var getList = function($el) {
           return $el.map(function() {
-            return {value:this.value, label:this.text};
+            return {value:this.value, label:this.text, attr: Backbone.$(this).prop('attributes')};
           }).get();
         };
         if ($el.find('optgroup').length) {
@@ -536,12 +536,17 @@
         _.each(optList, function(obj) {
           var option = Backbone.$('<option/>'), optionVal = obj;
 
-          var fillOption = function(text, val) {
+          var fillOption = function(text, val, attr) {
             option.text(text);
             optionVal = val;
             // Save the option value as data so that we can reference it later.
             option.data('stickit_bind_val', optionVal);
             if (!_.isArray(optionVal) && !_.isObject(optionVal)) option.val(optionVal);
+            if (_.isObject(attr)) { // restore HTML5 data attributes, disabled attr, CSS, etc.
+              _.each(attr, function(a) {
+                option.attr(a.name, a.value);
+              });
+            }
           };
 
           var text, val;
@@ -552,7 +557,7 @@
             text = evaluatePath(obj, selectConfig.labelPath),
             val = evaluatePath(obj, selectConfig.valuePath);
           }
-          fillOption(text, val);
+          fillOption(text, val, obj.attr);
 
           // Determine if this option is selected.
           var isSelected = function() {
