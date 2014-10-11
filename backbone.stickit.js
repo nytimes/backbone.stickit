@@ -543,7 +543,7 @@
             // Save the option value as data so that we can reference it later.
             option.data('stickit_bind_val', optionVal);
             if (!_.isArray(optionVal) && !_.isObject(optionVal)) option.val(optionVal);
-            
+
             if (disabled === true) option.prop('disabled', 'disabled');
           };
 
@@ -551,7 +551,7 @@
           if (obj === '__default__') {
             text = fieldVal.label,
             val = fieldVal.value,
-            disabled = _.isUndefined(fieldVal.disabled) ? true : fieldVal.disabled;
+            disabled = fieldVal.disabled;
           } else {
             text = evaluatePath(obj, selectConfig.labelPath),
             val = evaluatePath(obj, selectConfig.valuePath),
