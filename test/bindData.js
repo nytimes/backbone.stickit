@@ -680,7 +680,7 @@ $(document).ready(function() {
     equal(model.get('water'), 'dasina');
   });
 
-  test('bindings:selectOptions:defaultOption (options is disabled)', 10, function() {
+  test('bindings:selectOptions:defaultOption (options is disabled)', 9, function() {
 
     model.set({'water':null});
     view.model = model;
@@ -710,10 +710,6 @@ $(document).ready(function() {
     equal(view.$('#test8 option').eq(0).text(), 'Choose one...');
     ok(view.$('#test8 option').eq(0).prop('disabled'));
 
-    // Because the default option is disabled, browsers will select the second option
-    equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), 'fountain');
-
-    // We need to check that the browser's behaviour isn't affecting the model
     equal(model.get('water'), null);
 
     model.set('water', 'evian');
