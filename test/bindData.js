@@ -680,7 +680,51 @@ $(document).ready(function() {
     equal(model.get('water'), 'dasina');
   });
 
-test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
+  test('bindings:selectOptions:defaultOption (options is disabled)', 10, function() {
+
+    model.set({'water':null});
+    view.model = model;
+    view.templateId = 'jst8';
+    view.bindings = {
+      '#test8': {
+        observe: 'water',
+        selectOptions: {
+          collection: function($el, options) {
+            ok($el.is('select'));
+            equal(options.observe, 'water');
+            return [{id:1,type:{name:'fountain'}}, {id:2,type:{name:'evian'}}, {id:3,type:{name:'dasina'}}];
+          },
+          defaultOption: {
+            label: 'Choose one...',
+            value: null,
+            disabled: true
+          },
+          labelPath: 'type.name',
+          valuePath: 'type.name'
+        }
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(view.$('#test8 option').eq(0).text(), 'Choose one...');
+    ok(view.$('#test8 option').eq(0).prop('disabled'));
+
+    // Because the default option is disabled, browsers will select the second option
+    equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), 'fountain');
+
+    // We need to check that the browser's behaviour isn't affecting the model
+    equal(model.get('water'), null);
+
+    model.set('water', 'evian');
+    equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), 'evian');
+
+    // We can force the selection of disabled options
+    view.$('#test8 option').eq(0).prop('selected', true).trigger('change');
+    equal(model.get('water'), null);
+  });
+
+  test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
 
     model.set({'water':null});
     view.model = model;
@@ -717,6 +761,29 @@ test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
 
     view.$('#test8 option').eq(3).prop('selected', true).trigger('change');
     equal(model.get('water'), 'dasina');
+  });
+
+  test('bindings:selectOptions (disabled options)'  , function() {
+
+    model.set({'water':'fountain'});
+    view.model = model;
+    view.templateId = 'jst8';
+    view.bindings = {
+      '#test8': {
+        observe: 'water',
+        selectOptions: {
+          collection: [{id:1,name:'fountain'}, {id:2,name:'evian',disabled:true}, {id:3,name:'dasina'}],
+          labelPath: 'name',
+          valuePath: 'id'
+        }
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(view.$('#test8 option').eq(0).prop('disabled'), false);
+    equal(view.$('#test8 option').eq(1).prop('disabled'), true);
+    equal(view.$('#test8 option').eq(2).prop('disabled'), false);
   });
 
   test('bindings:selectOptions (pre-rendered)', 3, function() {
