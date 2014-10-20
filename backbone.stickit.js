@@ -112,8 +112,9 @@
     // `optionalModel` is ommitted, will default to the view's `model` property.
     addBinding: function(optionalModel, selector, binding) {
       var model = optionalModel || this.model,
-          namespace = '.stickit.' + model.cid,
-          binding = binding || {};
+          namespace = '.stickit.' + model.cid;
+
+      binding = binding || {};
 
       // Support jQuery-style {key: val} event maps.
       if (_.isObject(selector)) {
@@ -505,8 +506,14 @@
       if (!selectConfig) {
         selectConfig = {};
         var getList = function($el) {
-          return $el.map(function() {
-            return {value:this.value, label:this.text};
+          return $el.map(function(index, option) {
+            // Retrieve the text and value of the option, preferring "stickit-bind-val"
+            // data attribute over value property.
+            var dataVal = Backbone.$(option).data('stickit-bind-val');
+            return {
+              value: dataVal !== undefined ? dataVal : option.value,
+              label: option.text
+            };
           }).get();
         };
         if ($el.find('optgroup').length) {
@@ -540,7 +547,7 @@
             option.text(text);
             optionVal = val;
             // Save the option value as data so that we can reference it later.
-            option.data('stickit_bind_val', optionVal);
+            option.data('stickit-bind-val', optionVal);
             if (!_.isArray(optionVal) && !_.isObject(optionVal)) option.val(optionVal);
           };
 
@@ -670,10 +677,10 @@
 
       if ($el.prop('multiple')) {
         return _.map(selected, function(el) {
-          return Backbone.$(el).data('stickit_bind_val');
+          return Backbone.$(el).data('stickit-bind-val');
         });
       } else {
-        return selected.data('stickit_bind_val');
+        return selected.data('stickit-bind-val');
       }
     }
   }]);
