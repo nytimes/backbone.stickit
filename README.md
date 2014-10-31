@@ -66,7 +66,7 @@ Adds a single binding to the view, using the given model, or `view.model`, and t
   // With configuration.
   this.addBinding(null, '#author', {observe:'author', onGet: function() {/* ... */}});
   // Or, with a bindings hash.
-  this.addBindings(null, {
+  this.addBinding(null, {
     '#author': {
       observe: 'author',
       onGet: function() {/* ... */}
