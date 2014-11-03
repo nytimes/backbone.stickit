@@ -13,7 +13,7 @@
     "backbone": ">=0.9.0"
   },
   "devDependencies": {
-    "phantomjs": "1.9.7-1",
+    "phantomjs": "^1.9.7",
     "grunt-contrib": "~0.4.0",
     "grunt-docco": "~0.3.0",
     "grunt": "~0.4.2",
