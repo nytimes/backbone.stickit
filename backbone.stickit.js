@@ -59,25 +59,22 @@
         return;
       }
 
-      var models = [], destroyFns = [], bindings = _.clone(this._modelBindings);
-      _.each(bindings, function(binding, i) {
+      var models = [], destroyFns = [];
+      this._modelBindings = _.reject(this._modelBindings, function(binding) {
         if (model && binding.model !== model) return;
         if (bindingSelector && binding.config.selector != bindingSelector) return;
 
         binding.model.off(binding.event, binding.fn);
         destroyFns.push(binding.config._destroy);
         models.push(binding.model);
-        delete this._modelBindings[i];
-      }, this);
+        return true;
+      });
 
       // Trigger an event for each model that was unbound.
       _.invoke(_.uniq(models), 'trigger', 'stickit:unstuck', this.cid);
 
       // Call `_destroy` on a unique list of the binding callbacks.
       _.each(_.uniq(destroyFns), function(fn) { fn.call(this); }, this);
-
-      // Cleanup the null values.
-      this._modelBindings = _.compact(this._modelBindings);
 
       this.$el.off('.stickit' + (model ? '.' + model.cid : ''), bindingSelector);
     },
