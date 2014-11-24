@@ -360,7 +360,7 @@ The following is a list of the supported form elements, their binding details, a
  - select
    - (recommended) specify `selectOptions` to have Stickit handle the rendering and option bindings of your select (see `selectOptions`)
    - if you choose to pre-render your select-options (not recommended) then there are two ways of configuring the bindings:
-     - "data-stickit-bind-val" attributes in the DOM. This allows for binding non-string values from a prerendered <select>, assuming that you are using jQuery or a build of Zepto that includes the "data" module.
+     - "data-stickit-bind-val" attributes in the DOM. This allows for binding non-string values from a prerendered &lt;select&gt;, assuming that you are using jQuery or a build of Zepto that includes the "data" module.
      - "option[value]" attributes in the DOM (used if no data-stickit-bind-val is present)
    - `change` event is used for handling
 
