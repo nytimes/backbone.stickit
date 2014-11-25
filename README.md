@@ -678,6 +678,8 @@ MIT
 - `defaultOption` can be defined as a function.
 - Passing a Backbone Collection to `selectOptions` will keep the select dropdown in sync with add, remove, and sort events on the collection.
 - `view#stickit` returns `this` for easier chaining.
+- Non-string values can be bound to a pre-rendered `<select>` dropdown by setting `data-stickit-bind-val` on `<option>` elements.
+
 #### 0.8.0
 
 - **Breaking Change**: Calling `view#stickit` a second time with the same model, will no longer unbind all previously bound bindings associated with that model; instead, it will unbind any duplicate bindings (selectors) found in the given bindings hash (or whatever's in `view.bindings`) before initializing.
