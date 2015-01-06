@@ -713,7 +713,7 @@ $(document).ready(function() {
     equal(model.get('water'), null);
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit_bind_val'), 'evian');
+    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
 
     // We can force the selection of disabled options
     view.$('#test8 option').eq(0).prop('selected', true).trigger('change');
