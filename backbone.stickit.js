@@ -428,7 +428,7 @@
   // ----------------
 
   Stickit.addHandler([{
-    selector: '[contenteditable="true"]',
+    selector: '[contenteditable]',
     updateMethod: 'html',
     events: ['input', 'change']
   }, {
