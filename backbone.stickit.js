@@ -526,7 +526,7 @@
         // then I will remove this code. If it's possible, then I will enable it
 
         var check = function(val) {
-          return _.isArray(val) || _.isObject(val);
+          return _.isObject(val);
         };
 
         if (isMultiple && _.isArray(val)) {
@@ -579,7 +579,7 @@
             option.text(text);
             optionVal = val;
 
-            if (!_.isArray(optionVal) && !_.isObject(optionVal)) {
+            if (!_.isObject(optionVal)) {
               option.val(optionVal);
             } else {
               // Save the option value as data so that we can reference it later.
