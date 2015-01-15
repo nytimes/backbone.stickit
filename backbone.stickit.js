@@ -513,10 +513,6 @@
       // If there are no `selectOptions` then we assume that the `<select>`
       // is pre-rendered and that we need to generate the collection.
       if (!selectConfig) {
-        // simple way
-        $el.val(val);
-        return;
-
         // I do not know if it is possible that this method might be invoked
         // each time with different params. I |selectConfig| might be present
         // in future calls after one call with it,
