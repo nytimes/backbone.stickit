@@ -577,7 +577,7 @@
 
             if (!_.isObject(optionVal)) {
               option.val(optionVal);
-            } else {
+            }/* else */{
               // Save the option value as data so that we can reference it later.
               option[0].__stickitBindVal__ = true;
               option.data(STICKIT_BINDVAL_KEY, optionVal);
