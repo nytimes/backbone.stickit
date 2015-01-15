@@ -212,8 +212,10 @@
   // Returns value of select option
   // First checks for containing custom values, e.g not string
   // If such exists, then return it. If not, fallback to simple node.value
-  var getSelectOptionValue = function(el) {
-    if (el.__stickitBindVal__) {
+  var getSelectOptionValue = Stickit.__getSelectOptionValue = function(el) {
+    if (!el) return null;
+
+    if (el.__stickitBindVal__ || el.hasAttribute('data-' + STICKIT_BINDVAL_KEY)) {
       return Backbone.$(el).data(STICKIT_BINDVAL_KEY);
     } else {
       return el.value;
@@ -513,51 +515,8 @@
       // If there are no `selectOptions` then we assume that the `<select>`
       // is pre-rendered and that we need to generate the collection.
       if (!selectConfig) {
-        // I do not know if it is possible that this method might be invoked
-        // each time with different params. I |selectConfig| might be present
-        // in future calls after one call with it,
-        // then next code should be enable
-
-        // I left it here so you can check. If that case is not possible
-        // then I will remove this code. If it's possible, then I will enable it
-
-        var check = function(val) {
-          return _.isObject(val);
-        };
-
-        if (isMultiple && _.isArray(val)) {
-          var hasCustomValue = _.some(val, check);
-        } else {
-          var hasCustomValue = check(val);
-        }
-
-        if (hasCustomValue) {
-          $el.prop('selectedIndex', -1);
-
-          if (isMultiple) {
-            $el.find('option').each(function() {
-              var optionVal = getSelectOptionValue(this);
-              var self = this;
-
-              _.each(val, function(deepVal) {
-                if (_.isEqual(optionVal, deepVal)) {
-                  $(self).prop('selected', true);
-                }
-              });
-            });
-          } else {
-            $el.find('option').each(function() {
-              var optionVal = getSelectOptionValue(this);
-
-              if (_.isEqual(optionVal, val)) {
-                $(this).prop('selected', true);
-                return false;
-              }
-            });
-          }
-        } else {
-          $el.val(val);
-        }
+        $el.val(val);
+        return;
       }
 
       // Fill in default label and path values.

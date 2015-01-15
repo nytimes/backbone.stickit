@@ -27,4 +27,8 @@ $(document).ready(function() {
     return $el.find('option').not(function(){ return !this.selected; });
   };
 
+
+  $.fn.stickitSelectValue = function() {
+    return Backbone.Stickit.__getSelectOptionValue(this[0]);
+  };
 });
