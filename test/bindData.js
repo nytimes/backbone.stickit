@@ -1411,7 +1411,7 @@ $(document).ready(function() {
     equal(view.$('#test5').attr('data-name'), '_evian_water');
   });
 
-  test('bindings:attributes:udpate', function() {
+  test('bindings:attributes:update', function() {
     model.set({'box':'0 0 100 100'});
     view.model = model;
     view.templateId = 'jst27';
@@ -1435,7 +1435,7 @@ $(document).ready(function() {
     equal(view.$('#test27')[0].getAttributeNS(null, 'viewBox'), '100 100 200 200');
   });
 
-  test('bindings:attributes:udpate (string)', function() {
+  test('bindings:attributes:update (string)', function() {
     model.set({'box':'0 0 100 100'});
     view.model = model;
     view.templateId = 'jst27';
