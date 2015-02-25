@@ -1411,6 +1411,55 @@ $(document).ready(function() {
     equal(view.$('#test5').attr('data-name'), '_evian_water');
   });
 
+  test('bindings:attributes:udpate', function() {
+    model.set({'box':'0 0 100 100'});
+    view.model = model;
+    view.templateId = 'jst27';
+    view.bindings = {
+      '#test27': {
+        attributes: [{
+          name: 'viewBox',
+          observe: 'box',
+          update: function($el, val, model, options) {
+            $el[0].setAttributeNS(null, 'viewBox', val);
+          }
+        }]
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(view.$('#test27')[0].getAttributeNS(null, 'viewBox'), '0 0 100 100');
+
+    model.set('box', '100 100 200 200');
+    equal(view.$('#test27')[0].getAttributeNS(null, 'viewBox'), '100 100 200 200');
+  });
+
+  test('bindings:attributes:udpate (string)', function() {
+    model.set({'box':'0 0 100 100'});
+    view.model = model;
+    view.templateId = 'jst27';
+    view.updateByString = function($el, val, model, options) {
+      $el[0].setAttributeNS(null, 'viewBox', val);
+    };
+    view.bindings = {
+      '#test27': {
+        attributes: [{
+          name: 'viewBox',
+          observe: 'box',
+          update: 'updateByString'
+        }]
+      }
+    };
+
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(view.$('#test27')[0].getAttributeNS(null, 'viewBox'), '0 0 100 100');
+
+    model.set('box', '100 100 200 200');
+    equal(view.$('#test27')[0].getAttributeNS(null, 'viewBox'), '100 100 200 200');
+  });
+
   test('bindings:attributes:observe', function() {
 
     model.set({'water':'fountain', 'candy':'twix'});

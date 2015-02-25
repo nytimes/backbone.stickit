@@ -335,12 +335,16 @@
         var updateType = _.contains(props, attrConfig.name) ? 'prop' : 'attr',
             val = getAttr(model, observed, attrConfig);
 
-        // If it is a class then we need to remove the last value and add the new.
-        if (attrConfig.name === 'class') {
-          $el.removeClass(lastClass).addClass(val);
-          lastClass = val;
+        if (attrConfig.update) {
+          applyViewFn.call(view, attrConfig.update, $el, val, model, attrConfig);
         } else {
-          $el[updateType](attrConfig.name, val);
+          // If it is a class then we need to remove the last value and add the new.
+          if (attrConfig.name === 'class') {
+            $el.removeClass(lastClass).addClass(val);
+            lastClass = val;
+          } else {
+            $el[updateType](attrConfig.name, val);
+          }
         }
       };
 
