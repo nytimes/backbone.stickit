@@ -3,7 +3,7 @@
   "description": "Backbone data binding, model binding plugin. The real logic-less templates.",
   "homepage": "http://nytimes.github.io/backbone.stickit/",
   "main": ["./backbone.stickit.js"],
-  "version": "0.8.0",
+  "version": "0.9.0",
   "license": "https://github.com/NYTimes/backbone.stickit/blob/master/LICENSE",
   "keywords": ["backbone", "data-binding", "client", "browser"],
   "author": {

@@ -1,5 +1,5 @@
-// Backbone.Stickit v0.8.0, MIT Licensed
-// Copyright (c) 2012 The New York Times, CMS Group, Matthew DeLambo <delambo@gmail.com>
+// Backbone.Stickit v0.9.0, MIT Licensed
+// Copyright (c) 2012-2015 The New York Times, CMS Group, Matthew DeLambo <delambo@gmail.com>
 
 (function (factory) {
 

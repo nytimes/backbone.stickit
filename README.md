@@ -1,4 +1,4 @@
-[-> **Documentation for current/stable release: 0.8.0**](http://nytimes.github.com/backbone.stickit/)
+[-> **Documentation for current/stable release: 0.9.0**](http://nytimes.github.com/backbone.stickit/)
 
 **The following is documentation for the code in master/edge version...**
 
@@ -10,7 +10,7 @@ Stickit is a Backbone data binding plugin that binds Model attributes to View el
 
 ## Download + Source
 
-[download v0.8.0](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.8.0.zip)
+[download v0.9.0](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.9.0.zip)
 
 [download master/edge](https://raw.github.com/NYTimes/backbone.stickit/master/backbone.stickit.js)
 
@@ -674,6 +674,8 @@ MIT
 ## Change Log
 
 #### Master
+
+#### 0.9.0
 - **Breaking Change**: Classes are now treated separately from other attribute bindings. Use the new `classes` hash to bind element classes to your attributes.
 - `defaultOption` can be defined as a function.
 - Passing a Backbone Collection to `selectOptions` will keep the select dropdown in sync with add, remove, and sort events on the collection.
