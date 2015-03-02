@@ -4,24 +4,24 @@
 (function (factory) {
 
   // Set up Stickit appropriately for the environment. Start with AMD.
-  if (typeof define === 'function' && define.amd) {
+  if (typeof define === 'function' && define.amd)
     define(['underscore', 'backbone', 'exports'], factory);
-  }
 
   // Next for Node.js or CommonJS.
-  else if (typeof exports === 'object') {
+  else if (typeof exports === 'object')
     factory(require('underscore'), require('backbone'), exports);
-  }
 
   // Finally, as a browser global.
-  else {
+  else
     factory(_, Backbone, {});
-  }
 
 }(function (_, Backbone, Stickit) {
 
   // Stickit Namespace
   // --------------------------
+
+  // Export onto Backbone object
+  Backbone.Stickit = Stickit;
 
   Stickit._handlers = [];
 
@@ -687,10 +687,6 @@
     }
   }]);
 
-
-  // Export onto Backbone object
-  Backbone.Stickit = Stickit;
-
-  return Backbone.Stickit;
+  return Stickit;
 
 }));
