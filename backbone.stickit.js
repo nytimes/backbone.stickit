@@ -620,14 +620,15 @@
           collection.off('stickit:selectRefreshForView');
           model.off('stickit:selectRefresh');
         };
-        var removeCollectionListenersForView = function(cid) {
-          if(this.cid == cid){
+        collection.trigger('stickit:selectRefreshForView', this.cid);
+        // Compare the view cid on the event to this.cid to ensure we don't
+        // remove events from the collection that are tied to other views.
+        collection.once('stickit:selectRefreshForView', function(viewCid) {
+          if(this.cid == viewCid){
             // Remove previously set event listeners by triggering a custom event
             collection.trigger('stickit:selectRefresh');
           }
-        };
-        collection.trigger('stickit:selectRefreshForView', this.cid);
-        collection.once('stickit:selectRefreshForView', removeCollectionListenersForView, this);
+        }, this);
         collection.once('stickit:selectRefresh', removeCollectionListeners, this);
 
         // Listen to the collection and trigger an update of the select options
