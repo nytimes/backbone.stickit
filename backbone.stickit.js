@@ -609,31 +609,25 @@
           var currentVal = getAttr(model, options.observe, options);
           applyViewFn.call(this, options.update, $el, currentVal, model, options);
         };
-
-
         // We need to call this function after unstickit and after an update so we don't end up
         // with multiple listeners doing the same thing
         var removeCollectionListeners = function() {
           collection.off('add remove reset sort', refreshSelectOptions);
         };
-
         var removeAllListeners = function() {
           removeCollectionListeners();
           collection.off('stickit:selectRefresh');
           collection.off('stickit:selectRefreshForView');
           model.off('stickit:selectRefresh');
         };
-
-        // Remove previously set event listeners by triggering a custom event
-        function removeCollectionListenersForView(cid) {
+        var removeCollectionListenersForView = function(cid) {
           if(this.cid == cid){
+            // Remove previously set event listeners by triggering a custom event
             collection.trigger('stickit:selectRefresh');
           }
-        }
-
+        };
         collection.trigger('stickit:selectRefreshForView', this.cid);
         collection.once('stickit:selectRefreshForView', removeCollectionListenersForView, this);
-
         collection.once('stickit:selectRefresh', removeCollectionListeners, this);
 
         // Listen to the collection and trigger an update of the select options
