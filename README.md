@@ -568,6 +568,29 @@ Binds element attributes and properties with observed model attributes, using th
     return val ? 'has-wings' : 'no-wings';
   }
  ```
+ 
+### classes
+
+Binds element classes with observed model attributes. Following bindings configuration will bind `view.$('#header')` element classes to `hasWater`, `hasFire` and `airVolume` model attributes. `water` class will be set to element if `hasWater` model attribute has a truthy value. The same logic applies to `fire` class. `air` class will be set to element only if `airVolume` model attribute value will satisfy `value > 1` condition.
+
+```javascript
+  bindings: {
+    '#header': {
+      classes: {
+        water: 'hasWater',
+        fire: {
+          observe: 'hasFire'
+        },
+        air: {
+          observe: 'airVolume',
+          onGet: function(volume) {
+            return volume > 1;
+          }
+        }
+      }
+    }
+  }
+```
 
 ## Custom Handlers
 
