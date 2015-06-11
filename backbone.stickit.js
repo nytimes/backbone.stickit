@@ -462,7 +462,8 @@
         val || (val = []);
         $el.each(function(i, el) {
           var checkbox = Backbone.$(el);
-          var checked = _.contains(val, checkbox.val());
+          var checkboxVal = checkbox.val();
+          var checked = _.some(val, function(item) { return ''+item === checkboxVal; });
           checkbox.prop('checked', checked);
         });
       } else {
