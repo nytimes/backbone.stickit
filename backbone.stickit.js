@@ -467,7 +467,7 @@
           checkbox.prop('checked', checked);
         });
       } else {
-        var checked = _.isBoolean(val) ? val : val === $el.val();
+        var checked = _.isBoolean(val) ? val : ''+val === $el.val();
         $el.prop('checked', checked);
       }
     },

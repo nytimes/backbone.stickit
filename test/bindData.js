@@ -1844,6 +1844,37 @@ $(document).ready(function() {
     equal(model.get('water'), null);
   });
 
+  test('checkbox (single with number value defined)', function() {
+
+    model.set({'number':null});
+    view.model = model;
+    view.templateId = 'jst28';
+    view.bindings = {
+      '.box': 'number'
+    };
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(view.$('.box').prop('checked'), false);
+
+    model.set('number', '1');
+    equal(view.$('.box').prop('checked'), true);
+
+    model.set('number', '2');
+    equal(view.$('.box').prop('checked'), false);
+
+    model.set('number', 1);
+    equal(view.$('.box').prop('checked'), true);
+
+    model.set('number', 2);
+    equal(view.$('.box').prop('checked'), false);
+
+    view.$('.box').prop('checked', true).trigger('change');
+    equal(model.get('number'), "1");
+
+    view.$('.box').prop('checked', false).trigger('change');
+    equal(model.get('number'), null);
+  });
+
   test('getVal', 5, function() {
 
     model.set({'water':'fountain'});
