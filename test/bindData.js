@@ -1799,6 +1799,32 @@ $(document).ready(function() {
     equal(_.indexOf(model.get('water'), 'dasina') > -1, true);
   });
 
+  test('checkbox multiple with numbers', function() {
+
+    model.set({'numbers':[1, 3]});
+    view.model = model;
+    view.templateId = 'jst27';
+    view.bindings = {
+      '.boxes': 'numbers'
+    };
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(view.$('.boxes[value="1"]').prop('checked'), true);
+    equal(view.$('.boxes[value="2"]').prop('checked'), false);
+    equal(view.$('.boxes[value="3"]').prop('checked'), true);
+
+    model.set({'numbers':[2]});
+    equal(view.$('.boxes[value="1"]').prop('checked'), false);
+    equal(view.$('.boxes[value="2"]').prop('checked'), true);
+    equal(view.$('.boxes[value="3"]').prop('checked'), false);
+
+    view.$('.boxes[value="3"]').prop('checked', true).trigger('change');
+
+    equal(model.get('numbers').length, 2);
+    equal(_.contains(model.get('numbers'), '2'), true);
+    equal(_.contains(model.get('numbers'), '3'), true);
+  });
+
   test('checkbox (single with value defined)', function() {
 
     model.set({'water':null});
@@ -1816,6 +1842,37 @@ $(document).ready(function() {
 
     view.$('.box').prop('checked', false).trigger('change');
     equal(model.get('water'), null);
+  });
+
+  test('checkbox (single with number value defined)', function() {
+
+    model.set({'number':null});
+    view.model = model;
+    view.templateId = 'jst28';
+    view.bindings = {
+      '.box': 'number'
+    };
+    $('#qunit-fixture').html(view.render().el);
+
+    equal(view.$('.box').prop('checked'), false);
+
+    model.set('number', '1');
+    equal(view.$('.box').prop('checked'), true);
+
+    model.set('number', '2');
+    equal(view.$('.box').prop('checked'), false);
+
+    model.set('number', 1);
+    equal(view.$('.box').prop('checked'), true);
+
+    model.set('number', 2);
+    equal(view.$('.box').prop('checked'), false);
+
+    view.$('.box').prop('checked', true).trigger('change');
+    equal(model.get('number'), "1");
+
+    view.$('.box').prop('checked', false).trigger('change');
+    equal(model.get('number'), null);
   });
 
   test('getVal', 5, function() {
