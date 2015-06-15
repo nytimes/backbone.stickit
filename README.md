@@ -10,7 +10,7 @@ Stickit is a Backbone data binding plugin that binds Model attributes to View el
 
 ## Download + Source
 
-[download v0.9.2](http://nytimes.github.com/backbone.stickit/downloads/backbone.stickit_0.9.2.zip)
+[download v0.9.2](https://github.com/NYTimes/backbone.stickit/archive/0.9.2.zip)
 
 [download master/edge](https://raw.github.com/NYTimes/backbone.stickit/master/backbone.stickit.js)
 
@@ -568,7 +568,7 @@ Binds element attributes and properties with observed model attributes, using th
     return val ? 'has-wings' : 'no-wings';
   }
  ```
- 
+
 ### classes
 
 Binds element classes with observed model attributes. Following bindings configuration will bind `view.$('#header')` element classes to `hasWater`, `hasFire` and `airVolume` model attributes. `water` class will be set to element if `hasWater` model attribute has a truthy value. The same logic applies to `fire` class. `air` class will be set to element only if `airVolume` model attribute value will satisfy `value > 1` condition.
