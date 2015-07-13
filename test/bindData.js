@@ -934,6 +934,56 @@ $(document).ready(function() {
     ok(_.isEmpty(collection._events));
   });
 
+  // test for issue #250: https://github.com/NYTimes/backbone.stickit/issues/250
+  test('bindings:selectOptions (Backbone.Collection that changes - multiple views)', function() {
+    var collection = new Backbone.Collection([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);
+    model.set({'water':'fountain'});
+
+    var View = Backbone.View.extend({
+      bindings: {
+        'select': {
+          observe: 'water',
+          selectOptions: {
+            collection: function() { return collection; },
+            labelPath: 'name',
+            valuePath: 'name'
+          }
+        }
+      },
+
+      initialize: function() {
+        this.model = model;
+        this.templateId = 'jst8';
+      },
+
+      render: function() {
+        var html = document.getElementById(this.templateId).innerHTML;
+        this.$el.html(_.template(html)());
+        this.stickit();
+        return this;
+      }
+    });
+
+    var view1 = new View();
+    var view2 = new View();
+
+    $('#qunit-fixture').append(view1.render().el);
+    $('#qunit-fixture').append(view2.render().el);
+
+    equal(getSelectedOption(view1.$('#test8')).data('stickit-bind-val'), 'fountain');
+    equal(getSelectedOption(view2.$('#test8')).data('stickit-bind-val'), 'fountain');
+
+    collection.add({id:4,name:'buxton'});
+
+    equal(view1.$('#test8 option').eq(3).data('stickit-bind-val'), 'buxton');
+    equal(view2.$('#test8 option').eq(3).data('stickit-bind-val'), 'buxton');
+
+    collection.set([]);
+    equal(view1.$('#test8 option').length, 0);
+    equal(view2.$('#test8 option').length, 0);
+
+  });
+
   test('bindings:selectOptions (collection path relative to `this`)', function() {
 
     view.collection = new Backbone.Collection([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);

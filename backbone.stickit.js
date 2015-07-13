@@ -618,10 +618,18 @@
         var removeAllListeners = function() {
           removeCollectionListeners();
           collection.off('stickit:selectRefresh');
+          collection.off('stickit:selectRefreshForView');
           model.off('stickit:selectRefresh');
         };
-        // Remove previously set event listeners by triggering a custom event
-        collection.trigger('stickit:selectRefresh');
+        collection.trigger('stickit:selectRefreshForView', this.cid);
+        // Compare the view cid on the event to this.cid to ensure we don't
+        // remove events from the collection that are tied to other views.
+        collection.once('stickit:selectRefreshForView', function(viewCid) {
+          if(this.cid == viewCid){
+            // Remove previously set event listeners by triggering a custom event
+            collection.trigger('stickit:selectRefresh');
+          }
+        }, this);
         collection.once('stickit:selectRefresh', removeCollectionListeners, this);
 
         // Listen to the collection and trigger an update of the select options
