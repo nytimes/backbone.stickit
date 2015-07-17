@@ -602,10 +602,10 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'fountain');
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'evian');
 
     view.$('#test8 option').eq(2).prop('selected', true).trigger('change');
     equal(model.get('water'), 'dasina');
@@ -638,10 +638,10 @@ $(document).ready(function() {
     $('#qunit-fixture').html(view.render().el);
 
     equal(view.$('#test8 option').eq(0).text(), 'Choose one...');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), null);
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), null);
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'evian');
 
     view.$('#test8 option').eq(3).prop('selected', true).trigger('change');
     equal(model.get('water'), 'dasina');
@@ -674,10 +674,10 @@ $(document).ready(function() {
     $('#qunit-fixture').html(view.render().el);
 
     equal(view.$('#test8 option').eq(0).text(), 'Choose dynamic...');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), null);
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), null);
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'evian');
 
     view.$('#test8 option').eq(3).prop('selected', true).trigger('change');
     equal(model.get('water'), 'dasina');
@@ -716,7 +716,7 @@ $(document).ready(function() {
     equal(model.get('water'), null);
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'evian');
 
     // We can force the selection of disabled options
     view.$('#test8 option').eq(0).prop('selected', true).trigger('change');
@@ -753,10 +753,10 @@ $(document).ready(function() {
     $('#qunit-fixture').html(view.render().el);
 
     equal(view.$('#test8 > option').eq(0).text(), 'Choose one...');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), null);
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), null);
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'evian');
 
     view.$('#test8 option').eq(3).prop('selected', true).trigger('change');
     equal(model.get('water'), 'dasina');
@@ -801,10 +801,10 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    strictEqual(getSelectedOption(view.$('#test21')).data('stickit-bind-val'), '1');
+    strictEqual(getSelectedOption(view.$('#test21')).stickitSelectValue(), '1');
 
     model.set('water', '2');
-    strictEqual(getSelectedOption(view.$('#test21')).data('stickit-bind-val'), '2');
+    strictEqual(getSelectedOption(view.$('#test21')).stickitSelectValue(), '2');
 
     view.$('#test21 option').eq(2).prop('selected', true).trigger('change');
     strictEqual(model.get('water'), '3');
@@ -824,11 +824,10 @@ $(document).ready(function() {
     };
 
     $('#qunit-fixture').html(view.render().el);
-
-    strictEqual(getSelectedOption(view.$('#test26')).data('stickit-bind-val'), 1);
+    strictEqual(getSelectedOption(view.$('#test26')).stickitSelectValue(), 1);
 
     model.set('water', 2);
-    strictEqual(getSelectedOption(view.$('#test26')).data('stickit-bind-val'), 2);
+    strictEqual(getSelectedOption(view.$('#test26')).stickitSelectValue(), 2);
 
     view.$('#test26 option:contains("dasina")').prop('selected', true).trigger('change');
     strictEqual(model.get('water'), 3);
@@ -856,10 +855,10 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'fountain');
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'evian');
 
     view.$('#test8 option').eq(2).prop('selected', true).trigger('change');
     equal(model.get('water'), 'dasina');
@@ -884,17 +883,17 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'fountain');
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'evian');
 
     view.$('#test8 option').eq(2).prop('selected', true).trigger('change');
     equal(model.get('water'), 'dasina');
 
     // Test that the select options are auto-updated
     collection.add({id:4,name:'buxton'});
-    equal(view.$('#test8 option').eq(3).data('stickit-bind-val'), 'buxton');
+    equal(view.$('#test8 option').eq(3).stickitSelectValue(), 'buxton');
 
     var modelEvents = ['stickit:unstuck', 'stickit:selectRefresh'];
     var collectionEvents = ['stickit:selectRefresh', 'add', 'remove', 'reset', 'sort'];
@@ -1003,10 +1002,10 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'fountain');
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'evian');
 
     view.$('#test8 option').eq(2).prop('selected', true).trigger('change');
     equal(model.get('water'), 'dasina');
@@ -1031,10 +1030,10 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val').id, 1);
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue().id, 1);
 
     model.set('water', {id:2, name:'evian'});
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val').id, 2);
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue().id, 2);
 
     view.$('#test8 option').eq(2).prop('selected', true).trigger('change');
     equal(model.get('water').id, 3);
@@ -1060,11 +1059,11 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'session');
-    equal(view.$('#test8 option').eq(0).data('stickit-bind-val'), '');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'session');
+    equal(view.$('#test8 option').eq(0).stickitSelectValue(), '');
 
     model.set('water', '');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), '');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), '');
   });
 
   test('bindings:selectOptions (default labelPath/valuePath)', function() {
@@ -1085,10 +1084,10 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'evian');
 
     model.set('water', 'fountain');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'fountain');
   });
 
   test('bindings:selectOptions (collection defined as value/label map)', function() {
@@ -1111,12 +1110,12 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'moo');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'moo');
 
     // Options are sorted alphabetically by label
-    equal(view.$('#test8 option:eq(0)').data('stickit-bind-val'), 'moo');
-    equal(view.$('#test8 option:eq(1)').data('stickit-bind-val'), 'oink');
-    equal(view.$('#test8 option:eq(2)').data('stickit-bind-val'), 'baa');
+    equal(view.$('#test8 option:eq(0)').stickitSelectValue(), 'moo');
+    equal(view.$('#test8 option:eq(1)').stickitSelectValue(), 'oink');
+    equal(view.$('#test8 option:eq(2)').stickitSelectValue(), 'baa');
   });
 
   test('bindings:selectOptions (collection defined as value/label map, sorted by value)', function() {
@@ -1140,12 +1139,12 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'moo');
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 'moo');
 
     // Options are sorted alphabetically by value
-    equal(view.$('#test8 option:eq(0)').data('stickit-bind-val'), 'baa');
-    equal(view.$('#test8 option:eq(1)').data('stickit-bind-val'), 'moo');
-    equal(view.$('#test8 option:eq(2)').data('stickit-bind-val'), 'oink');
+    equal(view.$('#test8 option:eq(0)').stickitSelectValue(), 'baa');
+    equal(view.$('#test8 option:eq(1)').stickitSelectValue(), 'moo');
+    equal(view.$('#test8 option:eq(2)').stickitSelectValue(), 'oink');
   });
 
   test('bindings:selectOptions (multi-select without valuePath)', function() {
@@ -1167,14 +1166,14 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test16')).eq(0).data('stickit-bind-val').name, 'fountain');
-    equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val').name, 'dasina');
+    equal(getSelectedOption(view.$('#test16')).eq(0).stickitSelectValue().name, 'fountain');
+    equal(getSelectedOption(view.$('#test16')).eq(1).stickitSelectValue().name, 'dasina');
 
     var field = _.clone(model.get('water'));
     field.push({id:2,name:'evian'});
 
     model.set({'water':field});
-    equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val').name, 'evian');
+    equal(getSelectedOption(view.$('#test16')).eq(1).stickitSelectValue().name, 'evian');
 
     view.$('#test16 option').eq(3).prop('selected', true).trigger('change');
 
@@ -1202,14 +1201,14 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test16')).eq(0).data('stickit-bind-val'), 1);
-    equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val'), 3);
+    equal(getSelectedOption(view.$('#test16')).eq(0).stickitSelectValue(), 1);
+    equal(getSelectedOption(view.$('#test16')).eq(1).stickitSelectValue(), 3);
 
     var field = _.clone(model.get('water'));
     field.push(2);
 
     model.set({'water':field});
-    equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val'), 2);
+    equal(getSelectedOption(view.$('#test16')).eq(1).stickitSelectValue(), 2);
 
     view.$('#test16 option').eq(3).prop('selected', true).trigger('change');
 
@@ -1230,14 +1229,14 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test23')).eq(0).data('stickit-bind-val'), '1');
-    equal(getSelectedOption(view.$('#test23')).eq(1).data('stickit-bind-val'), '3');
+    equal(getSelectedOption(view.$('#test23')).eq(0).stickitSelectValue(), '1');
+    equal(getSelectedOption(view.$('#test23')).eq(1).stickitSelectValue(), '3');
 
     var field = _.clone(model.get('water'));
     field.push('2');
 
     model.set({'water':field});
-    equal(getSelectedOption(view.$('#test23')).eq(1).data('stickit-bind-val'), '2');
+    equal(getSelectedOption(view.$('#test23')).eq(1).stickitSelectValue(), '2');
 
     view.$('#test23 option').eq(3).prop('selected', true).trigger('change');
 
@@ -1271,14 +1270,14 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test16')).eq(0).data('stickit-bind-val'), 1);
-    equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val'), 3);
+    equal(getSelectedOption(view.$('#test16')).eq(0).stickitSelectValue(), 1);
+    equal(getSelectedOption(view.$('#test16')).eq(1).stickitSelectValue(), 3);
 
     var field = _.clone(model.get('water'));
     field += '-2';
 
     model.set({'water':field});
-    equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val'), 2);
+    equal(getSelectedOption(view.$('#test16')).eq(1).stickitSelectValue(), 2);
 
     view.$('#test16 option').eq(3).prop('selected', true).trigger('change');
 
@@ -1312,10 +1311,10 @@ $(document).ready(function() {
 
     equal(getSelectedOption(view.$('#test8')).parent().is('optgroup'), true);
     equal(getSelectedOption(view.$('#test8')).parent().attr('label'), 'Three Stooges');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 3);
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 3);
 
     model.set({'character':2});
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 2);
+    equal(getSelectedOption(view.$('#test8')).stickitSelectValue(), 2);
 
     view.$('#test8 option').eq(3).prop('selected', true).trigger('change');
     equal(model.get('character'), 4);
@@ -1336,10 +1335,10 @@ $(document).ready(function() {
 
     equal(getSelectedOption(view.$('#test22')).parent().is('optgroup'), true);
     equal(getSelectedOption(view.$('#test22')).parent().attr('label'), 'Three Stooges');
-    equal(getSelectedOption(view.$('#test22')).data('stickit-bind-val'), '3');
+    equal(getSelectedOption(view.$('#test22')).stickitSelectValue(), '3');
 
     model.set({'character':'2'});
-    equal(getSelectedOption(view.$('#test22')).data('stickit-bind-val'), '2');
+    equal(getSelectedOption(view.$('#test22')).stickitSelectValue(), '2');
 
     view.$('#test22 option').eq(3).prop('selected', true).trigger('change');
     equal(model.get('character'), '4');
@@ -1360,10 +1359,10 @@ $(document).ready(function() {
 
     equal(getSelectedOption(view.$('#test24')).parent().is('optgroup'), true);
     equal(getSelectedOption(view.$('#test24')).parent().attr('label'), 'Three Stooges');
-    equal(getSelectedOption(view.$('#test24')).data('stickit-bind-val'), '3');
+    equal(getSelectedOption(view.$('#test24')).stickitSelectValue(), '3');
 
     model.set({'character':'0'});
-    equal(getSelectedOption(view.$('#test24')).data('stickit-bind-val'), '0');
+    equal(getSelectedOption(view.$('#test24')).stickitSelectValue(), '0');
 
     view.$('#test24 option').eq(4).prop('selected', true).trigger('change');
     equal(model.get('character'), '4');

@@ -207,6 +207,20 @@
   // -------
 
   var slice = [].slice;
+  var STICKIT_BINDVAL_KEY = 'stickit-bind-val';
+
+  // Returns value of select option
+  // First checks for containing custom values, e.g not string
+  // If such exists, then return it. If not, fallback to simple node.value
+  var getSelectOptionValue = Stickit.__getSelectOptionValue = function(el) {
+    if (!el) return null;
+
+    if (el.__stickitBindVal__ || el.hasAttribute('data-' + STICKIT_BINDVAL_KEY)) {
+      return Backbone.$(el).data(STICKIT_BINDVAL_KEY);
+    } else {
+      return el.value;
+    }
+  };
 
   // Evaluates the given `path` (in object/dot-notation) relative to the given
   // `obj`. If the path is null/undefined, then the given `obj` is returned.
@@ -502,35 +516,8 @@
       // If there are no `selectOptions` then we assume that the `<select>`
       // is pre-rendered and that we need to generate the collection.
       if (!selectConfig) {
-        selectConfig = {};
-        var getList = function($el) {
-          return $el.map(function(index, option) {
-            // Retrieve the text and value of the option, preferring "stickit-bind-val"
-            // data attribute over value property.
-            var dataVal = Backbone.$(option).data('stickit-bind-val');
-            return {
-              value: dataVal !== undefined ? dataVal : option.value,
-              label: option.text
-            };
-          }).get();
-        };
-        if ($el.find('optgroup').length) {
-          list = {opt_labels:[]};
-          // Search for options without optgroup
-          if ($el.find('> option').length) {
-            list.opt_labels.push(undefined);
-            _.each($el.find('> option'), function(el) {
-              list[undefined] = getList(Backbone.$(el));
-            });
-          }
-          _.each($el.find('optgroup'), function(el) {
-            var label = Backbone.$(el).attr('label');
-            list.opt_labels.push(label);
-            list[label] = getList(Backbone.$(el).find('option'));
-          });
-        } else {
-          list = getList($el.find('option'));
-        }
+        $el.val(val);
+        return;
       }
 
       // Fill in default label and path values.
@@ -539,15 +526,22 @@
       selectConfig.disabledPath = selectConfig.disabledPath || 'disabled';
 
       var addSelectOptions = function(optList, $el, fieldVal) {
+        var fragment = document.createDocumentFragment();
+
         _.each(optList, function(obj) {
           var option = Backbone.$('<option/>'), optionVal = obj;
 
           var fillOption = function(text, val, disabled) {
             option.text(text);
             optionVal = val;
-            // Save the option value as data so that we can reference it later.
-            option.data('stickit-bind-val', optionVal);
-            if (!_.isArray(optionVal) && !_.isObject(optionVal)) option.val(optionVal);
+
+            if (optionVal != null && !_.isObject(optionVal)) {
+              option.val(optionVal);
+            } else {
+              // Save the option value as data so that we can reference it later.
+              option[0].__stickitBindVal__ = true;
+              option.data(STICKIT_BINDVAL_KEY, optionVal);
+            }
 
             if (disabled === true) option.prop('disabled', 'disabled');
           };
@@ -584,8 +578,10 @@
             });
           }
 
-          $el.append(option);
+          option.appendTo(fragment);
         });
+
+        $el.append(fragment);
       };
 
       $el.find('*').remove();
@@ -688,10 +684,10 @@
 
       if ($el.prop('multiple')) {
         return _.map(selected, function(el) {
-          return Backbone.$(el).data('stickit-bind-val');
+          return getSelectOptionValue(el);
         });
       } else {
-        return selected.data('stickit-bind-val');
+        return getSelectOptionValue(selected[0]);
       }
     }
   }]);
