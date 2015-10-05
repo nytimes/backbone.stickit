@@ -86,6 +86,15 @@
       var model = optionalModel || this.model,
           bindings = optionalBindingsConfig || _.result(this, "bindings") || {};
 
+      // Support of Marionette.js syntax same as for events and triggers
+      // does not brake Backbone only usage
+      // now bindings can have selector like '@ui.someSelectorName'
+      // and value for this selector gets from view.ui object
+      // see http://marionettejs.com/docs/v2.4.3/marionette.view.html#viewevents
+      if (this.normalizeUIKeys) {
+        bindings = this.normalizeUIKeys(bindings);
+      }
+
       this._modelBindings || (this._modelBindings = []);
 
       // Add bindings in bulk using `addBinding`.
