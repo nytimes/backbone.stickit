@@ -124,7 +124,7 @@
 
       // Consider Marionette uiBindings
       if(selector.charAt(0) === '@' && this.ui) {
-        selector = this.ui[selector.substr(4)];
+        selector = this.ui[selector.substr(4)][0];
       }
 
       // Special case the ':el' selector to use the view's this.$el.
