@@ -539,6 +539,7 @@
       selectConfig.disabledPath = selectConfig.disabledPath || 'disabled';
 
       var addSelectOptions = function(optList, $el, fieldVal) {
+        var fragment = document.createDocumentFragment();
         _.each(optList, function(obj) {
           var option = Backbone.$('<option/>'), optionVal = obj;
 
@@ -584,11 +585,13 @@
             });
           }
 
-          $el.append(option);
+          fragment.appendChild(option[0]);
         });
+
+        $el.append(fragment);
       };
 
-      $el.find('*').remove();
+      $el.empty();
 
       // The `list` configuration is a function that returns the options list or a string
       // which represents the path to the list relative to `window` or the view/`this`.
