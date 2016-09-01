@@ -540,6 +540,7 @@
 
       var addSelectOptions = function(optList, $el, fieldVal) {
         var fragment = document.createDocumentFragment();
+
         _.each(optList, function(obj) {
           var option = Backbone.$('<option/>'), optionVal = obj;
 
@@ -585,7 +586,7 @@
             });
           }
 
-          fragment.appendChild(option[0]);
+          option.appendTo(fragment);
         });
 
         $el.append(fragment);
