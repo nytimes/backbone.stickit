@@ -53,9 +53,9 @@
 
       // Support passing a bindings hash in place of bindingSelector.
       if (_.isObject(bindingSelector)) {
-        _.each(bindingSelector, function(v, selector) {
+        _.each(bindingSelector, _.bind(function(v, selector) {
           this.unstickit(model, selector);
-        }, this);
+        }, this));
         return;
       }
 
@@ -71,10 +71,12 @@
       });
 
       // Trigger an event for each model that was unbound.
-      _.invoke(_.uniq(models), 'trigger', 'stickit:unstuck', this.cid);
+      _.each(_.uniq(models), _.bind(function (model) {
+        model.trigger('stickit:unstuck', this.cid);
+      }, this));
 
       // Call `_destroy` on a unique list of the binding callbacks.
-      _.each(_.uniq(destroyFns), function(fn) { fn.call(this); }, this);
+      _.each(_.uniq(destroyFns), _.bind(function(fn) { fn.call(this); }, this));
 
       this.$el.off('.stickit' + (model ? '.' + model.cid : ''), bindingSelector);
     },
@@ -116,9 +118,9 @@
       // Support jQuery-style {key: val} event maps.
       if (_.isObject(selector)) {
         var bindings = selector;
-        _.each(bindings, function(val, key) {
+        _.each(bindings, _.bind(function(val, key) {
           this.addBinding(model, key, val);
-        }, this);
+        }, this));
         return;
       }
 
@@ -167,7 +169,7 @@
 
       if (modelAttr) {
         // Setup one-way (input element -> model) bindings.
-        _.each(config.events, function(type) {
+        _.each(config.events, _.bind(function(type) {
           var eventName = type + namespace;
           var listener = function(event) {
             var val = applyViewFn.call(this, config.getVal, $el, event, config, slice.call(arguments, 1));
@@ -178,7 +180,7 @@
           };
           var sel = selector === ':el'? '' : selector;
           this.$el.on(eventName, sel, _.bind(listener, this));
-        }, this);
+        }, this));
 
         // Setup a `change:modelAttr` observer to keep the view element in sync.
         // `modelAttr` may be an array of attributes or a single string value.
@@ -332,7 +334,7 @@
       var lastClass = '';
       var observed = attrConfig.observe || (attrConfig.observe = modelAttr);
       var updateAttr = function() {
-        var updateType = _.contains(props, attrConfig.name) ? 'prop' : 'attr',
+        var updateType = _.includes(props, attrConfig.name) ? 'prop' : 'attr',
             val = getAttr(model, observed, attrConfig);
 
         // If it is a class then we need to remove the last value and add the new.
