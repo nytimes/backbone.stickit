@@ -55,7 +55,7 @@
       if (_.isObject(bindingSelector)) {
         _.each(bindingSelector, function(v, selector) {
           this.unstickit(model, selector);
-        }, this);
+        }.bind(this));
         return;
       }
 
@@ -71,10 +71,12 @@
       });
 
       // Trigger an event for each model that was unbound.
-      _.invoke(_.uniq(models), 'trigger', 'stickit:unstuck', this.cid);
+      _.each(_.uniq(models), function (model) {
+        model.trigger('stickit:unstuck', this.cid);
+      }.bind(this));
 
       // Call `_destroy` on a unique list of the binding callbacks.
-      _.each(_.uniq(destroyFns), function(fn) { fn.call(this); }, this);
+      _.each(_.uniq(destroyFns), function(fn) { fn.call(this); }.bind(this));
 
       this.$el.off('.stickit' + (model ? '.' + model.cid : ''), bindingSelector);
     },
@@ -118,7 +120,7 @@
         var bindings = selector;
         _.each(bindings, function(val, key) {
           this.addBinding(model, key, val);
-        }, this);
+        }.bind(this));
         return;
       }
 
@@ -177,8 +179,8 @@
             if (currentVal) setAttr(model, modelAttr, val, options, config);
           };
           var sel = selector === ':el'? '' : selector;
-          this.$el.on(eventName, sel, _.bind(listener, this));
-        }, this);
+          this.$el.on(eventName, sel, listener.bind(this));
+        }.bind(this));
 
         // Setup a `change:modelAttr` observer to keep the view element in sync.
         // `modelAttr` may be an array of attributes or a single string value.
@@ -332,7 +334,7 @@
       var lastClass = '';
       var observed = attrConfig.observe || (attrConfig.observe = modelAttr);
       var updateAttr = function() {
-        var updateType = _.contains(props, attrConfig.name) ? 'prop' : 'attr',
+        var updateType = _.includes(props, attrConfig.name) ? 'prop' : 'attr',
             val = getAttr(model, observed, attrConfig);
 
         // If it is a class then we need to remove the last value and add the new.
