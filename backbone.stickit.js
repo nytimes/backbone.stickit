@@ -53,9 +53,9 @@
 
       // Support passing a bindings hash in place of bindingSelector.
       if (_.isObject(bindingSelector)) {
-        _.each(bindingSelector, _.bind(function(v, selector) {
+        _.each(bindingSelector, function(v, selector) {
           this.unstickit(model, selector);
-        }, this));
+        }.bind(this));
         return;
       }
 
@@ -71,12 +71,12 @@
       });
 
       // Trigger an event for each model that was unbound.
-      _.each(_.uniq(models), _.bind(function (model) {
+      _.each(_.uniq(models), function (model) {
         model.trigger('stickit:unstuck', this.cid);
-      }, this));
+      }.bind(this));
 
       // Call `_destroy` on a unique list of the binding callbacks.
-      _.each(_.uniq(destroyFns), _.bind(function(fn) { fn.call(this); }, this));
+      _.each(_.uniq(destroyFns), function(fn) { fn.call(this); }.bind(this));
 
       this.$el.off('.stickit' + (model ? '.' + model.cid : ''), bindingSelector);
     },
@@ -118,9 +118,9 @@
       // Support jQuery-style {key: val} event maps.
       if (_.isObject(selector)) {
         var bindings = selector;
-        _.each(bindings, _.bind(function(val, key) {
+        _.each(bindings, function(val, key) {
           this.addBinding(model, key, val);
-        }, this));
+        }.bind(this));
         return;
       }
 
@@ -169,7 +169,7 @@
 
       if (modelAttr) {
         // Setup one-way (input element -> model) bindings.
-        _.each(config.events, _.bind(function(type) {
+        _.each(config.events, function(type) {
           var eventName = type + namespace;
           var listener = function(event) {
             var val = applyViewFn.call(this, config.getVal, $el, event, config, slice.call(arguments, 1));
@@ -179,8 +179,8 @@
             if (currentVal) setAttr(model, modelAttr, val, options, config);
           };
           var sel = selector === ':el'? '' : selector;
-          this.$el.on(eventName, sel, _.bind(listener, this));
-        }, this));
+          this.$el.on(eventName, sel, listener.bind(this));
+        }.bind(this));
 
         // Setup a `change:modelAttr` observer to keep the view element in sync.
         // `modelAttr` may be an array of attributes or a single string value.
