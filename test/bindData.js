@@ -1,8 +1,8 @@
 $(document).ready(function() {
 
-  module("view.stickit");
+  QUnit.module("view.stickit");
 
-  test('input:text', function() {
+  QUnit.test('input:text', function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -23,7 +23,7 @@ $(document).ready(function() {
     equal(model.get('water'), 'dasina');
   });
 
-  test('textarea', function() {
+  QUnit.test('textarea', function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -47,7 +47,7 @@ $(document).ready(function() {
   _([1,2]).each(function(subtest) {
     var sel = '#test17-' + subtest;
 
-    test('contenteditable-' + subtest, function() {
+    QUnit.test('contenteditable-' + subtest, function() {
       model.set({'water':'<span>fountain</span>'});
       view.model = model;
       view.templateId = 'jst17';
@@ -68,7 +68,7 @@ $(document).ready(function() {
 
   });
 
-  test('checkbox', function() {
+  QUnit.test('checkbox', function() {
 
     model.set({'water':true});
     view.model = model;
@@ -89,7 +89,7 @@ $(document).ready(function() {
     equal(model.get('water'), true);
   });
 
-  test('radio', function() {
+  QUnit.test('radio', function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -110,7 +110,7 @@ $(document).ready(function() {
     equal(model.get('water'), 'fountain');
   });
 
-  test('div', function() {
+  QUnit.test('div', function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -128,7 +128,7 @@ $(document).ready(function() {
     equal(view.$('#test5').text(), 'evian');
   });
 
-  test(':el selector', function() {
+  QUnit.test(':el selector', function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -146,7 +146,7 @@ $(document).ready(function() {
     equal(view.$el.text(), 'evian');
   });
 
-  test('bindings as a function', 2, function() {
+  QUnit.test('bindings as a function', 2, function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -161,7 +161,7 @@ $(document).ready(function() {
     equal(model.get('water'), 'dasina');
   });
 
-  test('stickit (shorthand bindings)', function() {
+  QUnit.test('stickit (shorthand bindings)', function() {
     model.set({'water':'fountain'});
     view.model = model;
     view.templateId = 'jst5';
@@ -178,7 +178,7 @@ $(document).ready(function() {
 
   });
 
-  test('stickit (multiple models and bindings)', function() {
+  QUnit.test('stickit (multiple models and bindings)', function() {
 
     // Test sticking two times to two different models and configs.
     var model1, model2, testView;
@@ -240,7 +240,7 @@ $(document).ready(function() {
     testView.remove();
   });
 
-  test('stickit (existing events property as hash with multiple models and bindings)', function() {
+  QUnit.test('stickit (existing events property as hash with multiple models and bindings)', function() {
 
     var model1, model2, testView;
 
@@ -302,7 +302,7 @@ $(document).ready(function() {
     equal(model2.get('candy'), 'butterfinger');
   });
 
-  test('stickit (existing events property as function with multiple models and bindings)', function() {
+  QUnit.test('stickit (existing events property as function with multiple models and bindings)', function() {
 
     var model1, model2, testView;
 
@@ -359,7 +359,7 @@ $(document).ready(function() {
     testView.remove();
   });
 
-  test('bindings:setOptions', function() {
+  QUnit.test('bindings:setOptions', function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -379,7 +379,7 @@ $(document).ready(function() {
     equal(model.changedAttributes().water, 'dasina');
   });
 
-  test('bindings:updateMethod', function() {
+  QUnit.test('bindings:updateMethod', function() {
 
     model.set({'water':'<a href="www.test.com">river</a>'});
     view.model = model;
@@ -395,7 +395,7 @@ $(document).ready(function() {
     equal(view.$('#test5').text(), 'river');
   });
 
-  test('bindings:escape', function() {
+  QUnit.test('bindings:escape', function() {
 
     model.set({'water':'<a href="www.test.com">river</a>'});
     view.model = model;
@@ -413,7 +413,7 @@ $(document).ready(function() {
     equal(view.$('#test5').text(), '<a href="www.test.com">river</a>');
   });
 
-  test('bindings:onSet/onGet', 6, function() {
+  QUnit.test('bindings:onSet/onGet', 6, function() {
 
     model.set({'water':'_fountain'});
     view.model = model;
@@ -441,7 +441,7 @@ $(document).ready(function() {
     equal(model.get('water'), '_evian');
   });
 
-  test('bindings:sanitization', 7, function() {
+  QUnit.test('bindings:sanitization', 7, function() {
 
     model.set({'duration':null});
     view.model = model;
@@ -470,7 +470,7 @@ $(document).ready(function() {
     equal(model.get('duration'), null);
   });
 
-  test('bindings:onSet (returning array of observed values)', 2, function() {
+  QUnit.test('bindings:onSet (returning array of observed values)', 2, function() {
 
     model.set({'water':'fountain', 'candy':'skittles'});
     view.model = model;
@@ -494,7 +494,7 @@ $(document).ready(function() {
     equal(model.get('candy'), 'kitkat');
   });
 
-  test('bindings:set', 5, function() {
+  QUnit.test('bindings:set', 5, function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -518,7 +518,7 @@ $(document).ready(function() {
     equal(model.get('water'), 'evian');
   });
 
-  test('bindings:afterUpdate', 14, function() {
+  QUnit.test('bindings:afterUpdate', 14, function() {
 
     model.set({'water':'fountain', 'candy':true});
     view.model = model;
@@ -580,7 +580,7 @@ $(document).ready(function() {
     model.set('candy', false);
   });
 
-  test('bindings:selectOptions', 7, function() {
+  QUnit.test('bindings:selectOptions', 7, function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -611,7 +611,7 @@ $(document).ready(function() {
     equal(model.get('water'), 'dasina');
   });
 
-  test('bindings:selectOptions:defaultOption', 8, function() {
+  QUnit.test('bindings:selectOptions:defaultOption', 8, function() {
 
     model.set({'water':null});
     view.model = model;
@@ -647,7 +647,7 @@ $(document).ready(function() {
     equal(model.get('water'), 'dasina');
   });
 
-  test('bindings:selectOptions:defaultOption (options is a method)', 8, function() {
+  QUnit.test('bindings:selectOptions:defaultOption (options is a method)', 8, function() {
 
     model.set({'water':null});
     view.model = model;
@@ -683,7 +683,7 @@ $(document).ready(function() {
     equal(model.get('water'), 'dasina');
   });
 
-  test('bindings:selectOptions:defaultOption (options is disabled)', 9, function() {
+  QUnit.test('bindings:selectOptions:defaultOption (options is disabled)', 9, function() {
 
     model.set({'water':null});
     view.model = model;
@@ -723,7 +723,7 @@ $(document).ready(function() {
     equal(model.get('water'), null);
   });
 
-  test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
+  QUnit.test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
 
     model.set({'water':null});
     view.model = model;
@@ -762,7 +762,7 @@ $(document).ready(function() {
     equal(model.get('water'), 'dasina');
   });
 
-  test('bindings:selectOptions (disabled options)'  , function() {
+  QUnit.test('bindings:selectOptions (disabled options)'  , function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -785,7 +785,7 @@ $(document).ready(function() {
     equal(view.$('#test8 option').eq(2).prop('disabled'), false);
   });
 
-  test('bindings:selectOptions (pre-rendered)', 3, function() {
+  QUnit.test('bindings:selectOptions (pre-rendered)', 3, function() {
 
     // Note that we're working with strings and not numeric values here - the pre-rendered <select>
     // handling is limited to strings unless data-stickit-bind-val is specified for each <option>
@@ -810,7 +810,7 @@ $(document).ready(function() {
     strictEqual(model.get('water'), '3');
   });
 
-  test('bindings:selectOptions (pre-rendered, with data-stickit-bind-val)', function() {
+  QUnit.test('bindings:selectOptions (pre-rendered, with data-stickit-bind-val)', function() {
 
     // Here we're testing that numeric values can be bound via data-stickit-bind-val
 
@@ -837,7 +837,7 @@ $(document).ready(function() {
     strictEqual(model.get('water'), 0);
   });
 
-  test('bindings:selectOptions (Backbone.Collection)', function() {
+  QUnit.test('bindings:selectOptions (Backbone.Collection)', function() {
 
     var collection = new Backbone.Collection([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);
     model.set({'water':'fountain'});
@@ -865,7 +865,7 @@ $(document).ready(function() {
     equal(model.get('water'), 'dasina');
   });
 
-  test('bindings:selectOptions (Backbone.Collection that changes)', function() {
+  QUnit.test('bindings:selectOptions (Backbone.Collection that changes)', function() {
 
     var collection = new Backbone.Collection([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);
     model.set({'water':'fountain'});
@@ -935,7 +935,7 @@ $(document).ready(function() {
   });
 
   // test for issue #250: https://github.com/NYTimes/backbone.stickit/issues/250
-  test('bindings:selectOptions (Backbone.Collection that changes - multiple views)', function() {
+  QUnit.test('bindings:selectOptions (Backbone.Collection that changes - multiple views)', function() {
     var collection = new Backbone.Collection([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);
     model.set({'water':'fountain'});
 
@@ -984,7 +984,7 @@ $(document).ready(function() {
 
   });
 
-  test('bindings:selectOptions (collection path relative to `this`)', function() {
+  QUnit.test('bindings:selectOptions (collection path relative to `this`)', function() {
 
     view.collection = new Backbone.Collection([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);
     model.set({'water':'fountain'});
@@ -1012,7 +1012,7 @@ $(document).ready(function() {
     equal(model.get('water'), 'dasina');
   });
 
-  test('bindings:selectOptions (empty valuePath)', function() {
+  QUnit.test('bindings:selectOptions (empty valuePath)', function() {
 
     model.set({'water':{id:1, name:'fountain'}});
     window.test = {
@@ -1040,7 +1040,7 @@ $(document).ready(function() {
     equal(model.get('water').id, 3);
   });
 
-  test('bindings:selectOptions (empty string label)', function() {
+  QUnit.test('bindings:selectOptions (empty string label)', function() {
 
     model.set({'water':'session'});
     view.model = model;
@@ -1067,7 +1067,7 @@ $(document).ready(function() {
     equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), '');
   });
 
-  test('bindings:selectOptions (default labelPath/valuePath)', function() {
+  QUnit.test('bindings:selectOptions (default labelPath/valuePath)', function() {
 
     model.set({'water':'evian'});
     view.model = model;
@@ -1091,7 +1091,7 @@ $(document).ready(function() {
     equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
   });
 
-  test('bindings:selectOptions (collection defined as value/label map)', function() {
+  QUnit.test('bindings:selectOptions (collection defined as value/label map)', function() {
 
     model.set({'sound':'moo'});
     view.model = model;
@@ -1119,7 +1119,7 @@ $(document).ready(function() {
     equal(view.$('#test8 option:eq(2)').data('stickit-bind-val'), 'baa');
   });
 
-  test('bindings:selectOptions (collection defined as value/label map, sorted by value)', function() {
+  QUnit.test('bindings:selectOptions (collection defined as value/label map, sorted by value)', function() {
 
     model.set({'sound':'moo'});
     view.model = model;
@@ -1148,7 +1148,7 @@ $(document).ready(function() {
     equal(view.$('#test8 option:eq(2)').data('stickit-bind-val'), 'oink');
   });
 
-  test('bindings:selectOptions (multi-select without valuePath)', function() {
+  QUnit.test('bindings:selectOptions (multi-select without valuePath)', function() {
 
     var collection = [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}, {id:4,name:'aquafina'}];
 
@@ -1182,7 +1182,7 @@ $(document).ready(function() {
 
   });
 
-  test('bindings:selectOptions (multi-select with valuePath)', function() {
+  QUnit.test('bindings:selectOptions (multi-select with valuePath)', function() {
 
     var collection = [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}, {id:4,name:'aquafina'}];
 
@@ -1217,7 +1217,7 @@ $(document).ready(function() {
 
   });
 
-  test('bindings:selectOptions (pre-rendered multi-select)', function() {
+  QUnit.test('bindings:selectOptions (pre-rendered multi-select)', function() {
 
     model.set({'water': ['1', '3']});
     view.model = model;
@@ -1245,7 +1245,7 @@ $(document).ready(function() {
 
   });
 
-  test('bindings:selectOptions (multi-select with onGet/onSet)', function() {
+  QUnit.test('bindings:selectOptions (multi-select with onGet/onSet)', function() {
 
     var collection = [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}, {id:4,name:'aquafina'}];
 
@@ -1286,7 +1286,7 @@ $(document).ready(function() {
 
   });
 
-  test('bindings:selectOptions (optgroup)', function() {
+  QUnit.test('bindings:selectOptions (optgroup)', function() {
 
     model.set({'character':3});
     view.model = model;
@@ -1321,7 +1321,7 @@ $(document).ready(function() {
     equal(model.get('character'), 4);
   });
 
-  test('bindings:selectOptions (pre-rendered optgroup)', function() {
+  QUnit.test('bindings:selectOptions (pre-rendered optgroup)', function() {
 
     model.set({'character':'3'});
     view.model = model;
@@ -1345,7 +1345,7 @@ $(document).ready(function() {
     equal(model.get('character'), '4');
   });
 
-  test('bindings:selectOptions (pre-rendered optgroup with extra option)', function() {
+  QUnit.test('bindings:selectOptions (pre-rendered optgroup with extra option)', function() {
 
     model.set({'character':'3'});
     view.model = model;
@@ -1369,7 +1369,7 @@ $(document).ready(function() {
     equal(model.get('character'), '4');
   });
 
-  test('bindings:attributes:name', function() {
+  QUnit.test('bindings:attributes:name', function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1392,7 +1392,7 @@ $(document).ready(function() {
     equal(view.$('#test5').attr('data-name'), 'evian');
   });
 
-  test('bindings:attributes:name:class', function() {
+  QUnit.test('bindings:attributes:name:class', function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1414,7 +1414,7 @@ $(document).ready(function() {
     ok(view.$('#test9').hasClass('test') && view.$('#test9').hasClass('evian'));
   });
 
-  test('bindings:attributes:onGet', function() {
+  QUnit.test('bindings:attributes:onGet', function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1437,7 +1437,7 @@ $(document).ready(function() {
     equal(view.$('#test5').attr('data-name'), '_evian_water');
   });
 
-  test('bindings:attributes:onGet (string)', function() {
+  QUnit.test('bindings:attributes:onGet (string)', function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1461,7 +1461,7 @@ $(document).ready(function() {
     equal(view.$('#test5').attr('data-name'), '_evian_water');
   });
 
-  test('bindings:attributes:observe', function() {
+  QUnit.test('bindings:attributes:observe', function() {
 
     model.set({'water':'fountain', 'candy':'twix'});
     view.model = model;
@@ -1487,7 +1487,7 @@ $(document).ready(function() {
     equal(view.$('#test5').attr('data-name'), 'evian-snickers');
   });
 
-  test('bindings:attributes:observe (array)', 11, function() {
+  QUnit.test('bindings:attributes:observe (array)', 11, function() {
 
     model.set({'water':'fountain', 'candy':'twix'});
     view.model = model;
@@ -1516,7 +1516,7 @@ $(document).ready(function() {
     equal(view.$('#test5').attr('data-name'), 'evian-snickers');
   });
 
-  test('bindings:attributes (properties)', function() {
+  QUnit.test('bindings:attributes (properties)', function() {
 
     model.set({'water':true});
     view.model = model;
@@ -1538,7 +1538,7 @@ $(document).ready(function() {
     equal(view.$('#test1').prop('readonly'), false);
   });
 
-  test('bindings:classes:name', function() {
+  QUnit.test('bindings:classes:name', function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1558,7 +1558,7 @@ $(document).ready(function() {
     ok(!view.$('#test5').hasClass('testClass'));
   });
 
-  test('bindings:classes:observe', function() {
+  QUnit.test('bindings:classes:observe', function() {
 
     model.set({'truthy':false});
     view.model = model;
@@ -1588,7 +1588,7 @@ $(document).ready(function() {
     ok(!view.$('#test5').hasClass('col-md-3'));
   });
 
-  test('input:number', function() {
+  QUnit.test('input:number', function() {
 
     model.set({'code':1});
     view.model = model;
@@ -1606,7 +1606,7 @@ $(document).ready(function() {
     equal(Number(view.$('#test11').val()), 2);
   });
 
-  test('visible', 28, function() {
+  QUnit.test('visible', 28, function() {
 
     model.set({'water':false, 'candy':'twix', 'costume':false, 'visible': 'yes'});
     view.model = model;
@@ -1678,7 +1678,7 @@ $(document).ready(function() {
 
   });
 
-  test('observe (multiple; array)', 12, function() {
+  QUnit.test('observe (multiple; array)', 12, function() {
 
     model.set({'water':'fountain', 'candy':'twix'});
     view.model = model;
@@ -1706,7 +1706,7 @@ $(document).ready(function() {
     equal(view.$('#test5').text(), 'evian snickers');
   });
 
-  test('observe (function)', 5, function() {
+  QUnit.test('observe (function)', 5, function() {
     model.set({'water':'fountain'});
 
     var testView = new (Backbone.View.extend({
@@ -1746,7 +1746,7 @@ $(document).ready(function() {
     testView.remove();
   });
 
-  test('bindings:updateView', 9, function() {
+  QUnit.test('bindings:updateView', 9, function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1772,7 +1772,7 @@ $(document).ready(function() {
     equal(view.$('#test1').val(), 'evian');
   });
 
-  test('bindings:updateModel', 10, function() {
+  QUnit.test('bindings:updateModel', 10, function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1798,7 +1798,7 @@ $(document).ready(function() {
     equal(model.get('water'), 'evian');
   });
 
-  test('bindings:events', function() {
+  QUnit.test('bindings:events', function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1824,7 +1824,7 @@ $(document).ready(function() {
     equal(model.get('water'), 'evian');
   });
 
-  test('checkbox multiple', function() {
+  QUnit.test('checkbox multiple', function() {
 
     model.set({'water':['fountain', 'dasina']});
     view.model = model;
@@ -1849,7 +1849,7 @@ $(document).ready(function() {
     equal(_.indexOf(model.get('water'), 'dasina') > -1, true);
   });
 
-  test('checkbox multiple with numbers', function() {
+  QUnit.test('checkbox multiple with numbers', function() {
 
     model.set({'numbers':[1, 3]});
     view.model = model;
@@ -1875,7 +1875,7 @@ $(document).ready(function() {
     equal(_.contains(model.get('numbers'), '3'), true);
   });
 
-  test('checkbox (single with value defined)', function() {
+  QUnit.test('checkbox (single with value defined)', function() {
 
     model.set({'water':null});
     view.model = model;
@@ -1894,7 +1894,7 @@ $(document).ready(function() {
     equal(model.get('water'), null);
   });
 
-  test('checkbox (single with number value defined)', function() {
+  QUnit.test('checkbox (single with number value defined)', function() {
 
     model.set({'number':null});
     view.model = model;
@@ -1925,7 +1925,7 @@ $(document).ready(function() {
     equal(model.get('number'), null);
   });
 
-  test('getVal', 5, function() {
+  QUnit.test('getVal', 5, function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1948,7 +1948,7 @@ $(document).ready(function() {
     equal(model.get('water'), 'test-dasina');
   });
 
-  test('update', 8, function() {
+  QUnit.test('update', 8, function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1972,7 +1972,7 @@ $(document).ready(function() {
     equal(view.$('#test1').val(), 'test-dasina');
   });
 
-  test('initialize', 3, function() {
+  QUnit.test('initialize', 3, function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1990,7 +1990,7 @@ $(document).ready(function() {
     $('#qunit-fixture').html(view.render().el);
   });
 
-  test('destroy', 3, function() {
+  QUnit.test('destroy', 3, function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -2010,7 +2010,7 @@ $(document).ready(function() {
     view.unstickit();
   });
 
-  test('null form value', function() {
+  QUnit.test('null form value', function() {
 
     model.set({'water':null});
     view.model = model;
@@ -2022,7 +2022,7 @@ $(document).ready(function() {
     equal(view.$('#test1').val(), '');
   });
 
-  test('null html value', function() {
+  QUnit.test('null html value', function() {
 
     model.set({'water':null});
     view.model = model;
@@ -2034,7 +2034,7 @@ $(document).ready(function() {
     equal(view.$('#test5').html(), '');
   });
 
-  test('stickitChange', 1, function() {
+  QUnit.test('stickitChange', 1, function() {
 
     model.set({'water':null});
     view.model = model;
@@ -2051,7 +2051,7 @@ $(document).ready(function() {
     view.$('#test1').val('dasina').trigger('change');
   });
 
-  test('view.remove should be called and unbind events', 4, function() {
+  QUnit.test('view.remove should be called and unbind events', 4, function() {
 
     model.set({'water':null});
     view.model = model;

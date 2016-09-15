@@ -1,8 +1,8 @@
 $(document).ready(function() {
 
-  module("view.unstickit");
+  QUnit.module("view.unstickit");
 
-  test('unstickit', function() {
+  QUnit.test('unstickit', function() {
 
     model.set({'water':'fountain', 'test':'nada', 'copy':'cat', 'fickle':'brat'});
     view.model = model;
@@ -31,7 +31,7 @@ $(document).ready(function() {
     ok(!events);
   });
 
-  test('unstickit with selector parameter', 4, function() {
+  QUnit.test('unstickit with selector parameter', 4, function() {
 
     model.set({'water':'fountain', 'candy':'skittles', 'album':'rival-dealer', 'state': 'liquid'});
     view.model = model;
@@ -55,7 +55,7 @@ $(document).ready(function() {
     equal(_.keys(view.model._events).length, 0);
   });
 
-  test('unstickit is only called once on remove with multiple stickits', function() {
+  QUnit.test('unstickit is only called once on remove with multiple stickits', function() {
     view.model = model;
     view.render = function() {
       this.stickit();
@@ -76,7 +76,7 @@ $(document).ready(function() {
     view.unstickit = unstickit;
   });
 
-  test('unstickit (multiple models)', function() {
+  QUnit.test('unstickit (multiple models)', function() {
 
     var model1, model2, view, model3;
 
@@ -138,7 +138,7 @@ $(document).ready(function() {
     equal(view._modelBindings.length, 0);
   });
 
-  test('addBinding', 2, function() {
+  QUnit.test('addBinding', 2, function() {
     view = new (Backbone.View.extend({
       initialize: function() {
         this.model = model;
@@ -166,7 +166,7 @@ $(document).ready(function() {
     equal(view._modelBindings.length, 4);
   });
 
-  test('stickit:unstuck event', 1, function() {
+  QUnit.test('stickit:unstuck event', 1, function() {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -183,7 +183,7 @@ $(document).ready(function() {
     view.unstickit();
   });
 
-   test('change with different model', 2, function() {
+   QUnit.test('change with different model', 2, function() {
 
     model.set({'water':'fountain'});
     view.model = model;

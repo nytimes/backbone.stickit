@@ -1,0 +1,171 @@
+$('body').append(
+    '<div id="qunit"></div>' +
+    '<div id="qunit-fixture">' +
+    '  <div id="testElement">' +
+    '    <h1>Test</h1>' +
+    '  </div>' +
+    '</div>' +
+
+    '<script id="jst0" type="text/jst">' +
+    '  <div id="test0-div"></div>' +
+    '  <textarea id="test0-textarea"></textarea>' +
+    '  <span id="test0-span"></span>' +
+    '  <input type="text" id="test0-input">' +
+    '</script>' +
+
+    '<script id="jst1" type="text/jst"><input type="text" id="test1"></script>' +
+
+    '<script id="jst2" type="text/jst"><textarea id="test2"></textarea></script>' +
+
+    '<script id="jst3" type="text/jst"><input type="checkbox" id="test3"></script>' +
+
+    '<script id="jst4" type="text/jst">' +
+    '  <input type="radio" name="water" value="fountain" class="test4">' +
+    '  <input type="radio" name="water" value="evian" class="test4">' +
+    '</script>' +
+
+    '<script id="jst5" type="text/jst"><div id="test5"></div></script>' +
+
+    '<script id="jst6" type="text/jst"><input type="text" id="test6"></script>' +
+
+    '<script id="jst7" type="text/jst"><input type="text" id="test7"></script>' +
+
+    '<script id="jst8" type="text/jst"><select id="test8"></select></script>' +
+
+    '<script id="jst9" type="text/jst"><div data-bind="water" class="test" id="test9"></div></script>' +
+
+    '<script id="jst10" type="text/jst">' +
+    '  <input type="text" class="test10">' +
+    '  <input type="text" class="test10">' +
+    '</script>' +
+
+    '<script id="jst11" type="text/jst"><input type="number" id="test11"></script>' +
+
+    '<script id="jst12" type="text/jst">' +
+    '  <input type="number" class="test12-1">' +
+    '  <input type="number" class="test12-2">' +
+    '  <input type="number" class="test12-3">' +
+    '  <input type="number" class="test12-4">' +
+    '  <input type="number" class="test12-5">' +
+    '  <input type="number" class="test12-6">' +
+    '</script>' +
+
+    '<script id="jst13" type="text/jst">' +
+    '  <input type="number" class="test13-5">' +
+    '  <input type="number" class="test13-6">' +
+    '</script>' +
+
+    '<script id="jst14" type="text/jst">' +
+    '  <div id="test14-1"></div>' +
+    '  <div id="test14-2">Test</div>' +
+    '  <div id="test14-3"></div>' +
+    '      <div id="test14-4">Test 2</div>' +
+    '  <div id="test14-5"></div>' +
+    '  <input type="text" id="test14-6">' +
+    '</script>' +
+
+    '<script id="jst15" type="text/jst">' +
+    '  <div id="test15-1"></div>' +
+    '  <input id="test15-2" type="text">' +
+    '  <input id="test15-3" type="checkbox">' +
+    '  <input class="test15-4" type="radio" name="water" value="fountain">' +
+    '  <input class="test15-4" type="radio" name="water" value="evian">' +
+    '  <textarea id="test15-6"></textarea>' +
+    '  <select id="test15-7"></select>' +
+    '</script>' +
+
+    '<script id="jst16" type="text/jst"><select id="test16" multiple="true"></select></script>' +
+
+    '<script id="jst17" type="text/jst">' +
+    '  <div id="test17-1" contenteditable="true"></div>' +
+    '  <div id="test17-2" contenteditable></div>' +
+    '</script>' +
+
+    '<script id="jst18" type="text/jst">' +
+    '  <input type="checkbox" class="boxes" value="fountain">' +
+    '  <input type="checkbox" class="boxes" value="evian">' +
+    '  <input type="checkbox" class="boxes" value="dasina">' +
+    '</script>' +
+
+    '<script id="jst19" type="text/jst">' +
+    '  <input type="checkbox" class="box" value="fountain">' +
+    '</script>' +
+
+    '<script id="jst20" type="text/jst">' +
+    '  <input class="trim">' +
+    '  <input class="input">' +
+    '  <textarea id="textarea"></textarea>' +
+    '  <div id="div"></div>' +
+    '</script>' +
+
+    '<script id="jst21" type="text/jst">' +
+    '  <select id="test21">' +
+    '    <option value="1">foutain</option>' +
+    '    <option value="2">evian</option>' +
+    '    <option value="3">dasina</option>' +
+    '  </select>' +
+    '</script>' +
+
+    '<script id="jst22" type="text/jst">' +
+    '  <select id="test22">' +
+    '    <optgroup label="Looney Tunes">' +
+    '      <option value="1">Bugs Bunny</option>' +
+    '      <option value="2">Donald Duck</option>' +
+    '    </optgroup>' +
+    '    <optgroup label="Three Stooges">' +
+    '      <option value="3">moe</option>' +
+    '      <option value="4">larry</option>' +
+    '      <option value="5">curly</option>' +
+    '    </optgroup>' +
+    '  </select>' +
+    '</script>' +
+
+    '<script id="jst23" type="text/jst">' +
+    '  <select id="test23" multiple="multiple">' +
+    '    <option value="1">foutain</option>' +
+    '    <option value="2">evian</option>' +
+    '    <option value="3">dasina</option>' +
+    '    <option value="4">aquafina</option>' +
+    '  </select>' +
+    '</script>' +
+
+    '<script id="jst24" type="text/jst">' +
+    '  <select id="test24">' +
+    '    <option value="0">Darth Vader</option>' +
+    '    <optgroup label="Looney Tunes">' +
+    '      <option value="1">Bugs Bunny</option>' +
+    '      <option value="2">Donald Duck</option>' +
+    '    </optgroup>' +
+    '    <optgroup label="Three Stooges">' +
+    '      <option value="3">moe</option>' +
+    '      <option value="4">larry</option>' +
+    '      <option value="5">curly</option>' +
+    '    </optgroup>' +
+    '  </select>' +
+    '</script>' +
+
+    '<script id="jst25" type="text/jst">' +
+    '  <input type="radio" name="water" value="one" class="test25">' +
+    '  <input type="radio" name="water" checked value="two" class="test25">' +
+    '</script>' +
+
+    '<script id="jst26" type="text/jst">' +
+    '  <select id="test26">' +
+    '    <option value="0" data-stickit-bind-val="0">foutain</option>' +
+    '    <option value="1" data-stickit-bind-val="1">structured</option>' +
+    '    <option value="2" data-stickit-bind-val="2">evian</option>' +
+    '    <option value="3" data-stickit-bind-val="3">dasina</option>' +
+    '    <option value="4" data-stickit-bind-val="4">aquafina</option>' +
+    '  </select>' +
+    '</script>' +
+
+    '<script id="jst27" type="text/jst">' +
+    '  <input type="checkbox" class="boxes" value="1">' +
+    '  <input type="checkbox" class="boxes" value="2">' +
+    '  <input type="checkbox" class="boxes" value="3">' +
+    '</script>' +
+
+    '<script id="jst28" type="text/jst">' +
+    '  <input type="checkbox" class="box" value="1">' +
+    '</script>'
+);
