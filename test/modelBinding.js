@@ -2,7 +2,7 @@ $(document).ready(function() {
 
   QUnit.module("view.unstickit");
 
-  QUnit.test('unstickit', function() {
+  QUnit.test('unstickit', function(assert) {
 
     model.set({'water':'fountain', 'test':'nada', 'copy':'cat', 'fickle':'brat'});
     view.model = model;
@@ -21,17 +21,18 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(_.keys(view.model._events).length, 3);
+    assert.equal(_.keys(view.model._events).length, 3);
     var events = $._data(view.$el[0], 'events');
-    ok(events.input.length && events.propertychange.length && events.change.length);
+    assert.ok(events.input.length && events.propertychange.length && events.change.length);
 
     view.unstickit();
-    equal(_.keys(view.model._events).length, 0);
+    assert.equal(_.keys(view.model._events).length, 0);
     events = $._data(view.$el[0], 'events');
-    ok(!events);
+    assert.ok(!events);
   });
 
-  QUnit.test('unstickit with selector parameter', 4, function() {
+  QUnit.test('unstickit with selector parameter', function(assert) {
+    assert.expect(4);
 
     model.set({'water':'fountain', 'candy':'skittles', 'album':'rival-dealer', 'state': 'liquid'});
     view.model = model;
@@ -43,19 +44,19 @@ $(document).ready(function() {
       '#test14-6': 'state'
     };
     $('#qunit-fixture').html(view.render().el);
-    equal(_.keys(view.model._events).length, 4);
+    assert.equal(_.keys(view.model._events).length, 4);
 
     view.unstickit(null, '#test14-1');
-    equal(_.keys(view.model._events).length, 3);
+    assert.equal(_.keys(view.model._events).length, 3);
 
     view.$('#test14-6').val('solid').change();
-    equal(model.get('state'), 'solid');
+    assert.equal(model.get('state'), 'solid');
 
     view.unstickit(null, view.bindings);
-    equal(_.keys(view.model._events).length, 0);
+    assert.equal(_.keys(view.model._events).length, 0);
   });
 
-  QUnit.test('unstickit is only called once on remove with multiple stickits', function() {
+  QUnit.test('unstickit is only called once on remove with multiple stickits', function(assert) {
     view.model = model;
     view.render = function() {
       this.stickit();
@@ -72,11 +73,11 @@ $(document).ready(function() {
 
     view.remove();
 
-    equal(counter, 1);
+    assert.equal(counter, 1);
     view.unstickit = unstickit;
   });
 
-  QUnit.test('unstickit (multiple models)', function() {
+  QUnit.test('unstickit (multiple models)', function(assert) {
 
     var model1, model2, view, model3;
 
@@ -111,34 +112,36 @@ $(document).ready(function() {
     }))().render();
 
     var events = $._data(view.$el[0], 'events');
-    ok(events.input.length == 6 && events.propertychange.length == 6 && events.change.length == 6);
+    assert.ok(events.input.length == 6 && events.propertychange.length == 6 && events.change.length == 6);
 
-    equal(_.keys(model1._events).length, 2);
-    equal(_.keys(model2._events).length, 2);
-    equal(_.keys(model3._events).length, 2);
-    equal(view._modelBindings.length, 6);
+    assert.equal(_.keys(model1._events).length, 2);
+    assert.equal(_.keys(model2._events).length, 2);
+    assert.equal(_.keys(model3._events).length, 2);
+    assert.equal(view._modelBindings.length, 6);
 
     view.unstickit(model3);
 
     events = $._data(view.$el[0], 'events');
-    ok(events.input.length == 4 && events.propertychange.length == 4 && events.change.length == 4);
+    assert.ok(events.input.length == 4 && events.propertychange.length == 4 && events.change.length == 4);
 
-    equal(_.keys(model1._events).length, 2);
-    equal(_.keys(model2._events).length, 2);
-    equal(_.keys(model3._events).length, 0);
-    equal(view._modelBindings.length, 4);
+    assert.equal(_.keys(model1._events).length, 2);
+    assert.equal(_.keys(model2._events).length, 2);
+    assert.equal(_.keys(model3._events).length, 0);
+    assert.equal(view._modelBindings.length, 4);
 
     view.unstickit();
 
     events = $._data(view.$el[0], 'events');
-    ok(!events);
+    assert.ok(!events);
 
-    equal(_.keys(model1._events).length, 0);
-    equal(_.keys(model2._events).length, 0);
-    equal(view._modelBindings.length, 0);
+    assert.equal(_.keys(model1._events).length, 0);
+    assert.equal(_.keys(model2._events).length, 0);
+    assert.equal(view._modelBindings.length, 0);
   });
 
-  QUnit.test('addBinding', 2, function() {
+  QUnit.test('addBinding', function(assert) {
+    assert.expect(2);
+
     view = new (Backbone.View.extend({
       initialize: function() {
         this.model = model;
@@ -147,7 +150,7 @@ $(document).ready(function() {
         '.test12-1': {
           observe: 'one',
           destroy: function() {
-            ok(true);
+            assert.ok(true);
           }
         },
         '.test12-2': 'two'
@@ -163,10 +166,11 @@ $(document).ready(function() {
       }
     }))().render();
 
-    equal(view._modelBindings.length, 4);
+    assert.equal(view._modelBindings.length, 4);
   });
 
-  QUnit.test('stickit:unstuck event', 1, function() {
+  QUnit.test('stickit:unstuck event', function(assert) {
+    assert.expect(1);
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -178,12 +182,13 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    model.on('stickit:unstuck', function() { ok(true); });
+    model.on('stickit:unstuck', function() { assert.ok(true); });
     view.unstickit();
     view.unstickit();
   });
 
-   QUnit.test('change with different model', 2, function() {
+   QUnit.test('change with different model', function(assert) {
+    assert.expect(2);
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -192,7 +197,7 @@ $(document).ready(function() {
       '.test10': {
         observe: 'water',
         updateView: function(value, config) {
-          ok(value == 'fountain');
+          assert.ok(value == 'fountain');
         }
       }
     };

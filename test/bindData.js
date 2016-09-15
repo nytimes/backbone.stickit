@@ -2,7 +2,7 @@ $(document).ready(function() {
 
   QUnit.module("view.stickit");
 
-  QUnit.test('input:text', function() {
+  QUnit.test('input:text', function(assert) {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -14,16 +14,16 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test1').val(), 'fountain');
+    assert.equal(view.$('#test1').val(), 'fountain');
 
     model.set('water', 'evian');
-    equal(view.$('#test1').val(), 'evian');
+    assert.equal(view.$('#test1').val(), 'evian');
 
     view.$('#test1').val('dasina').trigger('change');
-    equal(model.get('water'), 'dasina');
+    assert.equal(model.get('water'), 'dasina');
   });
 
-  QUnit.test('textarea', function() {
+  QUnit.test('textarea', function(assert) {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -35,19 +35,19 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test2').val(), 'fountain');
+    assert.equal(view.$('#test2').val(), 'fountain');
 
     model.set('water', 'evian');
-    equal(view.$('#test2').val(), 'evian');
+    assert.equal(view.$('#test2').val(), 'evian');
 
     view.$('#test2').val('dasina').trigger('change');
-    equal(model.get('water'), 'dasina');
+    assert.equal(model.get('water'), 'dasina');
   });
 
   _([1,2]).each(function(subtest) {
     var sel = '#test17-' + subtest;
 
-    QUnit.test('contenteditable-' + subtest, function() {
+    QUnit.test('contenteditable-' + subtest, function(assert) {
       model.set({'water':'<span>fountain</span>'});
       view.model = model;
       view.templateId = 'jst17';
@@ -57,18 +57,18 @@ $(document).ready(function() {
       };
       $('#qunit-fixture').html(view.render().el);
 
-      equal(view.$(sel).html(), '<span>fountain</span>');
+      assert.equal(view.$(sel).html(), '<span>fountain</span>');
 
       model.set('water', '<span>evian</span>');
-      equal(view.$(sel).html(), '<span>evian</span>');
+      assert.equal(view.$(sel).html(), '<span>evian</span>');
 
       view.$(sel).html('<span>dasina</span>').trigger('change');
-      equal(model.get('water'), '<span>dasina</span>');
+      assert.equal(model.get('water'), '<span>dasina</span>');
     });
 
   });
 
-  QUnit.test('checkbox', function() {
+  QUnit.test('checkbox', function(assert) {
 
     model.set({'water':true});
     view.model = model;
@@ -80,16 +80,16 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test3').prop('checked'), true);
+    assert.equal(view.$('#test3').prop('checked'), true);
 
     model.set('water', false);
-    equal(view.$('#test3').prop('checked'), false);
+    assert.equal(view.$('#test3').prop('checked'), false);
 
     view.$('#test3').prop('checked', true).trigger('change');
-    equal(model.get('water'), true);
+    assert.equal(model.get('water'), true);
   });
 
-  QUnit.test('radio', function() {
+  QUnit.test('radio', function(assert) {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -101,16 +101,16 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('.test4:checked').val(), 'fountain');
+    assert.equal(view.$('.test4:checked').val(), 'fountain');
 
     model.set('water', 'evian');
-    equal(view.$('.test4:checked').val(), 'evian');
+    assert.equal(view.$('.test4:checked').val(), 'evian');
 
     view.$('.test4[value=fountain]').prop('checked', true).trigger('change');
-    equal(model.get('water'), 'fountain');
+    assert.equal(model.get('water'), 'fountain');
   });
 
-  QUnit.test('div', function() {
+  QUnit.test('div', function(assert) {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -122,13 +122,13 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test5').text(), 'fountain');
+    assert.equal(view.$('#test5').text(), 'fountain');
 
     model.set('water', 'evian');
-    equal(view.$('#test5').text(), 'evian');
+    assert.equal(view.$('#test5').text(), 'evian');
   });
 
-  QUnit.test(':el selector', function() {
+  QUnit.test(':el selector', function(assert) {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -140,13 +140,15 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$el.text(), 'fountain');
+    assert.equal(view.$el.text(), 'fountain');
 
     model.set('water', 'evian');
-    equal(view.$el.text(), 'evian');
+    assert.equal(view.$el.text(), 'evian');
   });
 
-  QUnit.test('bindings as a function', 2, function() {
+  QUnit.test('bindings as a function', function(assert) {
+
+    assert.expect(2);
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -156,12 +158,12 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test1').val(), 'fountain');
+    assert.equal(view.$('#test1').val(), 'fountain');
     view.$('#test1').val('dasina').trigger('change');
-    equal(model.get('water'), 'dasina');
+    assert.equal(model.get('water'), 'dasina');
   });
 
-  QUnit.test('stickit (shorthand bindings)', function() {
+  QUnit.test('stickit (shorthand bindings)', function(assert) {
     model.set({'water':'fountain'});
     view.model = model;
     view.templateId = 'jst5';
@@ -170,15 +172,15 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test5').text(), 'fountain');
+    assert.equal(view.$('#test5').text(), 'fountain');
 
     model.set('water', 'evian');
 
-    equal(view.$('#test5').text(), 'evian');
+    assert.equal(view.$('#test5').text(), 'evian');
 
   });
 
-  QUnit.test('stickit (multiple models and bindings)', function() {
+  QUnit.test('stickit (multiple models and bindings)', function(assert) {
 
     // Test sticking two times to two different models and configs.
     var model1, model2, testView;
@@ -218,29 +220,29 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(testView.render().el);
 
-    equal(testView.$('#test0-div').text(), 'fountain');
-    equal(testView.$('#test0-textarea').val(), 'twix');
-    equal(testView.$('#test0-span').text(), 'evian');
-    equal(testView.$('#test0-input').val(), 'snickers');
+    assert.equal(testView.$('#test0-div').text(), 'fountain');
+    assert.equal(testView.$('#test0-textarea').val(), 'twix');
+    assert.equal(testView.$('#test0-span').text(), 'evian');
+    assert.equal(testView.$('#test0-input').val(), 'snickers');
 
     model1.set({water:'dasina', candy: 'mounds'});
     model2.set({water:'poland springs', candy: 'almond joy'});
 
-    equal(testView.$('#test0-div').text(), 'dasina');
-    equal(testView.$('#test0-textarea').val(), 'mounds');
-    equal(testView.$('#test0-span').text(), 'poland springs');
-    equal(testView.$('#test0-input').val(), 'almond joy');
+    assert.equal(testView.$('#test0-div').text(), 'dasina');
+    assert.equal(testView.$('#test0-textarea').val(), 'mounds');
+    assert.equal(testView.$('#test0-span').text(), 'poland springs');
+    assert.equal(testView.$('#test0-input').val(), 'almond joy');
 
     testView.$('#test0-textarea').val('kit kat').trigger('change');
     testView.$('#test0-input').val('butterfinger').trigger('change');
 
-    equal(model1.get('candy'), 'kit kat');
-    equal(model2.get('candy'), 'butterfinger');
+    assert.equal(model1.get('candy'), 'kit kat');
+    assert.equal(model2.get('candy'), 'butterfinger');
 
     testView.remove();
   });
 
-  QUnit.test('stickit (existing events property as hash with multiple models and bindings)', function() {
+  QUnit.test('stickit (existing events property as hash with multiple models and bindings)', function(assert) {
 
     var model1, model2, testView;
 
@@ -285,12 +287,12 @@ $(document).ready(function() {
     testView.$('#test0-textarea').val('kit kat').trigger('change');
     testView.$('#test0-input').val('butterfinger').trigger('change');
 
-    equal(model1.get('candy'), 'kit kat');
-    equal(model2.get('candy'), 'butterfinger');
+    assert.equal(model1.get('candy'), 'kit kat');
+    assert.equal(model2.get('candy'), 'butterfinger');
 
     testView.$el.trigger('click');
 
-    equal(testView.clickHandled, true);
+    assert.equal(testView.clickHandled, true);
 
     // Remove the view which should unbind the event handlers.
     testView.remove();
@@ -298,11 +300,11 @@ $(document).ready(function() {
     testView.$('#test0-textarea').val('mounds').trigger('change');
     testView.$('#test0-input').val('skittles').trigger('change');
 
-    equal(model1.get('candy'), 'kit kat');
-    equal(model2.get('candy'), 'butterfinger');
+    assert.equal(model1.get('candy'), 'kit kat');
+    assert.equal(model2.get('candy'), 'butterfinger');
   });
 
-  QUnit.test('stickit (existing events property as function with multiple models and bindings)', function() {
+  QUnit.test('stickit (existing events property as function with multiple models and bindings)', function(assert) {
 
     var model1, model2, testView;
 
@@ -349,17 +351,17 @@ $(document).ready(function() {
     testView.$('#test0-textarea').val('kit kat').trigger('change');
     testView.$('#test0-input').val('butterfinger').trigger('change');
 
-    equal(model1.get('candy'), 'kit kat');
-    equal(model2.get('candy'), 'butterfinger');
+    assert.equal(model1.get('candy'), 'kit kat');
+    assert.equal(model2.get('candy'), 'butterfinger');
 
     testView.$el.trigger('click');
 
-    equal(testView.clickHandled, true);
+    assert.equal(testView.clickHandled, true);
 
     testView.remove();
   });
 
-  QUnit.test('bindings:setOptions', function() {
+  QUnit.test('bindings:setOptions', function(assert) {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -372,14 +374,14 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test1').val(), 'fountain');
+    assert.equal(view.$('#test1').val(), 'fountain');
 
     view.$('#test1').val('dasina').trigger('change');
-    equal(model.get('water'), 'dasina');
-    equal(model.changedAttributes().water, 'dasina');
+    assert.equal(model.get('water'), 'dasina');
+    assert.equal(model.changedAttributes().water, 'dasina');
   });
 
-  QUnit.test('bindings:updateMethod', function() {
+  QUnit.test('bindings:updateMethod', function(assert) {
 
     model.set({'water':'<a href="www.test.com">river</a>'});
     view.model = model;
@@ -392,10 +394,10 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test5').text(), 'river');
+    assert.equal(view.$('#test5').text(), 'river');
   });
 
-  QUnit.test('bindings:escape', function() {
+  QUnit.test('bindings:escape', function(assert) {
 
     model.set({'water':'<a href="www.test.com">river</a>'});
     view.model = model;
@@ -410,10 +412,12 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test5').text(), '<a href="www.test.com">river</a>');
+    assert.equal(view.$('#test5').text(), '<a href="www.test.com">river</a>');
   });
 
-  QUnit.test('bindings:onSet/onGet', 6, function() {
+  QUnit.test('bindings:onSet/onGet', function(assert) {
+
+    assert.expect(6);
 
     model.set({'water':'_fountain'});
     view.model = model;
@@ -422,13 +426,13 @@ $(document).ready(function() {
       '#test1': {
         observe: 'water',
         onGet: function(val, options) {
-          equal(val, this.model.get('water'));
-          equal(options.observe, 'water');
+          assert.equal(val, this.model.get('water'));
+          assert.equal(options.observe, 'water');
           return val.substring(1);
         },
         onSet: function(val, options) {
-          equal(val, view.$('#test1').val());
-          equal(options.observe, 'water');
+          assert.equal(val, view.$('#test1').val());
+          assert.equal(options.observe, 'water');
           return '_' + val;
         }
       }
@@ -436,12 +440,14 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test1').val(), 'fountain');
+    assert.equal(view.$('#test1').val(), 'fountain');
     view.$('#test1').val('evian').trigger('change');
-    equal(model.get('water'), '_evian');
+    assert.equal(model.get('water'), '_evian');
   });
 
-  QUnit.test('bindings:sanitization', 7, function() {
+  QUnit.test('bindings:sanitization', function(assert) {
+
+    assert.expect(7);
 
     model.set({'duration':null});
     view.model = model;
@@ -450,14 +456,14 @@ $(document).ready(function() {
       '#test1': {
         observe: 'duration',
         onGet: function(val, options) {
-          equal(val, null);
-          equal(options.observe, 'duration');
+          assert.equal(val, null);
+          assert.equal(options.observe, 'duration');
           return val;
         },
         onSet: function(val, options) {
-          equal(parseInt(val, 10), 30);
-          equal(val, view.$('#test1').val());
-          equal(options.observe, 'duration');
+          assert.equal(parseInt(val, 10), 30);
+          assert.equal(val, view.$('#test1').val());
+          assert.equal(options.observe, 'duration');
           return null;
         }
       }
@@ -465,12 +471,14 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test1').val(), '');
+    assert.equal(view.$('#test1').val(), '');
     view.$('#test1').val(30).trigger('change');
-    equal(model.get('duration'), null);
+    assert.equal(model.get('duration'), null);
   });
 
-  QUnit.test('bindings:onSet (returning array of observed values)', 2, function() {
+  QUnit.test('bindings:onSet (returning array of observed values)', function(assert) {
+
+    assert.expect(2);
 
     model.set({'water':'fountain', 'candy':'skittles'});
     view.model = model;
@@ -490,11 +498,13 @@ $(document).ready(function() {
     $('#qunit-fixture').html(view.render().el);
 
     view.$('#test1').val('evian-kitkat').trigger('change');
-    equal(model.get('water'), 'evian');
-    equal(model.get('candy'), 'kitkat');
+    assert.equal(model.get('water'), 'evian');
+    assert.equal(model.get('candy'), 'kitkat');
   });
 
-  QUnit.test('bindings:set', 5, function() {
+  QUnit.test('bindings:set', function(assert) {
+
+    assert.expect(5);
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -503,10 +513,10 @@ $(document).ready(function() {
       '#test1': {
         observe: 'water',
         set: function(attr, val, options, config) {
-          equal(attr, 'water');
-          equal(val, 'evian');
-          equal(options.stickitChange.observe, attr);
-          equal(config.observe, attr);
+          assert.equal(attr, 'water');
+          assert.equal(val, 'evian');
+          assert.equal(options.stickitChange.observe, attr);
+          assert.equal(config.observe, attr);
           model.set(attr, val);
         }
       }
@@ -515,10 +525,12 @@ $(document).ready(function() {
     $('#qunit-fixture').html(view.render().el);
 
     view.$('#test1').val('evian').trigger('change');
-    equal(model.get('water'), 'evian');
+    assert.equal(model.get('water'), 'evian');
   });
 
-  QUnit.test('bindings:afterUpdate', 14, function() {
+  QUnit.test('bindings:afterUpdate', function(assert) {
+
+    assert.expect(14);
 
     model.set({'water':'fountain', 'candy':true});
     view.model = model;
@@ -527,38 +539,38 @@ $(document).ready(function() {
       '#test15-1': {
         observe: 'water',
         afterUpdate: function($el, val, options) {
-          equal($el.text(), model.get('water'));
-          equal(val, 'evian');
-          equal(options.observe, 'water');
+          assert.equal($el.text(), model.get('water'));
+          assert.equal(val, 'evian');
+          assert.equal(options.observe, 'water');
         }
       },
       '#test15-2': {
         observe: 'water',
         afterUpdate: function($el, val, options) {
-          equal($el.val(), model.get('water'));
-          equal(val, 'evian');
-          equal(options.observe, 'water');
+          assert.equal($el.val(), model.get('water'));
+          assert.equal(val, 'evian');
+          assert.equal(options.observe, 'water');
         }
       },
       '#test15-3': {
         observe: 'candy',
         afterUpdate: function($el, val, options) {
-          equal(val, false);
-          equal(options.observe, 'candy');
+          assert.equal(val, false);
+          assert.equal(options.observe, 'candy');
         }
       },
       '.test15-4': {
         observe: 'water',
         afterUpdate: function($el, val, options) {
-          equal(val, 'evian');
-          equal(options.observe, 'water');
+          assert.equal(val, 'evian');
+          assert.equal(options.observe, 'water');
         }
       },
       '#test15-6': {
         observe: 'water',
         afterUpdate: function($el, val, options) {
-          equal(val, 'evian');
-          equal(options.observe, 'water');
+          assert.equal(val, 'evian');
+          assert.equal(options.observe, 'water');
         }
       },
       '#test15-7': {
@@ -569,8 +581,8 @@ $(document).ready(function() {
           valuePath: 'name'
         },
         afterUpdate: function($el, val, options) {
-          equal(val, 'evian');
-          equal(options.observe, 'water');
+          assert.equal(val, 'evian');
+          assert.equal(options.observe, 'water');
         }
       }
     };
@@ -580,7 +592,9 @@ $(document).ready(function() {
     model.set('candy', false);
   });
 
-  QUnit.test('bindings:selectOptions', 7, function() {
+  QUnit.test('bindings:selectOptions', function(assert) {
+
+    assert.expect(7);
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -590,8 +604,8 @@ $(document).ready(function() {
         observe: 'water',
         selectOptions: {
           collection: function($el, options) {
-            ok($el.is('select'));
-            equal(options.observe, 'water');
+            assert.ok($el.is('select'));
+            assert.equal(options.observe, 'water');
             return [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}];
           },
           labelPath: 'name',
@@ -602,16 +616,18 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
 
     view.$('#test8 option').eq(2).prop('selected', true).trigger('change');
-    equal(model.get('water'), 'dasina');
+    assert.equal(model.get('water'), 'dasina');
   });
 
-  QUnit.test('bindings:selectOptions:defaultOption', 8, function() {
+  QUnit.test('bindings:selectOptions:defaultOption', function(assert) {
+
+    assert.expect(8);
 
     model.set({'water':null});
     view.model = model;
@@ -621,8 +637,8 @@ $(document).ready(function() {
         observe: 'water',
         selectOptions: {
           collection: function($el, options) {
-            ok($el.is('select'));
-            equal(options.observe, 'water');
+            assert.ok($el.is('select'));
+            assert.equal(options.observe, 'water');
             return [{id:1,type:{name:'fountain'}}, {id:2,type:{name:'evian'}}, {id:3,type:{name:'dasina'}}];
           },
           defaultOption: {
@@ -637,17 +653,19 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test8 option').eq(0).text(), 'Choose one...');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), null);
+    assert.equal(view.$('#test8 option').eq(0).text(), 'Choose one...');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), null);
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
 
     view.$('#test8 option').eq(3).prop('selected', true).trigger('change');
-    equal(model.get('water'), 'dasina');
+    assert.equal(model.get('water'), 'dasina');
   });
 
-  QUnit.test('bindings:selectOptions:defaultOption (options is a method)', 8, function() {
+  QUnit.test('bindings:selectOptions:defaultOption (options is a method)', function(assert) {
+
+    assert.expect(8);
 
     model.set({'water':null});
     view.model = model;
@@ -657,8 +675,8 @@ $(document).ready(function() {
         observe: 'water',
         selectOptions: {
           collection: function($el, options) {
-            ok($el.is('select'));
-            equal(options.observe, 'water');
+            assert.ok($el.is('select'));
+            assert.equal(options.observe, 'water');
             return [{id:1,type:{name:'fountain'}}, {id:2,type:{name:'evian'}}, {id:3,type:{name:'dasina'}}];
           },
           defaultOption: function(){
@@ -673,17 +691,19 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test8 option').eq(0).text(), 'Choose dynamic...');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), null);
+    assert.equal(view.$('#test8 option').eq(0).text(), 'Choose dynamic...');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), null);
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
 
     view.$('#test8 option').eq(3).prop('selected', true).trigger('change');
-    equal(model.get('water'), 'dasina');
+    assert.equal(model.get('water'), 'dasina');
   });
 
-  QUnit.test('bindings:selectOptions:defaultOption (options is disabled)', 9, function() {
+  QUnit.test('bindings:selectOptions:defaultOption (options is disabled)', function(assert) {
+
+    assert.expect(9);
 
     model.set({'water':null});
     view.model = model;
@@ -693,8 +713,8 @@ $(document).ready(function() {
         observe: 'water',
         selectOptions: {
           collection: function($el, options) {
-            ok($el.is('select'));
-            equal(options.observe, 'water');
+            assert.ok($el.is('select'));
+            assert.equal(options.observe, 'water');
             return [{id:1,type:{name:'fountain'}}, {id:2,type:{name:'evian'}}, {id:3,type:{name:'dasina'}}];
           },
           defaultOption: {
@@ -710,20 +730,22 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test8 option').eq(0).text(), 'Choose one...');
-    ok(view.$('#test8 option').eq(0).prop('disabled'));
+    assert.equal(view.$('#test8 option').eq(0).text(), 'Choose one...');
+    assert.ok(view.$('#test8 option').eq(0).prop('disabled'));
 
-    equal(model.get('water'), null);
+    assert.equal(model.get('water'), null);
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
 
     // We can force the selection of disabled options
     view.$('#test8 option').eq(0).prop('selected', true).trigger('change');
-    equal(model.get('water'), null);
+    assert.equal(model.get('water'), null);
   });
 
-  QUnit.test('bindings:selectOptions:defaultOption:OptGroups', 8, function() {
+  QUnit.test('bindings:selectOptions:defaultOption:OptGroups', function(assert) {
+
+    assert.expect(8);
 
     model.set({'water':null});
     view.model = model;
@@ -733,8 +755,8 @@ $(document).ready(function() {
         observe: 'water',
         selectOptions: {
           collection: function($el, options) {
-            ok($el.is('select'));
-            equal(options.observe, 'water');
+            assert.ok($el.is('select'));
+            assert.equal(options.observe, 'water');
             return {
               'opt_labels': ['Types'],
               'Types': [{id:1,type:{name:'fountain'}}, {id:2,type:{name:'evian'}}, {id:3,type:{name:'dasina'}}]
@@ -752,17 +774,17 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test8 > option').eq(0).text(), 'Choose one...');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), null);
+    assert.equal(view.$('#test8 > option').eq(0).text(), 'Choose one...');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), null);
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
 
     view.$('#test8 option').eq(3).prop('selected', true).trigger('change');
-    equal(model.get('water'), 'dasina');
+    assert.equal(model.get('water'), 'dasina');
   });
 
-  QUnit.test('bindings:selectOptions (disabled options)'  , function() {
+  QUnit.test('bindings:selectOptions (disabled options)', function(assert) {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -780,12 +802,13 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test8 option').eq(0).prop('disabled'), false);
-    equal(view.$('#test8 option').eq(1).prop('disabled'), true);
-    equal(view.$('#test8 option').eq(2).prop('disabled'), false);
+    assert.equal(view.$('#test8 option').eq(0).prop('disabled'), false);
+    assert.equal(view.$('#test8 option').eq(1).prop('disabled'), true);
+    assert.equal(view.$('#test8 option').eq(2).prop('disabled'), false);
   });
 
-  QUnit.test('bindings:selectOptions (pre-rendered)', 3, function() {
+  QUnit.test('bindings:selectOptions (pre-rendered)', function(assert) {
+    assert.expect(3);
 
     // Note that we're working with strings and not numeric values here - the pre-rendered <select>
     // handling is limited to strings unless data-stickit-bind-val is specified for each <option>
@@ -801,16 +824,16 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    strictEqual(getSelectedOption(view.$('#test21')).data('stickit-bind-val'), '1');
+    assert.strictEqual(getSelectedOption(view.$('#test21')).data('stickit-bind-val'), '1');
 
     model.set('water', '2');
-    strictEqual(getSelectedOption(view.$('#test21')).data('stickit-bind-val'), '2');
+    assert.strictEqual(getSelectedOption(view.$('#test21')).data('stickit-bind-val'), '2');
 
     view.$('#test21 option').eq(2).prop('selected', true).trigger('change');
-    strictEqual(model.get('water'), '3');
+    assert.strictEqual(model.get('water'), '3');
   });
 
-  QUnit.test('bindings:selectOptions (pre-rendered, with data-stickit-bind-val)', function() {
+  QUnit.test('bindings:selectOptions (pre-rendered, with data-stickit-bind-val)', function(assert) {
 
     // Here we're testing that numeric values can be bound via data-stickit-bind-val
 
@@ -825,19 +848,19 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    strictEqual(getSelectedOption(view.$('#test26')).data('stickit-bind-val'), 1);
+    assert.strictEqual(getSelectedOption(view.$('#test26')).data('stickit-bind-val'), 1);
 
     model.set('water', 2);
-    strictEqual(getSelectedOption(view.$('#test26')).data('stickit-bind-val'), 2);
+    assert.strictEqual(getSelectedOption(view.$('#test26')).data('stickit-bind-val'), 2);
 
     view.$('#test26 option:contains("dasina")').prop('selected', true).trigger('change');
-    strictEqual(model.get('water'), 3);
+    assert.strictEqual(model.get('water'), 3);
 
     view.$('#test26 option:contains("foutain")').prop('selected', true).trigger('change');
-    strictEqual(model.get('water'), 0);
+    assert.strictEqual(model.get('water'), 0);
   });
 
-  QUnit.test('bindings:selectOptions (Backbone.Collection)', function() {
+  QUnit.test('bindings:selectOptions (Backbone.Collection)', function(assert) {
 
     var collection = new Backbone.Collection([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);
     model.set({'water':'fountain'});
@@ -856,16 +879,16 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
 
     view.$('#test8 option').eq(2).prop('selected', true).trigger('change');
-    equal(model.get('water'), 'dasina');
+    assert.equal(model.get('water'), 'dasina');
   });
 
-  QUnit.test('bindings:selectOptions (Backbone.Collection that changes)', function() {
+  QUnit.test('bindings:selectOptions (Backbone.Collection that changes)', function(assert) {
 
     var collection = new Backbone.Collection([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);
     model.set({'water':'fountain'});
@@ -884,42 +907,42 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
 
     view.$('#test8 option').eq(2).prop('selected', true).trigger('change');
-    equal(model.get('water'), 'dasina');
+    assert.equal(model.get('water'), 'dasina');
 
     // Test that the select options are auto-updated
     collection.add({id:4,name:'buxton'});
-    equal(view.$('#test8 option').eq(3).data('stickit-bind-val'), 'buxton');
+    assert.equal(view.$('#test8 option').eq(3).data('stickit-bind-val'), 'buxton');
 
     var modelEvents = ['stickit:unstuck', 'stickit:selectRefresh'];
     var collectionEvents = ['stickit:selectRefresh', 'add', 'remove', 'reset', 'sort'];
 
     // Test the number of event listeners set against the model and collection
-    equal(_.filter(model._events, function(event, key) {
+    assert.equal(_.filter(model._events, function(event, key) {
       return (event.length === 1 && _.contains(modelEvents, key));
     }).length, modelEvents.length);
 
-    equal(_.filter(collection._events, function(event, key) {
+    assert.equal(_.filter(collection._events, function(event, key) {
       return (event.length === 1 && _.contains(collectionEvents, key));
     }).length, collectionEvents.length);
 
     collection.remove(2);
-    equal(view.$('#test8 option').length, collection.length);
+    assert.equal(view.$('#test8 option').length, collection.length);
 
     collection.reset();
-    equal(view.$('#test8 option').length, collection.length);
+    assert.equal(view.$('#test8 option').length, collection.length);
 
     // Test the number of event listeners set against the model and collection after changes to the collection
-    equal(_.filter(model._events, function(event, key) {
+    assert.equal(_.filter(model._events, function(event, key) {
       return (event.length === 1 && _.contains(modelEvents, key));
     }).length, modelEvents.length);
 
-    equal(_.filter(collection._events, function(event, key) {
+    assert.equal(_.filter(collection._events, function(event, key) {
       return (event.length === 1 && _.contains(collectionEvents, key));
     }).length, collectionEvents.length);
 
@@ -927,15 +950,15 @@ $(document).ready(function() {
 
     // Test that the select options are no longer updated
     collection.add([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);
-    notEqual(view.$('#test8 option').length, collection.length);
+    assert.notEqual(view.$('#test8 option').length, collection.length);
 
     // Test that all event listeners have been removed after unstickit
-    ok(_.isEmpty(model._events));
-    ok(_.isEmpty(collection._events));
+    assert.ok(_.isEmpty(model._events));
+    assert.ok(_.isEmpty(collection._events));
   });
 
   // test for issue #250: https://github.com/NYTimes/backbone.stickit/issues/250
-  QUnit.test('bindings:selectOptions (Backbone.Collection that changes - multiple views)', function() {
+  QUnit.test('bindings:selectOptions (Backbone.Collection that changes - multiple views)', function(assert) {
     var collection = new Backbone.Collection([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);
     model.set({'water':'fountain'});
 
@@ -970,21 +993,21 @@ $(document).ready(function() {
     $('#qunit-fixture').append(view1.render().el);
     $('#qunit-fixture').append(view2.render().el);
 
-    equal(getSelectedOption(view1.$('#test8')).data('stickit-bind-val'), 'fountain');
-    equal(getSelectedOption(view2.$('#test8')).data('stickit-bind-val'), 'fountain');
+    assert.equal(getSelectedOption(view1.$('#test8')).data('stickit-bind-val'), 'fountain');
+    assert.equal(getSelectedOption(view2.$('#test8')).data('stickit-bind-val'), 'fountain');
 
     collection.add({id:4,name:'buxton'});
 
-    equal(view1.$('#test8 option').eq(3).data('stickit-bind-val'), 'buxton');
-    equal(view2.$('#test8 option').eq(3).data('stickit-bind-val'), 'buxton');
+    assert.equal(view1.$('#test8 option').eq(3).data('stickit-bind-val'), 'buxton');
+    assert.equal(view2.$('#test8 option').eq(3).data('stickit-bind-val'), 'buxton');
 
     collection.set([]);
-    equal(view1.$('#test8 option').length, 0);
-    equal(view2.$('#test8 option').length, 0);
+    assert.equal(view1.$('#test8 option').length, 0);
+    assert.equal(view2.$('#test8 option').length, 0);
 
   });
 
-  QUnit.test('bindings:selectOptions (collection path relative to `this`)', function() {
+  QUnit.test('bindings:selectOptions (collection path relative to `this`)', function(assert) {
 
     view.collection = new Backbone.Collection([{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}]);
     model.set({'water':'fountain'});
@@ -1003,16 +1026,16 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
 
     model.set('water', 'evian');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
 
     view.$('#test8 option').eq(2).prop('selected', true).trigger('change');
-    equal(model.get('water'), 'dasina');
+    assert.equal(model.get('water'), 'dasina');
   });
 
-  QUnit.test('bindings:selectOptions (empty valuePath)', function() {
+  QUnit.test('bindings:selectOptions (empty valuePath)', function(assert) {
 
     model.set({'water':{id:1, name:'fountain'}});
     window.test = {
@@ -1031,16 +1054,16 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val').id, 1);
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val').id, 1);
 
     model.set('water', {id:2, name:'evian'});
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val').id, 2);
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val').id, 2);
 
     view.$('#test8 option').eq(2).prop('selected', true).trigger('change');
-    equal(model.get('water').id, 3);
+    assert.equal(model.get('water').id, 3);
   });
 
-  QUnit.test('bindings:selectOptions (empty string label)', function() {
+  QUnit.test('bindings:selectOptions (empty string label)', function(assert) {
 
     model.set({'water':'session'});
     view.model = model;
@@ -1060,14 +1083,14 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'session');
-    equal(view.$('#test8 option').eq(0).data('stickit-bind-val'), '');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'session');
+    assert.equal(view.$('#test8 option').eq(0).data('stickit-bind-val'), '');
 
     model.set('water', '');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), '');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), '');
   });
 
-  QUnit.test('bindings:selectOptions (default labelPath/valuePath)', function() {
+  QUnit.test('bindings:selectOptions (default labelPath/valuePath)', function(assert) {
 
     model.set({'water':'evian'});
     view.model = model;
@@ -1085,13 +1108,13 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'evian');
 
     model.set('water', 'fountain');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'fountain');
   });
 
-  QUnit.test('bindings:selectOptions (collection defined as value/label map)', function() {
+  QUnit.test('bindings:selectOptions (collection defined as value/label map)', function(assert) {
 
     model.set({'sound':'moo'});
     view.model = model;
@@ -1111,15 +1134,15 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'moo');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'moo');
 
     // Options are sorted alphabetically by label
-    equal(view.$('#test8 option:eq(0)').data('stickit-bind-val'), 'moo');
-    equal(view.$('#test8 option:eq(1)').data('stickit-bind-val'), 'oink');
-    equal(view.$('#test8 option:eq(2)').data('stickit-bind-val'), 'baa');
+    assert.equal(view.$('#test8 option:eq(0)').data('stickit-bind-val'), 'moo');
+    assert.equal(view.$('#test8 option:eq(1)').data('stickit-bind-val'), 'oink');
+    assert.equal(view.$('#test8 option:eq(2)').data('stickit-bind-val'), 'baa');
   });
 
-  QUnit.test('bindings:selectOptions (collection defined as value/label map, sorted by value)', function() {
+  QUnit.test('bindings:selectOptions (collection defined as value/label map, sorted by value)', function(assert) {
 
     model.set({'sound':'moo'});
     view.model = model;
@@ -1140,15 +1163,15 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'moo');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 'moo');
 
     // Options are sorted alphabetically by value
-    equal(view.$('#test8 option:eq(0)').data('stickit-bind-val'), 'baa');
-    equal(view.$('#test8 option:eq(1)').data('stickit-bind-val'), 'moo');
-    equal(view.$('#test8 option:eq(2)').data('stickit-bind-val'), 'oink');
+    assert.equal(view.$('#test8 option:eq(0)').data('stickit-bind-val'), 'baa');
+    assert.equal(view.$('#test8 option:eq(1)').data('stickit-bind-val'), 'moo');
+    assert.equal(view.$('#test8 option:eq(2)').data('stickit-bind-val'), 'oink');
   });
 
-  QUnit.test('bindings:selectOptions (multi-select without valuePath)', function() {
+  QUnit.test('bindings:selectOptions (multi-select without valuePath)', function(assert) {
 
     var collection = [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}, {id:4,name:'aquafina'}];
 
@@ -1167,22 +1190,22 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test16')).eq(0).data('stickit-bind-val').name, 'fountain');
-    equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val').name, 'dasina');
+    assert.equal(getSelectedOption(view.$('#test16')).eq(0).data('stickit-bind-val').name, 'fountain');
+    assert.equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val').name, 'dasina');
 
     var field = _.clone(model.get('water'));
     field.push({id:2,name:'evian'});
 
     model.set({'water':field});
-    equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val').name, 'evian');
+    assert.equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val').name, 'evian');
 
     view.$('#test16 option').eq(3).prop('selected', true).trigger('change');
 
-    equal(model.get('water').length, 4);
+    assert.equal(model.get('water').length, 4);
 
   });
 
-  QUnit.test('bindings:selectOptions (multi-select with valuePath)', function() {
+  QUnit.test('bindings:selectOptions (multi-select with valuePath)', function(assert) {
 
     var collection = [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}, {id:4,name:'aquafina'}];
 
@@ -1202,22 +1225,22 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test16')).eq(0).data('stickit-bind-val'), 1);
-    equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val'), 3);
+    assert.equal(getSelectedOption(view.$('#test16')).eq(0).data('stickit-bind-val'), 1);
+    assert.equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val'), 3);
 
     var field = _.clone(model.get('water'));
     field.push(2);
 
     model.set({'water':field});
-    equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val'), 2);
+    assert.equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val'), 2);
 
     view.$('#test16 option').eq(3).prop('selected', true).trigger('change');
 
-    equal(model.get('water').length, 4);
+    assert.equal(model.get('water').length, 4);
 
   });
 
-  QUnit.test('bindings:selectOptions (pre-rendered multi-select)', function() {
+  QUnit.test('bindings:selectOptions (pre-rendered multi-select)', function(assert) {
 
     model.set({'water': ['1', '3']});
     view.model = model;
@@ -1230,22 +1253,22 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test23')).eq(0).data('stickit-bind-val'), '1');
-    equal(getSelectedOption(view.$('#test23')).eq(1).data('stickit-bind-val'), '3');
+    assert.equal(getSelectedOption(view.$('#test23')).eq(0).data('stickit-bind-val'), '1');
+    assert.equal(getSelectedOption(view.$('#test23')).eq(1).data('stickit-bind-val'), '3');
 
     var field = _.clone(model.get('water'));
     field.push('2');
 
     model.set({'water':field});
-    equal(getSelectedOption(view.$('#test23')).eq(1).data('stickit-bind-val'), '2');
+    assert.equal(getSelectedOption(view.$('#test23')).eq(1).data('stickit-bind-val'), '2');
 
     view.$('#test23 option').eq(3).prop('selected', true).trigger('change');
 
-    equal(model.get('water').length, '4');
+    assert.equal(model.get('water').length, '4');
 
   });
 
-  QUnit.test('bindings:selectOptions (multi-select with onGet/onSet)', function() {
+  QUnit.test('bindings:selectOptions (multi-select with onGet/onSet)', function(assert) {
 
     var collection = [{id:1,name:'fountain'}, {id:2,name:'evian'}, {id:3,name:'dasina'}, {id:4,name:'aquafina'}];
 
@@ -1271,22 +1294,22 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test16')).eq(0).data('stickit-bind-val'), 1);
-    equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val'), 3);
+    assert.equal(getSelectedOption(view.$('#test16')).eq(0).data('stickit-bind-val'), 1);
+    assert.equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val'), 3);
 
     var field = _.clone(model.get('water'));
     field += '-2';
 
     model.set({'water':field});
-    equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val'), 2);
+    assert.equal(getSelectedOption(view.$('#test16')).eq(1).data('stickit-bind-val'), 2);
 
     view.$('#test16 option').eq(3).prop('selected', true).trigger('change');
 
-    equal(model.get('water'), '1-2-3-4');
+    assert.equal(model.get('water'), '1-2-3-4');
 
   });
 
-  QUnit.test('bindings:selectOptions (optgroup)', function() {
+  QUnit.test('bindings:selectOptions (optgroup)', function(assert) {
 
     model.set({'character':3});
     view.model = model;
@@ -1310,18 +1333,18 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test8')).parent().is('optgroup'), true);
-    equal(getSelectedOption(view.$('#test8')).parent().attr('label'), 'Three Stooges');
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 3);
+    assert.equal(getSelectedOption(view.$('#test8')).parent().is('optgroup'), true);
+    assert.equal(getSelectedOption(view.$('#test8')).parent().attr('label'), 'Three Stooges');
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 3);
 
     model.set({'character':2});
-    equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 2);
+    assert.equal(getSelectedOption(view.$('#test8')).data('stickit-bind-val'), 2);
 
     view.$('#test8 option').eq(3).prop('selected', true).trigger('change');
-    equal(model.get('character'), 4);
+    assert.equal(model.get('character'), 4);
   });
 
-  QUnit.test('bindings:selectOptions (pre-rendered optgroup)', function() {
+  QUnit.test('bindings:selectOptions (pre-rendered optgroup)', function(assert) {
 
     model.set({'character':'3'});
     view.model = model;
@@ -1334,18 +1357,18 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test22')).parent().is('optgroup'), true);
-    equal(getSelectedOption(view.$('#test22')).parent().attr('label'), 'Three Stooges');
-    equal(getSelectedOption(view.$('#test22')).data('stickit-bind-val'), '3');
+    assert.equal(getSelectedOption(view.$('#test22')).parent().is('optgroup'), true);
+    assert.equal(getSelectedOption(view.$('#test22')).parent().attr('label'), 'Three Stooges');
+    assert.equal(getSelectedOption(view.$('#test22')).data('stickit-bind-val'), '3');
 
     model.set({'character':'2'});
-    equal(getSelectedOption(view.$('#test22')).data('stickit-bind-val'), '2');
+    assert.equal(getSelectedOption(view.$('#test22')).data('stickit-bind-val'), '2');
 
     view.$('#test22 option').eq(3).prop('selected', true).trigger('change');
-    equal(model.get('character'), '4');
+    assert.equal(model.get('character'), '4');
   });
 
-  QUnit.test('bindings:selectOptions (pre-rendered optgroup with extra option)', function() {
+  QUnit.test('bindings:selectOptions (pre-rendered optgroup with extra option)', function(assert) {
 
     model.set({'character':'3'});
     view.model = model;
@@ -1358,18 +1381,18 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(getSelectedOption(view.$('#test24')).parent().is('optgroup'), true);
-    equal(getSelectedOption(view.$('#test24')).parent().attr('label'), 'Three Stooges');
-    equal(getSelectedOption(view.$('#test24')).data('stickit-bind-val'), '3');
+    assert.equal(getSelectedOption(view.$('#test24')).parent().is('optgroup'), true);
+    assert.equal(getSelectedOption(view.$('#test24')).parent().attr('label'), 'Three Stooges');
+    assert.equal(getSelectedOption(view.$('#test24')).data('stickit-bind-val'), '3');
 
     model.set({'character':'0'});
-    equal(getSelectedOption(view.$('#test24')).data('stickit-bind-val'), '0');
+    assert.equal(getSelectedOption(view.$('#test24')).data('stickit-bind-val'), '0');
 
     view.$('#test24 option').eq(4).prop('selected', true).trigger('change');
-    equal(model.get('character'), '4');
+    assert.equal(model.get('character'), '4');
   });
 
-  QUnit.test('bindings:attributes:name', function() {
+  QUnit.test('bindings:attributes:name', function(assert) {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1386,13 +1409,13 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test5').attr('data-name'), 'fountain');
+    assert.equal(view.$('#test5').attr('data-name'), 'fountain');
 
     model.set('water', 'evian');
-    equal(view.$('#test5').attr('data-name'), 'evian');
+    assert.equal(view.$('#test5').attr('data-name'), 'evian');
   });
 
-  QUnit.test('bindings:attributes:name:class', function() {
+  QUnit.test('bindings:attributes:name:class', function(assert) {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1408,13 +1431,13 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    ok(view.$('#test9').hasClass('test') && view.$('#test9').hasClass('fountain'));
+    assert.ok(view.$('#test9').hasClass('test') && view.$('#test9').hasClass('fountain'));
 
     model.set('water', 'evian');
-    ok(view.$('#test9').hasClass('test') && view.$('#test9').hasClass('evian'));
+    assert.ok(view.$('#test9').hasClass('test') && view.$('#test9').hasClass('evian'));
   });
 
-  QUnit.test('bindings:attributes:onGet', function() {
+  QUnit.test('bindings:attributes:onGet', function(assert) {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1431,13 +1454,13 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test5').attr('data-name'), '_fountain_water');
+    assert.equal(view.$('#test5').attr('data-name'), '_fountain_water');
 
     model.set('water', 'evian');
-    equal(view.$('#test5').attr('data-name'), '_evian_water');
+    assert.equal(view.$('#test5').attr('data-name'), '_evian_water');
   });
 
-  QUnit.test('bindings:attributes:onGet (string)', function() {
+  QUnit.test('bindings:attributes:onGet (string)', function(assert) {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1455,13 +1478,13 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test5').attr('data-name'), '_fountain_water');
+    assert.equal(view.$('#test5').attr('data-name'), '_fountain_water');
 
     model.set('water', 'evian');
-    equal(view.$('#test5').attr('data-name'), '_evian_water');
+    assert.equal(view.$('#test5').attr('data-name'), '_evian_water');
   });
 
-  QUnit.test('bindings:attributes:observe', function() {
+  QUnit.test('bindings:attributes:observe', function(assert) {
 
     model.set({'water':'fountain', 'candy':'twix'});
     view.model = model;
@@ -1472,7 +1495,7 @@ $(document).ready(function() {
           name: 'data-name',
           observe: 'candy',
           onGet: function(val) {
-            equal(val, this.model.get('candy'));
+            assert.equal(val, this.model.get('candy'));
             return this.model.get('water') + '-' + this.model.get('candy');
           }
         }]
@@ -1481,13 +1504,14 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test5').attr('data-name'), 'fountain-twix');
+    assert.equal(view.$('#test5').attr('data-name'), 'fountain-twix');
 
     model.set({'water':'evian', 'candy':'snickers'});
-    equal(view.$('#test5').attr('data-name'), 'evian-snickers');
+    assert.equal(view.$('#test5').attr('data-name'), 'evian-snickers');
   });
 
-  QUnit.test('bindings:attributes:observe (array)', 11, function() {
+  QUnit.test('bindings:attributes:observe (array)', function(assert) {
+    assert.expect(11);
 
     model.set({'water':'fountain', 'candy':'twix'});
     view.model = model;
@@ -1499,9 +1523,9 @@ $(document).ready(function() {
           observe: ['water', 'candy'],
           onGet: function(val, options) {
             _.each(options.observe, _.bind(function(attr, i) {
-              equal(val[i], this.model.get(attr));
+              assert.equal(val[i], this.model.get(attr));
             }, this));
-            equal(options.observe.toString(), 'water,candy');
+            assert.equal(options.observe.toString(), 'water,candy');
             return model.get('water') + '-' + model.get('candy');
           }
         }]
@@ -1510,13 +1534,13 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test5').attr('data-name'), 'fountain-twix');
+    assert.equal(view.$('#test5').attr('data-name'), 'fountain-twix');
 
     model.set({'water':'evian', 'candy':'snickers'});
-    equal(view.$('#test5').attr('data-name'), 'evian-snickers');
+    assert.equal(view.$('#test5').attr('data-name'), 'evian-snickers');
   });
 
-  QUnit.test('bindings:attributes (properties)', function() {
+  QUnit.test('bindings:attributes (properties)', function(assert) {
 
     model.set({'water':true});
     view.model = model;
@@ -1532,13 +1556,13 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test1').prop('readonly'), true);
+    assert.equal(view.$('#test1').prop('readonly'), true);
 
     model.set({'water':false});
-    equal(view.$('#test1').prop('readonly'), false);
+    assert.equal(view.$('#test1').prop('readonly'), false);
   });
 
-  QUnit.test('bindings:classes:name', function() {
+  QUnit.test('bindings:classes:name', function(assert) {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1552,13 +1576,13 @@ $(document).ready(function() {
     };
 
     $('#qunit-fixture').html(view.render().el);
-    ok(view.$('#test5').hasClass('testClass'));
+    assert.ok(view.$('#test5').hasClass('testClass'));
 
     model.set('water', false);
-    ok(!view.$('#test5').hasClass('testClass'));
+    assert.ok(!view.$('#test5').hasClass('testClass'));
   });
 
-  QUnit.test('bindings:classes:observe', function() {
+  QUnit.test('bindings:classes:observe', function(assert) {
 
     model.set({'truthy':false});
     view.model = model;
@@ -1580,15 +1604,15 @@ $(document).ready(function() {
     };
 
     $('#qunit-fixture').html(view.render().el);
-    ok(!view.$('#test5').hasClass('col-md-2'));
-    ok(view.$('#test5').hasClass('col-md-3'));
+    assert.ok(!view.$('#test5').hasClass('col-md-2'));
+    assert.ok(view.$('#test5').hasClass('col-md-3'));
 
     model.set('truthy', 'string is truthy');
-    ok(view.$('#test5').hasClass('col-md-2'));
-    ok(!view.$('#test5').hasClass('col-md-3'));
+    assert.ok(view.$('#test5').hasClass('col-md-2'));
+    assert.ok(!view.$('#test5').hasClass('col-md-3'));
   });
 
-  QUnit.test('input:number', function() {
+  QUnit.test('input:number', function(assert) {
 
     model.set({'code':1});
     view.model = model;
@@ -1600,13 +1624,14 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(Number(view.$('#test11').val()), 1);
+    assert.equal(Number(view.$('#test11').val()), 1);
 
     model.set('code', 2);
-    equal(Number(view.$('#test11').val()), 2);
+    assert.equal(Number(view.$('#test11').val()), 2);
   });
 
-  QUnit.test('visible', 28, function() {
+  QUnit.test('visible', function(assert) {
+    assert.expect(28);
 
     model.set({'water':false, 'candy':'twix', 'costume':false, 'visible': 'yes'});
     view.model = model;
@@ -1619,8 +1644,8 @@ $(document).ready(function() {
       '#test14-2': {
         observe: 'candy',
         visible: function(val, options) {
-          equal(val, this.model.get('candy'));
-          equal(options.observe, 'candy');
+          assert.equal(val, this.model.get('candy'));
+          assert.equal(options.observe, 'candy');
           return this.model.get('candy') == 'twix';
         }
       },
@@ -1628,9 +1653,9 @@ $(document).ready(function() {
         observe: ['candy', 'costume'],
         visible: true,
         visibleFn: function($el, isVisible, options) {
-          equal($el.attr('id'), 'test14-3');
-          ok(isVisible);
-          equal(options.observe.toString(), 'candy,costume');
+          assert.equal($el.attr('id'), 'test14-3');
+          assert.ok(isVisible);
+          assert.equal(options.observe.toString(), 'candy,costume');
         }
       },
       '#test14-4': {
@@ -1645,13 +1670,13 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test14-1').css('display') == 'block' , false);
-    equal(view.$('#test14-2').css('display') == 'block' , true);
-    equal(view.$('#test14-2').text(), 'Test');
-    equal(view.$('#test14-3').css('display') == 'block' , true);
-    equal(view.$('#test14-4').css('display') == 'block' , true);
-    equal(view.$('#test14-4').text(), 'yes');
-    equal(view.$('#test14-5').css('display') == 'block' , true);
+    assert.equal(view.$('#test14-1').css('display') == 'block' , false);
+    assert.equal(view.$('#test14-2').css('display') == 'block' , true);
+    assert.equal(view.$('#test14-2').text(), 'Test');
+    assert.equal(view.$('#test14-3').css('display') == 'block' , true);
+    assert.equal(view.$('#test14-4').css('display') == 'block' , true);
+    assert.equal(view.$('#test14-4').text(), 'yes');
+    assert.equal(view.$('#test14-5').css('display') == 'block' , true);
 
     // Force-hide #test14-5 to make sure the fact that it's still visible
     // later is due to the truthiness check.
@@ -1662,23 +1687,24 @@ $(document).ready(function() {
     model.set('costume', true);
     model.set('visible', 'no')
 
-    equal(view.$('#test14-1').css('display') == 'block' , true);
-    equal(view.$('#test14-2').css('display') == 'block' , false);
-    equal(view.$('#test14-2').text(), 'Test');
-    equal(view.$('#test14-3').css('display') == 'block' , true);
-    equal(view.$('#test14-4').css('display') == 'block' , false);
-    equal(view.$('#test14-4').text(), 'no');
+    assert.equal(view.$('#test14-1').css('display') == 'block' , true);
+    assert.equal(view.$('#test14-2').css('display') == 'block' , false);
+    assert.equal(view.$('#test14-2').text(), 'Test');
+    assert.equal(view.$('#test14-3').css('display') == 'block' , true);
+    assert.equal(view.$('#test14-4').css('display') == 'block' , false);
+    assert.equal(view.$('#test14-4').text(), 'no');
 
     // 'no' is still truthy.
-    equal(view.$('#test14-5').css('display') == 'block' , true);
+    assert.equal(view.$('#test14-5').css('display') == 'block' , true);
 
     model.set('visible', false);
 
-    equal(view.$('#test14-5').css('display') == 'block' , false);
+    assert.equal(view.$('#test14-5').css('display') == 'block' , false);
 
   });
 
-  QUnit.test('observe (multiple; array)', 12, function() {
+  QUnit.test('observe (multiple; array)', function(assert) {
+    assert.expect(12);
 
     model.set({'water':'fountain', 'candy':'twix'});
     view.model = model;
@@ -1688,25 +1714,27 @@ $(document).ready(function() {
         observe: ['water', 'candy'],
         onGet: function(val, options) {
           _.each(options.observe, _.bind(function(attr, i) {
-            equal(val[i], this.model.get(attr));
+            assert.equal(val[i], this.model.get(attr));
           }, this));
-          equal(options.observe.toString(), 'water,candy');
+          assert.equal(options.observe.toString(), 'water,candy');
           return model.get('water') + ' ' + model.get('candy');
         }
       }
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test5').text(), 'fountain twix');
+    assert.equal(view.$('#test5').text(), 'fountain twix');
 
     model.set('water', 'evian');
-    equal(view.$('#test5').text(), 'evian twix');
+    assert.equal(view.$('#test5').text(), 'evian twix');
 
     model.set('candy', 'snickers');
-    equal(view.$('#test5').text(), 'evian snickers');
+    assert.equal(view.$('#test5').text(), 'evian snickers');
   });
 
-  QUnit.test('observe (function)', 5, function() {
+  QUnit.test('observe (function)', function(assert) {
+    assert.expect(5);
+
     model.set({'water':'fountain'});
 
     var testView = new (Backbone.View.extend({
@@ -1716,8 +1744,8 @@ $(document).ready(function() {
       bindings: {
         '#test1': {
           observe: function() {
-            equal(this, testView);
-            equal(this.options.observeValue, 'water');
+            assert.equal(this, testView);
+            assert.equal(this.options.observeValue, 'water');
             return this.options.observeValue;
           }
         }
@@ -1735,18 +1763,19 @@ $(document).ready(function() {
 
     $('#qunit-fixture').html(testView.render().el);
 
-    equal(testView.$('#test1').val(), 'fountain');
+    assert.equal(testView.$('#test1').val(), 'fountain');
 
     model.set('water', 'evian');
-    equal(testView.$('#test1').val(), 'evian');
+    assert.equal(testView.$('#test1').val(), 'evian');
 
     testView.$('#test1').val('dasina').trigger('change');
-    equal(model.get('water'), 'dasina');
+    assert.equal(model.get('water'), 'dasina');
 
     testView.remove();
   });
 
-  QUnit.test('bindings:updateView', 9, function() {
+  QUnit.test('bindings:updateView', function(assert) {
+    assert.expect(9);
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1755,24 +1784,25 @@ $(document).ready(function() {
       '#test1': {
         observe: 'water',
         updateView: function(val, options) {
-          equal(options.observe, 'water');
-          equal(val, model.get('water'));
+          assert.equal(options.observe, 'water');
+          assert.equal(val, model.get('water'));
           return val == 'evian';
         }
       }
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test1').val(), '');
+    assert.equal(view.$('#test1').val(), '');
 
     model.set({water:'evian'});
-    equal(view.$('#test1').val(), 'evian');
+    assert.equal(view.$('#test1').val(), 'evian');
 
     model.set({water:'dasina'});
-    equal(view.$('#test1').val(), 'evian');
+    assert.equal(view.$('#test1').val(), 'evian');
   });
 
-  QUnit.test('bindings:updateModel', 10, function() {
+  QUnit.test('bindings:updateModel', function(assert) {
+    assert.expect(10);
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1781,10 +1811,10 @@ $(document).ready(function() {
       '#test1': {
         observe: 'water',
         updateModel: function(val, event, config) {
-          equal(this.cid, view.cid);
-          equal(val, view.$('#test1').val());
-          equal(config.observe, 'water');
-          equal(event.type, 'change');
+          assert.equal(this.cid, view.cid);
+          assert.equal(val, view.$('#test1').val());
+          assert.equal(config.observe, 'water');
+          assert.equal(event.type, 'change');
           return val == 'evian';
         }
       }
@@ -1792,13 +1822,13 @@ $(document).ready(function() {
     $('#qunit-fixture').html(view.render().el);
 
     view.$('#test1').val('dasina').trigger('change');
-    equal(model.get('water'), 'fountain');
+    assert.equal(model.get('water'), 'fountain');
 
     view.$('#test1').val('evian').trigger('change');
-    equal(model.get('water'), 'evian');
+    assert.equal(model.get('water'), 'evian');
   });
 
-  QUnit.test('bindings:events', function() {
+  QUnit.test('bindings:events', function(assert) {
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1811,20 +1841,20 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test1').val(), 'fountain');
+    assert.equal(view.$('#test1').val(), 'fountain');
 
     // change should be overriden, so no change...
     view.$('#test1').val('dasina').trigger('change');
-    equal(model.get('water'), 'fountain');
+    assert.equal(model.get('water'), 'fountain');
 
     view.$('#test1').trigger('blur');
-    equal(model.get('water'), 'dasina');
+    assert.equal(model.get('water'), 'dasina');
 
     view.$('#test1').val('evian').trigger('keydown');
-    equal(model.get('water'), 'evian');
+    assert.equal(model.get('water'), 'evian');
   });
 
-  QUnit.test('checkbox multiple', function() {
+  QUnit.test('checkbox multiple', function(assert) {
 
     model.set({'water':['fountain', 'dasina']});
     view.model = model;
@@ -1834,22 +1864,22 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('.boxes[value="fountain"]').prop('checked'), true);
-    equal(view.$('.boxes[value="evian"]').prop('checked'), false);
-    equal(view.$('.boxes[value="dasina"]').prop('checked'), true);
+    assert.equal(view.$('.boxes[value="fountain"]').prop('checked'), true);
+    assert.equal(view.$('.boxes[value="evian"]').prop('checked'), false);
+    assert.equal(view.$('.boxes[value="dasina"]').prop('checked'), true);
 
     model.set('water', ['evian']);
-    equal(view.$('.boxes[value="fountain"]').prop('checked'), false);
-    equal(view.$('.boxes[value="evian"]').prop('checked'), true);
-    equal(view.$('.boxes[value="dasina"]').prop('checked'), false);
+    assert.equal(view.$('.boxes[value="fountain"]').prop('checked'), false);
+    assert.equal(view.$('.boxes[value="evian"]').prop('checked'), true);
+    assert.equal(view.$('.boxes[value="dasina"]').prop('checked'), false);
 
     view.$('.boxes[value="dasina"]').prop('checked', true).trigger('change');
-    equal(model.get('water').length, 2);
-    equal(_.indexOf(model.get('water'), 'evian') > -1, true);
-    equal(_.indexOf(model.get('water'), 'dasina') > -1, true);
+    assert.equal(model.get('water').length, 2);
+    assert.equal(_.indexOf(model.get('water'), 'evian') > -1, true);
+    assert.equal(_.indexOf(model.get('water'), 'dasina') > -1, true);
   });
 
-  QUnit.test('checkbox multiple with numbers', function() {
+  QUnit.test('checkbox multiple with numbers', function(assert) {
 
     model.set({'numbers':[1, 3]});
     view.model = model;
@@ -1859,23 +1889,23 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('.boxes[value="1"]').prop('checked'), true);
-    equal(view.$('.boxes[value="2"]').prop('checked'), false);
-    equal(view.$('.boxes[value="3"]').prop('checked'), true);
+    assert.equal(view.$('.boxes[value="1"]').prop('checked'), true);
+    assert.equal(view.$('.boxes[value="2"]').prop('checked'), false);
+    assert.equal(view.$('.boxes[value="3"]').prop('checked'), true);
 
     model.set({'numbers':[2]});
-    equal(view.$('.boxes[value="1"]').prop('checked'), false);
-    equal(view.$('.boxes[value="2"]').prop('checked'), true);
-    equal(view.$('.boxes[value="3"]').prop('checked'), false);
+    assert.equal(view.$('.boxes[value="1"]').prop('checked'), false);
+    assert.equal(view.$('.boxes[value="2"]').prop('checked'), true);
+    assert.equal(view.$('.boxes[value="3"]').prop('checked'), false);
 
     view.$('.boxes[value="3"]').prop('checked', true).trigger('change');
 
-    equal(model.get('numbers').length, 2);
-    equal(_.contains(model.get('numbers'), '2'), true);
-    equal(_.contains(model.get('numbers'), '3'), true);
+    assert.equal(model.get('numbers').length, 2);
+    assert.equal(_.contains(model.get('numbers'), '2'), true);
+    assert.equal(_.contains(model.get('numbers'), '3'), true);
   });
 
-  QUnit.test('checkbox (single with value defined)', function() {
+  QUnit.test('checkbox (single with value defined)', function(assert) {
 
     model.set({'water':null});
     view.model = model;
@@ -1885,16 +1915,16 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('.box').prop('checked'), false);
+    assert.equal(view.$('.box').prop('checked'), false);
 
     model.set('water', 'fountain');
-    equal(view.$('.box').prop('checked'), true);
+    assert.equal(view.$('.box').prop('checked'), true);
 
     view.$('.box').prop('checked', false).trigger('change');
-    equal(model.get('water'), null);
+    assert.equal(model.get('water'), null);
   });
 
-  QUnit.test('checkbox (single with number value defined)', function() {
+  QUnit.test('checkbox (single with number value defined)', function(assert) {
 
     model.set({'number':null});
     view.model = model;
@@ -1904,28 +1934,29 @@ $(document).ready(function() {
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('.box').prop('checked'), false);
+    assert.equal(view.$('.box').prop('checked'), false);
 
     model.set('number', '1');
-    equal(view.$('.box').prop('checked'), true);
+    assert.equal(view.$('.box').prop('checked'), true);
 
     model.set('number', '2');
-    equal(view.$('.box').prop('checked'), false);
+    assert.equal(view.$('.box').prop('checked'), false);
 
     model.set('number', 1);
-    equal(view.$('.box').prop('checked'), true);
+    assert.equal(view.$('.box').prop('checked'), true);
 
     model.set('number', 2);
-    equal(view.$('.box').prop('checked'), false);
+    assert.equal(view.$('.box').prop('checked'), false);
 
     view.$('.box').prop('checked', true).trigger('change');
-    equal(model.get('number'), "1");
+    assert.equal(model.get('number'), "1");
 
     view.$('.box').prop('checked', false).trigger('change');
-    equal(model.get('number'), null);
+    assert.equal(model.get('number'), null);
   });
 
-  QUnit.test('getVal', 5, function() {
+  QUnit.test('getVal', function(assert) {
+    assert.expect(5);
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1934,10 +1965,10 @@ $(document).ready(function() {
       '#test1': {
         observe: 'water',
         getVal: function($el, event, options) {
-          equal(this.cid, view.cid);
-          equal($el.attr('id'), 'test1');
-          equal(event.type, 'change');
-          equal(options.observe, 'water');
+          assert.equal(this.cid, view.cid);
+          assert.equal($el.attr('id'), 'test1');
+          assert.equal(event.type, 'change');
+          assert.equal(options.observe, 'water');
           return 'test-' + $el.val();
         }
       }
@@ -1945,10 +1976,11 @@ $(document).ready(function() {
     $('#qunit-fixture').html(view.render().el);
 
     view.$('#test1').val('dasina').trigger('change');
-    equal(model.get('water'), 'test-dasina');
+    assert.equal(model.get('water'), 'test-dasina');
   });
 
-  QUnit.test('update', 8, function() {
+  QUnit.test('update', function(assert) {
+    assert.expect(8);
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1957,22 +1989,23 @@ $(document).ready(function() {
       '#test1': {
         observe: 'water',
         update: function($el, val, model, options) {
-          equal($el.attr('id'), 'test1');
-          equal(val, model.get('water'));
-          equal(options.observe, 'water');
+          assert.equal($el.attr('id'), 'test1');
+          assert.equal(val, model.get('water'));
+          assert.equal(options.observe, 'water');
           $el.val('test-' + val);
         }
       }
     };
     $('#qunit-fixture').html(view.render().el);
 
-    equal(view.$('#test1').val(), 'test-fountain');
+    assert.equal(view.$('#test1').val(), 'test-fountain');
 
     model.set('water', 'dasina');
-    equal(view.$('#test1').val(), 'test-dasina');
+    assert.equal(view.$('#test1').val(), 'test-dasina');
   });
 
-  QUnit.test('initialize', 3, function() {
+  QUnit.test('initialize', function(assert) {
+    assert.expect(3);
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -1981,16 +2014,17 @@ $(document).ready(function() {
       '#test1': {
         observe: 'water',
         initialize: function($el, model, options) {
-          equal($el.val(), 'fountain');
-          equal(model.get('water'), 'fountain');
-          equal(options.observe, 'water');
+          assert.equal($el.val(), 'fountain');
+          assert.equal(model.get('water'), 'fountain');
+          assert.equal(options.observe, 'water');
         }
       }
     };
     $('#qunit-fixture').html(view.render().el);
   });
 
-  QUnit.test('destroy', 3, function() {
+  QUnit.test('destroy', function(assert) {
+    assert.expect(3);
 
     model.set({'water':'fountain'});
     view.model = model;
@@ -2000,9 +2034,9 @@ $(document).ready(function() {
         observe: 'water',
         events: ['change', 'input', 'keyup'],
         destroy: function($el, model, options) {
-          equal($el.val(), 'fountain');
-          equal(model.get('water'), 'fountain');
-          equal(options.observe, 'water');
+          assert.equal($el.val(), 'fountain');
+          assert.equal(model.get('water'), 'fountain');
+          assert.equal(options.observe, 'water');
         }
       }
     };
@@ -2010,7 +2044,7 @@ $(document).ready(function() {
     view.unstickit();
   });
 
-  QUnit.test('null form value', function() {
+  QUnit.test('null form value', function(assert) {
 
     model.set({'water':null});
     view.model = model;
@@ -2019,10 +2053,10 @@ $(document).ready(function() {
       '#test1': 'water'
     };
     $('#qunit-fixture').html(view.render().el);
-    equal(view.$('#test1').val(), '');
+    assert.equal(view.$('#test1').val(), '');
   });
 
-  QUnit.test('null html value', function() {
+  QUnit.test('null html value', function(assert) {
 
     model.set({'water':null});
     view.model = model;
@@ -2031,10 +2065,11 @@ $(document).ready(function() {
       '#test5': 'water'
     };
     $('#qunit-fixture').html(view.render().el);
-    equal(view.$('#test5').html(), '');
+    assert.equal(view.$('#test5').html(), '');
   });
 
-  QUnit.test('stickitChange', 1, function() {
+  QUnit.test('stickitChange', function(assert) {
+    assert.expect(1);
 
     model.set({'water':null});
     view.model = model;
@@ -2045,13 +2080,14 @@ $(document).ready(function() {
     $('#qunit-fixture').html(view.render().el);
 
     model.on('change:water', function(m, v, options) {
-      ok(options.stickitChange);
+      assert.ok(options.stickitChange);
     });
 
     view.$('#test1').val('dasina').trigger('change');
   });
 
-  QUnit.test('view.remove should be called and unbind events', 4, function() {
+  QUnit.test('view.remove should be called and unbind events', function(assert) {
+    assert.expect(4);
 
     model.set({'water':null});
     view.model = model;
@@ -2060,13 +2096,13 @@ $(document).ready(function() {
       '#test1': 'water'
     };
     view.remove = function(option) {
-      ok(true);
-      ok(!!option);
+      assert.ok(true);
+      assert.ok(!!option);
     };
     $('#qunit-fixture').html(view.render().el);
-    equal(view._modelBindings.length, 1);
+    assert.equal(view._modelBindings.length, 1);
     view.remove('test');
-    equal(view._modelBindings.length, 0);
+    assert.equal(view._modelBindings.length, 0);
   });
 
 });
