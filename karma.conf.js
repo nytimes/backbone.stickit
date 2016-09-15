@@ -71,7 +71,7 @@ module.exports = function(config) {
     // how many browser should be started simultaneous
     concurrency: Infinity,
 
-        // See http://stackoverflow.com/a/27873086/1517919
+    // See http://stackoverflow.com/a/27873086/1517919
     customLaunchers: {
         Chrome_sandbox: {
             base: 'Chrome',
