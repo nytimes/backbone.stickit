@@ -449,7 +449,11 @@
     selector: 'input[type="radio"]',
     events: ['change'],
     update: function($el, val) {
-      $el.filter('[value="'+val+'"]').prop('checked', true);
+      // Because we use " in the value descriptor, we need to escape any
+      // quotes in the value itself otherwise jQuery/Sizzle complain that
+      // the selector is invalid.
+      var escapedVal = val.toString().replace(/"/g, '\\"');
+      $el.filter('[value="'+escapedVal+'"]').prop('checked', true);
     },
     getVal: function($el) {
       return $el.filter(':checked').val();
