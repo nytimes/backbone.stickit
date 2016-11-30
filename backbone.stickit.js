@@ -85,8 +85,11 @@
     // can either call `stickit` with the new bindings, or add them directly
     // with `addBinding`. Both arguments to `stickit` are optional.
     stickit: function(optionalModel, optionalBindingsConfig) {
+      // Applies uibondings acordly to marionette.ui property when available
+      var uiBindings = (typeof Marionette !== undefined) ? Marionette.normalizeUIKeys(_.result(this, 'bindings'), _.result(this, '_uiBindings')) : undefined;
+
       var model = optionalModel || this.model,
-          bindings = optionalBindingsConfig || _.result(this, "bindings") || {};
+          bindings = optionalBindingsConfig || uiBindings || _.result(this, 'bindings') || {};
 
       this._modelBindings || (this._modelBindings = []);
 
