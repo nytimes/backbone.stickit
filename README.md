@@ -16,6 +16,10 @@ Stickit is a Backbone data binding plugin that binds Model attributes to View el
 
 [view annotated source](http://nytimes.github.com/backbone.stickit/docs/annotated/)
 
+### Bower install
+
+  `bower install backbone.stickit`
+
 ## Usage
 
 Similar to `view.events`, you can define `view.bindings` to map selectors to binding configurations. The following bindings configuration will bind the `view.$('#title')` element to the `title` model attribute and the `view.$('#author')` element to the `authorName` model attribute:
