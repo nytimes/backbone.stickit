@@ -1,3 +1,5 @@
+[Help Wanted!](https://github.com/NYTimes/backbone.stickit/issues/319)
+
 [-> **Documentation for current/stable release: 0.9.2**](http://nytimes.github.com/backbone.stickit/)
 
 **The following is documentation for the code in master/edge version...**
