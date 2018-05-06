@@ -108,9 +108,6 @@ $(document).ready(function() {
 
     view.$('.test4[value=fountain]').prop('checked', true).trigger('change');
     assert.equal(model.get('water'), 'fountain');
-
-    model.set({'water':'"Fountain of Youth"'});
-    assert.equal(view.$('.test4:checked').val(), '"Fountain of Youth"');
   });
 
   QUnit.test('div', function(assert) {
