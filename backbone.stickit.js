@@ -358,10 +358,10 @@
   var initializeClasses = function($el, config, model, modelAttr) {
     _.each(config.classes || [], function(classConfig, name) {
       if (_.isString(classConfig)) classConfig = {observe: classConfig};
-      classConfig.view = config.view;
 
       var observed = classConfig.observe;
       var updateClass = function() {
+        classConfig.view = config.view;
         var val = getAttr(model, observed, classConfig);
         $el.toggleClass(name, !!val);
       };
