@@ -2110,19 +2110,17 @@ $(document).ready(function() {
     var model1 = new Backbone.Model();
     var model2 = new Backbone.Model();
 
-    var thises = [];
-    var start = false;
-
     var View = Backbone.View.extend({
       templateId: 'jst29',
       bindings: {
         '#test29': {
           classes: {
-            'isWater': {
-              observe: 'water',
-              onGet: function(model) {
-                if (start) thises.push({model: model, view_cid: this.cid});
-                return !!model;
+            'hasCid': {
+              observe: 'cid',
+              onGet: function(cid) {
+                console.log(cid)
+                if (cid) assert.equal(cid, this.cid);
+                return true;
               }
             }
           }
@@ -2142,11 +2140,8 @@ $(document).ready(function() {
     $('#qunit-fixture').html(view1.render().el);
     $('#qunit-fixture').append(view2.render().el);
 
-    start = true;
-    model1.set({'water':'model1'});
-    model2.set({'water':'model2'});
-
-    assert.notEqual(thises[0]['view_cid'], thises[1]['view_cid']);
+    model1.set({'cid':view1.cid});
+    model2.set({'cid':view2.cid});
   });
 
 });
