@@ -167,5 +167,9 @@ $('body').append(
 
     '<script id="jst28" type="text/jst">' +
     '  <input type="checkbox" class="box" value="1">' +
+    '</script>' +
+
+    '<script id="jst29" type="text/jst">' +
+    '  <div id="test29"></div>' +
     '</script>'
 );

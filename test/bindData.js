@@ -2105,4 +2105,43 @@ $(document).ready(function() {
     assert.equal(view._modelBindings.length, 0);
   });
 
+
+  QUnit.test('context loss in getAttr', function(assert) {
+    var model1 = new Backbone.Model();
+    var model2 = new Backbone.Model();
+
+    var View = Backbone.View.extend({
+      templateId: 'jst29',
+      bindings: {
+        '#test29': {
+          classes: {
+            'hasCid': {
+              observe: 'cid',
+              onGet: function(cid) {
+                console.log(cid)
+                if (cid) assert.equal(cid, this.cid);
+                return true;
+              }
+            }
+          }
+        }
+      },
+      render: function() {
+        var html = document.getElementById(this.templateId).innerHTML;
+        this.$el.html(_.template(html)());
+        this.stickit();
+        return this;
+      }
+    });
+
+    var view1 = new View({ model: model1 });
+    var view2 = new View({ model: model2 });
+
+    $('#qunit-fixture').html(view1.render().el);
+    $('#qunit-fixture').append(view2.render().el);
+
+    model1.set({'cid':view1.cid});
+    model2.set({'cid':view2.cid});
+  });
+
 });
