@@ -2107,23 +2107,20 @@ $(document).ready(function() {
 
 
   QUnit.test('context loss in getAttr', function(assert) {
-    var model1 = new (Backbone.Model.extend())();
-    var model2 = new (Backbone.Model.extend())();
-
-    model1.set({'water':null});
-    model2.set({'water':null});
+    var model1 = new Backbone.Model();
+    var model2 = new Backbone.Model();
 
     var thises = [];
     var start = false;
 
-    var view_proto = Backbone.View.extend({
+    var viewProto = Backbone.View.extend({
       model: null,
       templateId: 'jst29',
       bindings: {
         '#test29': {
           classes: {
-            'isWater': {
-              observe: 'water',
+            'model': {
+              observe: 'model',
               onGet: function(val) {
                 if (start) thises.push({model: val, view_cid: this.cid});
                 return !!val;
@@ -2140,15 +2137,15 @@ $(document).ready(function() {
       }
     });
 
-    var view1 = new view_proto({ model: model1 });
-    var view2 = new view_proto({ model: model2 });
+    var view1 = new viewProto({ model: model1 });
+    var view2 = new viewProto({ model: model2 });
 
     $('#qunit-fixture').html(view1.render().el);
     $('#qunit-fixture').append(view2.render().el);
 
     start = true;
-    model1.set({'water':'model1'})
-    model2.set({'water':'model2'})
+    model1.set({'model':'model1'});
+    model2.set({'model':'model2'});
 
     assert.notEqual(thises[0]['view_cid'], thises[1]['view_cid']);
   });
