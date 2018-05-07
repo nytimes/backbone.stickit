@@ -116,16 +116,21 @@
       binding = binding || {};
 
       // Support jQuery-style {key: val} event maps.
-      if (_.isObject(selector)) {
+      if (_.isObject(selector) && !(selector instanceof jQuery) ) {
         var bindings = selector;
         _.each(bindings, _.bind(function(val, key) {
           this.addBinding(model, key, val);
         }, this));
         return;
       }
-
-      // Special case the ':el' selector to use the view's this.$el.
-      var $el = selector === ':el' ? this.$el : this.$(selector);
+           
+            // Special case the ':el' selector to use the view's this.$el.
+            // Support jQuery element as selector
+            var $el = selector === ':el'
+                    ? this.$el
+                    : (selector instanceof jQuery)
+                    ? selector
+                    : this.$(selector);
 
       // Clear any previous matching bindings.
       this.unstickit(model, selector);
