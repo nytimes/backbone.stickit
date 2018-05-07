@@ -2105,4 +2105,52 @@ $(document).ready(function() {
     assert.equal(view._modelBindings.length, 0);
   });
 
+
+  QUnit.test('context loss in getAttr', function(assert) {
+    var model1 = new (Backbone.Model.extend())();
+    var model2 = new (Backbone.Model.extend())();
+
+    model1.set({'water':null});
+    model2.set({'water':null});
+
+    var thises = [];
+    var start = false;
+
+    var view_proto = Backbone.View.extend({
+      model: null,
+      templateId: 'jst29',
+      bindings: {
+        '#test29': {
+          classes: {
+            'isWater': {
+              observe: 'water',
+              onGet: function(val) {
+                if (start) thises.push({model: val, view_cid: this.cid});
+                return !!val;
+              }
+            }
+          }
+        }
+      },
+      render: function() {
+        var html = document.getElementById(this.templateId).innerHTML;
+        this.$el.html(_.template(html)());
+        this.stickit();
+        return this;
+      }
+    });
+
+    var view1 = new view_proto({ model: model1 });
+    var view2 = new view_proto({ model: model2 });
+
+    $('#qunit-fixture').html(view1.render().el);
+    $('#qunit-fixture').append(view2.render().el);
+
+    start = true;
+    model1.set({'water':'model1'})
+    model2.set({'water':'model2'})
+
+    assert.notEqual(thises[0]['view_cid'], thises[1]['view_cid']);
+  });
+
 });
