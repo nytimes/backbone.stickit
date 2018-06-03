@@ -176,7 +176,11 @@
 
             // Don't update the model if false is returned from the `updateModel` configuration.
             var currentVal = evaluateBoolean(config.updateModel, val, event, config);
-            if (currentVal) setAttr(model, modelAttr, val, options, config);
+            if (isPromise(currentVal)) {
+              currentVal.then(function(){
+                setAttr(model, modelAttr, val, options, config);
+              });
+            } else if (currentVal) setAttr(model, modelAttr, val, options, config);
           };
           var sel = selector === ':el'? '' : selector;
           this.$el.on(eventName, sel, _.bind(listener, this));
@@ -284,6 +288,11 @@
     var val = _.isArray(attr) ? _.map(attr, retrieveVal) : retrieveVal(attr);
     if (config.onGet) val = applyViewFn.call(view, config.onGet, val, config);
     return _.isArray(val) ? _.map(val, sanitizeVal) : sanitizeVal(val);
+  };
+
+  // Check whether passed in a Promise
+  var isPromise= function(o) {
+    return (o && (_.isObject(o) || _.isFunction(o)) && o.then && _.isFunction(o.then));
   };
 
   // Find handlers in `Backbone.Stickit._handlers` with selectors that match
