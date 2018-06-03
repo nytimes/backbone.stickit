@@ -213,8 +213,17 @@
   // Evaluates the given `path` (in object/dot-notation) relative to the given
   // `obj`. If the path is null/undefined, then the given `obj` is returned.
   var evaluatePath = function(obj, path) {
-    var parts = (path || '').split('.');
-    var result = _.reduce(parts, function(memo, i) { return memo[i]; }, obj);
+      var result = null;
+      if ( typeof path=='function')
+      {
+          result = path.call(null,obj);
+      }
+      else
+      {
+          // previous
+          var parts = (path || '').split('.');
+          result    = _.reduce(parts, function (memo, i) { return memo[ i ]; }, obj);
+      }
     return result == null ? obj : result;
   };
 
